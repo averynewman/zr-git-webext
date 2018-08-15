@@ -20,7 +20,7 @@ const Popup = ({ counter, countActions }) => {
 
   return (
     <div className="popup">
-      <h1>This is a simple popup for demo</h1>
+      <h1>{browser.i18n.getMessage('popupTitle')}</h1>
       <button onClick={ increaseCounter }>Click to increase the counter</button>: { counter }<br />
       <button onClick={ openGithub }>
         Click to see more about <code>react-webextension-boilerplate</code>
