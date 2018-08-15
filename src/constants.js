@@ -1,1 +1,1 @@
-export const INCREASE = 'ADD';
+export const INCREASE = 'ADD'

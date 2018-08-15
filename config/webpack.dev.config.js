@@ -1,13 +1,13 @@
-import webpack from 'webpack';
-import WriteFilePlugin from 'write-file-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+import webpack from 'webpack'
+import WriteFilePlugin from 'write-file-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 
-import paths from './paths';
+import paths from './paths'
 
-const DEFAULT_HOST = "'localhost'";
-const DEFAULT_PORT = 3004;
-const devHotClient = require.resolve('./webpackHotDevClient');
+const DEFAULT_HOST = "'localhost'"
+const DEFAULT_PORT = 3004
+const devHotClient = require.resolve('./webpackHotDevClient')
 
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -32,7 +32,7 @@ module.exports = {
       test: /\.js?$/,
       exclude: /node_modules/,
       include: [paths.source],
-      loader: 'eslint-loader'
+      loader: 'standard-loader'
     }, {
       test: /\.js?$/,
       use: ['babel-loader'],
@@ -64,4 +64,4 @@ module.exports = {
       { from: paths.extension }
     ])
   ]
-};
+}

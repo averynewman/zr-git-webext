@@ -1,7 +1,7 @@
-import { INCREASE } from '../../constants';
+import { INCREASE } from '../../constants'
 
-export function increase() {
+export function increase () {
   return {
     type: INCREASE
-  };
+  }
 }

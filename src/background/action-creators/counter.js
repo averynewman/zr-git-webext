@@ -1,8 +1,8 @@
-import { INCREASE } from '../../constants';
+import { INCREASE } from '../../constants'
 
-export function increase(payload) {
+export function increase (payload) {
   return {
     type: INCREASE,
     ...payload
-  };
+  }
 }

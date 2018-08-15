@@ -1,9 +1,9 @@
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import webpack from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
-import paths from './paths';
+import paths from './paths'
 
 module.exports = {
   entry: {
@@ -25,7 +25,7 @@ module.exports = {
       test: /\.js?$/,
       exclude: /node_modules/,
       include: [paths.source],
-      loader: 'eslint-loader'
+      loader: 'standard-loader'
     }, {
       test: /\.js?$/,
       use: ['babel-loader'],
@@ -81,4 +81,4 @@ module.exports = {
       { from: paths.extension }
     ])
   ]
-};
+}

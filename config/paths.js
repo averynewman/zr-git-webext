@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
+import fs from 'fs'
+import path from 'path'
 
-const rootDir = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(rootDir, relativePath);
+const rootDir = fs.realpathSync(process.cwd())
+const resolveApp = relativePath => path.resolve(rootDir, relativePath)
 
 export default {
   source: resolveApp('src'),
@@ -13,4 +13,4 @@ export default {
   contentSrc: resolveApp('src/content'),
   backgroundSrc: resolveApp('src/background'),
   extension: resolveApp('extension')
-};
+}
