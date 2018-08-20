@@ -38,7 +38,7 @@ function setupCompiler () {
     console.log()
     console.log(
       'To create a production build, use ' +
-        `${chalk.cyan('yarn run build')}.`
+        `${chalk.cyan('npm run build')}.`
     )
     console.log()
   })

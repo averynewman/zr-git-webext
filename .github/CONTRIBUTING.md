@@ -1,3 +1,22 @@
+# Contributing
+
+There are several ways you can help:
+
+- [translations](#translations)
+- [adding tests](#adding-tests)
+- [fixing issues](#fixing-issues)
+
+# Explanation of technology stack
+
+https://hackernoon.com/a-basic-react-redux-introductory-tutorial-adcc681eeb5e
+https://github.com/ivantsov/redux-webext
+
+# Translations
+
+# Adding tests
+
+# Fixing issues
+
 # react-webextension-boilerplate
 
 This is a boilerplate to aim on bootstrap a [WebExtensions](https://developer.mozilla.org/en-US/Add-ons/WebExtensions) application with `React.js` easily.
@@ -29,8 +48,6 @@ $ yarn start
 
 After webpack bundle successfully, you will see `build-dev` folder will be created in the root folder. This folder is a temporary extension for development.  Now, you can open your modern browser and load it.
 
-> You can change the `build-dev` in `config/paths` file.
-
 When development, you can change the `popup` and `background` scripts, `webpack` will reload the extension automatically instead of reload it manually.   
 Above mechanism is work well on Chrome and Firefox currently.
 
@@ -46,11 +63,3 @@ The final result will be writed to `build-prod` folder. Same as development, you
 
 ### Testing
 
-### TODO
-
-- [ ] Write a basic example for `background` and `content` scripts
-- [ ] Create test boilerplate with `enzyme` and `jest`
-- [ ] Improve webpack config
-- [ ] Improve webpack custom message
-- [ ] Redux or Mobx
-- [ ] CI
