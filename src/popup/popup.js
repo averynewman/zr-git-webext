@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as countActionCreator from '../action-creators/counter'
+import * as countActionCreator from './action-creators/counter'
 
 const Popup = ({ counter, countActions }) => {
  const increaseCounter = () => {
