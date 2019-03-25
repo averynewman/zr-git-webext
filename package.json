@@ -52,6 +52,7 @@
     "write-file-webpack-plugin": "^4.2.0"
   },
   "dependencies": {
+    "browserfs": "^1.4.3",
     "chrome-browser-object-polyfill": "^0.2.2",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",

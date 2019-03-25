@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as countActionCreator from './action-creators/counter'
+import * as countActionCreator from '../action-creators/counter'
 
 const Popup = ({ counter, countActions }) => {
- const increaseCounter = () => {
+  const increaseCounter = () => {
     countActions.increase()
   }
 
@@ -15,9 +15,6 @@ const Popup = ({ counter, countActions }) => {
     <div className='popup'>
       <h1>{browser.i18n.getMessage('popupTitle')}</h1>
       <button onClick={increaseCounter}>Click to increase the counter</button>: { counter }<br />
-      <button onClick={openGithub}>
-        Click to see more about <code>react-webextension-boilerplate</code>
-      </button>
     </div>
   )
 }

@@ -11,3 +11,9 @@ const actions = {}
 actions[INCREASE] = increase
 
 createBackgroundStore({ store, actions })
+/* BrowserFS.configure({ fs: "IndexedDB", options: {} }, function (err) {
+  if (err) return console.log(err);
+  const fs = BrowserFS.BFSRequire("fs");
+  const files = git.listFiles({fs, dir: '/'});
+  console.log(files);
+}); */

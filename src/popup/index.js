@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { createUIStore } from 'redux-webext'
 
 import './index.scss'
-import Popup from './popup'
+import Popup from './containers/popup'
 
 createUIStore().then((store) => {
   ReactDOM.render(
