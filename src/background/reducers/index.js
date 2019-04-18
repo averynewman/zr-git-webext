@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import counter from './counter'
+import repoChange from './repo-select'
 
 export default combineReducers({
-  counter
+  repoChange
 })

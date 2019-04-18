@@ -3,14 +3,14 @@ import { createBackgroundStore } from 'redux-webext'
 import { git } from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 
-import { INCREASE } from '../constants'
-import { increase } from './action-creators/counter'
+import { CHANGE_REPO } from '../constants'
+import { changeRepo } from './action-creators/repo-select'
 import rootReducer from './reducers'
 
 const store = createStore(rootReducer)
 
 const actions = {}
-actions[INCREASE] = increase
+actions[CHANGE_REPO] = changeRepo
 
 createBackgroundStore({ store, actions })
 

@@ -1,37 +1,38 @@
-/* global browser */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as countActionCreator from '../action-creators/counter'
+import RepoSelect from './repo-select'
+import * as repoActionCreator from '../action-creators/repo-select'
 
-const Popup = ({ counter, countActions }) => {
-  const increaseCounter = () => {
-    countActions.increase()
+const Popup = ({ repoUrl, repoActions }) => {
+  const changeRepo = () => {
+    repoActions.changeRepo()
   }
 
   return (
     <div className='popup'>
-      <h1>{browser.i18n.getMessage('popupTitle')}</h1>
-      <button onClick={increaseCounter}>Click to increase the counter</button>: { counter }<br />
+      <h1>zr-git-webext dev version</h1>
+      <p>{repoUrl}</p>
+      <RepoSelect repoChange={changeRepo} />
     </div>
   )
 }
 
 Popup.propTypes = {
-  counter: PropTypes.number,
-  countActions: PropTypes.object
+  repoUrl: PropTypes.string,
+  repoActions: PropTypes.object
 }
 
 Popup.defaultProps = {
-  counter: -1,
-  countActions: {}
+  repoUrl: 'https://github.com',
+  repoActions: {}
 }
 
 // `connect` is a react-redux thing that ties redux state
 // to react component properties
 export default connect(
-  state => ({ counter: state.counter }),
-  dispatch => ({ countActions: bindActionCreators(countActionCreator, dispatch) })
+  state => ({ repoUrl: state.repoUrl }),
+  dispatch => ({ repoActions: bindActionCreators(repoActionCreator, dispatch) })
 )(Popup)

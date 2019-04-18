@@ -1,1 +1,1 @@
-export const INCREASE = 'ADD'
+export const CHANGE_REPO = 'CHANGE_REPO'
