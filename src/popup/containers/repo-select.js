@@ -9,7 +9,7 @@ class RepoSelect extends React.Component {
   }
 
   handleRepoChange () {
-    this.props.changeRepo(this.state.input)
+    this.props.changeRepo({ repoUrl: this.state.input })
     this.setState({ input: '' })
   }
 
