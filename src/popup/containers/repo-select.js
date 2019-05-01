@@ -6,9 +6,10 @@ class RepoSelect extends React.Component {
   constructor (props) {
     super(props)
     this.state = { input: '' }
+    this.handleRepoChange = this.unboundHandleRepoChange.bind(this)
   }
 
-  handleRepoChange () {
+  unboundHandleRepoChange () {
     this.props.changeRepo({ repoUrl: this.state.input })
     this.setState({ input: '' })
   }
