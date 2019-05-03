@@ -21,7 +21,6 @@ const Popup = ({ repoUrl, repoActions }) => {
       <h1>zr-git-webext dev version</h1>
       <p>{repoUrl}</p>
       <RepoSelect repoChange={changeRepo} />
-      <button onClick={printValue}>pirnt value</button>
     </div>
   )
 }

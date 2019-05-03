@@ -7,6 +7,20 @@ class RepoSelect extends React.Component {
     super(props)
     this.state = { input: '' }
     this.handleRepoChange = this.unboundHandleRepoChange.bind(this)
+    this.handleKeyPress = this.handleKeyPress.bind(this)
+  }
+
+  handleKeyPress (event) {
+    if (event.keyCode === 13) {
+      this.handleRepoChange()
+    }
+  }
+
+  componentDidMount () {
+    document.addEventListener('keydown', this.handleKeyPress)
+  }
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.handleKeyPress)
   }
 
   unboundHandleRepoChange () {

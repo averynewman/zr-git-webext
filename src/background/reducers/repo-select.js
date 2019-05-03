@@ -11,6 +11,5 @@ export default (state, action) => {
     default:
       console.log('defaulted on inside reducer')
       return state
-
   }
 }
