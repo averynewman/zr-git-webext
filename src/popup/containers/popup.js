@@ -11,11 +11,17 @@ const Popup = ({ repoUrl, repoActions }) => {
     repoActions.changeRepo()
   }
 
+  const printValue = () => {
+    console.log('repoUrl: ')
+    console.log(repoUrl)
+  }
+
   return (
     <div className='popup'>
       <h1>zr-git-webext dev version</h1>
       <p>{repoUrl}</p>
       <RepoSelect repoChange={changeRepo} />
+      <button onClick={printValue}>pirnt value</button>
     </div>
   )
 }
