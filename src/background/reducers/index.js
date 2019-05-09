@@ -16,7 +16,6 @@ export default (state = initialState, action) => {
     case CHANGE_REPO:
       return repoChange(state, action)
     default:
-      console.log('default on outside reducer, oh god oh fwick uwu uwu')
       return state
   }
 }

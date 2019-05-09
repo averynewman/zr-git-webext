@@ -21,5 +21,5 @@ createBackgroundStore({ store, actions })
   git.plugins.set('fs', fs)
 }) */
 const fs = new LightningFS('my-app')
-// git.plugins.set('fs', fs)
+git.plugins.set('fs', fs)
 // console.log('LightningFS and isomorphic-git initialized successfully')
