@@ -1,6 +1,6 @@
 import { createStore } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
-import { git } from 'isomorphic-git'
+import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 
 import { CHANGE_REPO } from '../constants'
@@ -20,6 +20,6 @@ createBackgroundStore({ store, actions })
   const fs = BrowserFS.BFSRequire('fs')
   git.plugins.set('fs', fs)
 }) */
-const fs = new LightningFS('my-app')
+const fs = new LightningFS('fs')
 git.plugins.set('fs', fs)
-// console.log('LightningFS and isomorphic-git initialized successfully')
+console.log('LightningFS and isomorphic-git initialized')

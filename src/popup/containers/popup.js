@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import RepoSelect from './repo-select'
 import * as repoActionCreator from '../action-creators/repo-select'
 
-const Popup = ({ repoUrl, repoActions }) => {
+const Popup = ({ cloning, repoUrl, validRepo, repoActions }) => {
   const changeRepo = () => {
     repoActions.changeRepo()
   }
@@ -14,7 +14,19 @@ const Popup = ({ repoUrl, repoActions }) => {
   return (
     <div className='popup'>
       <h1>zr-git-webext dev version</h1>
-      <p>{repoUrl}</p>
+      <p>{
+        ((cloning, repoUrl, validRepo) => {
+          if (cloning === true) {
+            return 'Cloning new repo...'
+          } else if (validRepo === false) {
+            return 'Clone failed. Check your path and try again.'
+          } else if (repoUrl === 'https://github.com') {
+            return 'No repo selected yet.'
+          } else {
+            return ('Working on ' + repoUrl)
+          }
+        })(cloning, repoUrl, validRepo)
+      }</p>
       <RepoSelect repoChange={changeRepo} />
     </div>
   )
@@ -33,6 +45,10 @@ Popup.defaultProps = {
 // `connect` is a react-redux thing that ties redux state
 // to react component properties
 export default connect(
-  state => ({ repoUrl: state.repoUrl }),
+  state => ({
+    repoUrl: state.repoSelect.repoUrl,
+    validRepo: state.repoSelect.validRepo,
+    cloning: state.repoSelect.cloning
+  }),
   dispatch => ({ repoActions: bindActionCreators(repoActionCreator, dispatch) })
 )(Popup)
