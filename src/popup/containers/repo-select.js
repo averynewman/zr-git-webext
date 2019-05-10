@@ -3,14 +3,16 @@ import { connect } from 'react-redux'
 import * as git from 'isomorphic-git'
 
 import { startClone, cloneFailure, cloneSuccess } from '../action-creators/repo-select'
+import { emitter } from '../../background/index'
 
 class RepoSelect extends React.Component {
   constructor (props) {
     super(props)
     this.state = { input: '' }
-    this.handleRepoChange = this.unboundHandleRepoChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleRepoChange = this.handleRepoChange.bind(this)
+    this.handleCloneFailure = this.handleCloneFailure.bind(this)
+    this.handleCloneSuccess = this.handleCloneSuccess.bind(this)
   }
 
   handleKeyPress (event) {
@@ -37,11 +39,13 @@ class RepoSelect extends React.Component {
   async handleRepoChange () {
     let repoPath = this.state.input
     this.setState({ input: '' })
+    console.log('starting clone with path ' + 'https://github.com/' + repoPath + '.git')
     this.props.startClone()
+    //emitter.on('message', message => { console.log(message) })
     git.clone({
       dir: '/',
       corsProxy: 'https://cors.isomorphic-git.org',
-      url: ('https://github.com/' + repoPath + '.git')
+      url: 'https://github.com/' + repoPath + '.git'
     }).then(this.handleCloneSuccess(repoPath), this.handleCloneFailure)
   }
 

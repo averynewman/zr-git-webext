@@ -3,14 +3,18 @@ import { createBackgroundStore } from 'redux-webext'
 import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 
-import { CHANGE_REPO } from '../constants'
-import { changeRepo } from './action-creators/repo-select'
+import { START_CLONE, CLONE_FAILURE, CLONE_SUCCESS } from '../constants'
+import { startClone, cloneFailure, cloneSuccess } from './action-creators/repo-select'
 import rootReducer from './reducers'
+import EventEmitter from 'events'
 
 const store = createStore(rootReducer)
 
-const actions = {}
-actions[CHANGE_REPO] = changeRepo
+const actions = {
+  START_CLONE: startClone,
+  CLONE_FAILURE: cloneFailure,
+  CLONE_SUCCESS: cloneSuccess
+}
 
 createBackgroundStore({ store, actions })
 
@@ -20,6 +24,9 @@ createBackgroundStore({ store, actions })
   const fs = BrowserFS.BFSRequire('fs')
   git.plugins.set('fs', fs)
 }) */
-const fs = new LightningFS('fs')
+const fs = new LightningFS('fs', { wipe: true })
 git.plugins.set('fs', fs)
+const emitter = new EventEmitter()
+git.plugins.set('emitter', emitter)
 console.log('LightningFS and isomorphic-git initialized')
+export { emitter }

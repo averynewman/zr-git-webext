@@ -1,15 +1,8 @@
-import { CHANGE_REPO, BEGIN_CLONE, CLONE_FAILURE, CLONE_SUCCESS } from '../../constants'
-
-export function changeRepo (payload) {
-  return {
-    type: CHANGE_REPO,
-    ...payload
-  }
-}
+import { START_CLONE, CLONE_FAILURE, CLONE_SUCCESS } from '../../constants'
 
 export function startClone (payload) {
   return {
-    type: BEGIN_CLONE,
+    type: START_CLONE,
     ...payload
   }
 }

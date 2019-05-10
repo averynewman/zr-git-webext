@@ -1,4 +1,3 @@
-export const CHANGE_REPO = 'CHANGE_REPO'
-export const BEGIN_CLONE = 'BEGIN_CLONE'
+export const START_CLONE = 'START_CLONE'
 export const CLONE_FAILURE = 'CLONE_FAILURE'
 export const CLONE_SUCCESS = 'CLONE_SUCCESS'

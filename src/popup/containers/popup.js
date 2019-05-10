@@ -23,7 +23,7 @@ const Popup = ({ cloning, repoUrl, validRepo, repoActions }) => {
           } else if (repoUrl === 'https://github.com') {
             return 'No repo selected yet.'
           } else {
-            return ('Working on ' + repoUrl)
+            return ('Active repo: ' + repoUrl)
           }
         })(cloning, repoUrl, validRepo)
       }</p>
