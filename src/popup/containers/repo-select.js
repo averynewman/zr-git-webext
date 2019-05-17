@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as git from 'isomorphic-git'
 
-import { startClone, cloneFailure, cloneSuccess } from '../action-creators/repo-select'
-import { emitter } from '../../background/index'
+import { changeRepo } from '../action-creators/repo-select'
 
 class RepoSelect extends React.Component {
   constructor (props) {
@@ -11,22 +9,12 @@ class RepoSelect extends React.Component {
     this.state = { input: '' }
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleRepoChange = this.handleRepoChange.bind(this)
-    this.handleCloneFailure = this.handleCloneFailure.bind(this)
-    this.handleCloneSuccess = this.handleCloneSuccess.bind(this)
   }
 
   handleKeyPress (event) {
     if (event.keyCode === 13) {
       this.handleRepoChange()
     }
-  }
-
-  handleCloneSuccess (path) {
-    return (fulfillment) => { this.props.cloneSuccess({ repoUrl: ('https://github.com/' + path + '.git') }) }
-  }
-
-  handleCloneFailure (fulfillment) {
-    return this.props.cloneFailure()
   }
 
   componentDidMount () {
@@ -36,17 +24,11 @@ class RepoSelect extends React.Component {
     document.removeEventListener('keydown', this.handleKeyPress) // document.getElementById('').removeEventListener('keydown', this.handleKeyPress)
   }
 
-  async handleRepoChange () {
+  handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
     let repoPath = this.state.input
     this.setState({ input: '' })
-    console.log('starting clone with path ' + 'https://github.com/' + repoPath + '.git')
-    this.props.startClone()
-    //emitter.on('message', message => { console.log(message) })
-    git.clone({
-      dir: '/',
-      corsProxy: 'https://cors.isomorphic-git.org',
-      url: 'https://github.com/' + repoPath + '.git'
-    }).then(this.handleCloneSuccess(repoPath), this.handleCloneFailure)
+    console.log('dispatching repo change request in popup with path ' + repoPath)
+    this.props.changeRepo(repoPath)
   }
 
   updateInput (input) {
@@ -70,5 +52,5 @@ class RepoSelect extends React.Component {
 
 export default connect(
   null,
-  { startClone, cloneFailure, cloneSuccess }
+  { changeRepo }
 )(RepoSelect)

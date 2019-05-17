@@ -1,32 +1,43 @@
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
 import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
+import thunkMiddleware from 'redux-thunk'
+import 'babel-polyfill'
 
-import { START_CLONE, CLONE_FAILURE, CLONE_SUCCESS } from '../constants'
-import { startClone, cloneFailure, cloneSuccess } from './action-creators/repo-select'
+import { changeRepo } from './action-creators/repo-select'
 import rootReducer from './reducers'
 import EventEmitter from 'events'
 
-const store = createStore(rootReducer)
+const middlewares = [thunkMiddleware]
+
+const initialState = {
+  repoSelect: {
+    erasing: false,
+    cloning: false,
+    validRepo: true,
+    repoPath: 'default'
+  }
+}
+
+/* const composeEnhancers =
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose */
+
+const store = createStore(
+  rootReducer,
+  initialState,
+  applyMiddleware(...middlewares)
+)
 
 const actions = {
-  START_CLONE: startClone,
-  CLONE_FAILURE: cloneFailure,
-  CLONE_SUCCESS: cloneSuccess
+  CHANGE_REPO: changeRepo
 }
 
 createBackgroundStore({ store, actions })
 
-// BrowserFS setup, deprecated
-/* BrowserFS.configure({ fs: 'IndexedDB', options: {} }, function (err) {
-  if (err) return console.log(err)
-  const fs = BrowserFS.BFSRequire('fs')
-  git.plugins.set('fs', fs)
-}) */
 const fs = new LightningFS('fs', { wipe: true })
 git.plugins.set('fs', fs)
 const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter)
 console.log('LightningFS and isomorphic-git initialized')
-export { emitter }
+export { emitter, fs }
