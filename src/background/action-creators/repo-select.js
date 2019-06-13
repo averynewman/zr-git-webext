@@ -76,7 +76,7 @@ export function startErase (payload) {
 }
 
 export function changeRepo (repoPath) {
-  console.log('changeRepo request received')
+  console.log('changeRepo request received with url ' + 'https://github.com/' + repoPath + '.git')
   return async function (dispatch) {
     console.log('thunk started')
     dispatch(startErase())
