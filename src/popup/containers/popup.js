@@ -20,7 +20,7 @@ const Popup = ({ cloning, repoUrl, validRepo, erasing }) => {
           } else if (repoUrl === 'default') {
             return 'No repo selected yet.'
           } else {
-            return ('Active repo: ' + repoUrl)
+            return (`Active repo: ${repoUrl}`)
           }
         })(cloning, repoUrl, validRepo, erasing)
       }</p>
@@ -34,7 +34,7 @@ Popup.propTypes = {
 }
 
 Popup.defaultProps = {
-  repoUrl: 'default'
+  repoUrl: 'error loading repoUrl from stateToProps'
 }
 
 export default connect(

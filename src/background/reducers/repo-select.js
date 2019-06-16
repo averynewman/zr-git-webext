@@ -4,7 +4,7 @@ var defaultSubstate = {
   erasing: false,
   cloning: false,
   validRepo: true,
-  repoPath: 'default'
+  repoUrl: 'default'
 }
 
 export default (state = defaultSubstate, action) => {
@@ -24,7 +24,7 @@ export default (state = defaultSubstate, action) => {
       output.cloning = false
       output.erasing = false
       output.validRepo = true
-      output.repoPath = action.repoPath
+      output.repoUrl = action.payload.repoPath
       break
     case REPO_CHANGE_FAILURE:
       output.cloning = false

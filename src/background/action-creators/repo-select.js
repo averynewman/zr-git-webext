@@ -1,15 +1,14 @@
 import * as git from 'isomorphic-git'
 import 'babel-polyfill'
 
-import { fs } from '../index'
+import { fs, logStoreState } from '../index'
 import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS } from '../../constants'
 
 async function clearFilesystem () {
   console.log('clearFilesystem: starting directory read')
   fs.promises.readdir('/').then(
     pathArray => {
-      console.log('clearFilesystem: starting directory clear with folders ' +
-String(pathArray))
+      console.log(`clearFilesystem: starting directory clear with folders ${String(pathArray)}`)
       let promises = []
       for (let i = 0; i < pathArray.length; i++) {
         promises.push(fs.promises.rmdir(pathArray[i]).then(
@@ -17,8 +16,8 @@ String(pathArray))
             return success
           },
           error => {
-            console.log('clearFilesystem: error in single rmdir promise from array, clearing path' +
-pathArray[i])
+            console.log(`clearFilesystem: error in single rmdir promise from array, clearing path ${pathArray[i]}`)
+            console.log(error)
             throw error
           }
         ))
@@ -29,15 +28,13 @@ pathArray[i])
           return success
         },
         error => {
-          console.log('clearFilesystem: compiled rmdir promises failed with error ' +
-String(error))
+          console.log(`clearFilesystem: compiled rmdir promises failed with error ${String(error)}`)
           throw error
         }
       )
     },
     error => {
-      console.log('clearFilesystem: filesystem read failed with error ' +
-String(error))
+      console.log(`clearFilesystem: filesystem read failed with error ${String(error)}`)
       throw error
     }
   )
@@ -47,7 +44,7 @@ export function startClone (payload) {
   console.log('clone starting in background')
   return {
     type: START_CLONE,
-    ...payload
+    payload
   }
 }
 
@@ -55,15 +52,15 @@ export function repoChangeFailure (payload) {
   console.log('clone failed in background')
   return {
     type: REPO_CHANGE_FAILURE,
-    ...payload
+    payload
   }
 }
 
 export function repoChangeSuccess (payload) {
-  console.log('clone succeeded with path ' + payload.repoPath)
+  console.log(`clone succeeded with path ${payload.repoPath}`)
   return {
     type: REPO_CHANGE_SUCCESS,
-    ...payload
+    payload
   }
 }
 
@@ -71,13 +68,13 @@ export function startErase (payload) {
   console.log('erase starting in background')
   return {
     type: START_ERASE,
-    ...payload
+    payload
   }
 }
 
 export function changeRepo (payload) {
   const repoPath = payload.payload
-  console.log('changeRepo request received with url ' + 'https://github.com/' + repoPath + '.git')
+  console.log(`changeRepo request received with url https://github.com/${repoPath}.git`)
   return async function (dispatch) {
     console.log('thunk started')
     dispatch(startErase())
@@ -88,27 +85,26 @@ export function changeRepo (payload) {
         return git.clone({
           dir: '/',
           corsProxy: 'https://cors.isomorphic-git.org',
-          url: 'https://github.com/' + repoPath + '.git'
+          url: `https://github.com/${repoPath}.git`
         })
       },
       error => {
-        console.log('changeRepo: filesystem clear failed with error ' +
-String(error))
+        console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
         dispatch(repoChangeFailure())
         throw error
       }
     ).then(
       success => {
-        console.log('changeRepo: repo change succeeded with path ' +
-repoPath)
+        console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         return dispatch(repoChangeSuccess({ repoPath: repoPath }))
       },
       error => {
-        console.log('changeRepo: git clone (or filesystem clear) failed with error ' +
-        String(error))
+        console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)
         dispatch(repoChangeFailure())
         throw error
       }
+    ).then(
+      success => { logStoreState() }, error => { throw error }
     )
   }
 }

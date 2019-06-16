@@ -16,7 +16,7 @@ const initialState = {
     erasing: false,
     cloning: false,
     validRepo: true,
-    repoPath: 'default'
+    repoUrl: 'default'
   }
 }
 
@@ -31,10 +31,20 @@ const actions = {
 }
 
 createBackgroundStore({ store, actions })
+const logStoreState = () => {
+  let state = store.getState()
+  Object.keys(state).forEach((key) => {
+    let substate = state[key]
+    Object.keys(substate).forEach((key2) => console.log(`${key2} : ${substate[key2]}`))
+  }) // This is really messy but I don't trust Chrome console to show me objects correctly
+}
+logStoreState()
+// set up debug every time state changes
+store.subscribe(() => logStoreState())
 
 const fs = new LightningFS('fs', { wipe: true })
 git.plugins.set('fs', fs)
 const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter)
 console.log('LightningFS and isomorphic-git initialized')
-export { emitter, fs }
+export { emitter, fs, logStoreState }
