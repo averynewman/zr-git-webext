@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import RepoSelect from './repo-select'
@@ -31,13 +31,13 @@ class Popup extends React.Component { // NEEDS FIX TO CONVERT TO OBJ NOTATION
   }
 }
 
-Popup.propTypes = {
+/* Popup.propTypes = {
   repoUrl: PropTypes.string
 }
 
 Popup.defaultProps = {
   repoUrl: 'error loading repoUrl from stateToProps'
-}
+} */
 
 export default connect(
   state => ({
