@@ -17,12 +17,12 @@ class RepoSelect extends React.Component {
     }
   }
 
-  componentDidMount () {
+  /* componentDidMount () {
     document.addEventListener('keydown', this.handleKeyPress) // document.getElementById('').addEventListener('keydown', this.handleKeyPress)
   }
   componentWillUnmount () {
     document.removeEventListener('keydown', this.handleKeyPress) // document.getElementById('').removeEventListener('keydown', this.handleKeyPress)
-  }
+  } */
 
   handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
     let repoPath = this.state.input
@@ -41,6 +41,7 @@ class RepoSelect extends React.Component {
         <input
           onChange={e => this.updateInput(e.target.value)}
           value={this.state.input}
+          onKeyDown={e => this.handleKeyPress(e)}
         />
         <button className='change-repo' onClick={this.handleRepoChange}>
           Change Repo

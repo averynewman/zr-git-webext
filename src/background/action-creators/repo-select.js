@@ -4,6 +4,7 @@ import 'babel-polyfill'
 import { logStoreState } from '../index'
 import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS } from '../../constants'
 import { clearFilesystem } from './clear-filesystem'
+import { updateBranches } from './branches'
 
 export function startClone (payload) {
   console.log('clone starting in background')
@@ -41,7 +42,7 @@ export function changeRepo (payload) {
   const repoPath = payload.payload
   console.log(`changeRepo request received with url https://github.com/${repoPath}.git`)
   return async function (dispatch) {
-    console.log('thunk started')
+    console.log('changeRepo thunk started')
     dispatch(startErase())
     console.log('startErase dispatched')
     return clearFilesystem().then(
@@ -70,6 +71,6 @@ export function changeRepo (payload) {
       }
     ).then(
       success => { logStoreState() }, error => { throw error }
-    )
+    ).then(updateBranches(dispatch), error => { throw error })
   }
 }

@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import RepoSelect from './repo-select'
+import BranchSelect from './branch-select'
 // import * as repoActionCreator from '../action-creators/repo-select'
 
 class Popup extends React.Component { // NEEDS FIX TO CONVERT TO OBJ NOTATION
@@ -26,6 +27,7 @@ class Popup extends React.Component { // NEEDS FIX TO CONVERT TO OBJ NOTATION
           })(this.props.cloning, this.props.repoUrl, this.props.validRepo, this.props.erasing)
         }</p>
         <RepoSelect />
+        <BranchSelect />
       </div>
     )
   }

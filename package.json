@@ -60,6 +60,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
+    "react-select": "^3.0.4",
     "redux": "^3.7.2",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2"
