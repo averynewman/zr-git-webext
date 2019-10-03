@@ -27,7 +27,7 @@ class RepoSelect extends React.Component {
   handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
     let repoPath = this.state.input
     this.setState({ input: '' })
-    console.log(`dispatching repo change request in popup with path ${repoPath}`)
+    // console.log(`dispatching repo change request in popup with path ${repoPath}`)
     this.props.changeRepo(repoPath)
   }
 
@@ -38,6 +38,21 @@ class RepoSelect extends React.Component {
   render () {
     return (
       <div>
+        <p>{
+          ((cloning, repoUrl, validRepo, erasing) => {
+            if (erasing === true) {
+              return 'Clearing filesystem...'
+            } else if (cloning === true) {
+              return 'Cloning new repo...'
+            } else if (validRepo === false) {
+              return 'Clone failed. Check your path and try again.'
+            } else if (repoUrl === 'default') {
+              return 'No repo selected yet.'
+            } else {
+              return (`Active repo: ${repoUrl}`)
+            }
+          })(this.props.cloning, this.props.repoUrl, this.props.validRepo, this.props.erasing)
+        }</p>
         <input
           onChange={e => this.updateInput(e.target.value)}
           value={this.state.input}
@@ -52,6 +67,11 @@ class RepoSelect extends React.Component {
 }
 
 export default connect(
-  null,
+  state => ({
+    repoUrl: state.repoSelect.repoUrl,
+    validRepo: state.repoSelect.validRepo,
+    cloning: state.repoSelect.cloning,
+    erasing: state.repoSelect.erasing
+  }),
   { changeRepo }
 )(RepoSelect)

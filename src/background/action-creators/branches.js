@@ -1,4 +1,4 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS } from '../../constants'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory } from '../../constants'
 import * as git from 'isomorphic-git'
 
 function startBranchListUpdate (payload) {
@@ -33,14 +33,14 @@ function branchChangeSuccess (payload) {
   }
 }
 
-export async function changeBranch (payload) {
+export function changeBranch (payload) {
   const branchName = payload.payload
   console.log(`changeBranch request received to branch ${branchName}`)
   return async function (dispatch) {
     console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
     console.log('startBranchChange dispatched')
-    return git.checkout({ dir: '/repoDirectory', ref: branchName }).then(
+    return git.checkout({ dir: repoDirectory, ref: branchName }).then(
       () => {
         dispatch(branchChangeSuccess({ branchName: branchName }))
       }, error => {
@@ -53,13 +53,19 @@ export async function changeBranch (payload) {
 
 export async function updateBranches (dispatch) {
   dispatch(startBranchListUpdate())
-  git.listBranches({ dir: '/repoDirectory' }).then(
+  return git.listBranches({ dir: repoDirectory }).then(
     branches => {
       dispatch(branchListUpdateSuccess({ branchList: branches }))
       console.log(`branchList updated to ${branches}`)
+      return branches
     }, error => {
       console.log(`updateBranches failed with error ${error}`)
       throw error
     }
   )
+}
+
+export function updateBranchesThunk (payload) {
+  console.log('updateBranchesThunk called')
+  return updateBranches
 }
