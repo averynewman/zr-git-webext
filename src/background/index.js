@@ -72,4 +72,4 @@ git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
-export { fs, logStoreState }
+export { fs, logStoreState, recursiveObjectPrinter }

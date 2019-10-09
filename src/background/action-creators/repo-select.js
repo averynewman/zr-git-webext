@@ -51,7 +51,11 @@ export function changeRepo (payload) {
         return git.clone({
           dir: repoDirectory,
           corsProxy: 'https://cors.isomorphic-git.org',
-          url: `https://github.com/${repoPath}.git`
+          url: `https://github.com/${repoPath}.git`,
+          depth: 2,
+          singleBranch: false,
+          noCheckout: true/* ,
+          ref: 'greenkeeper/update-all' */
         })
       },
       error => {

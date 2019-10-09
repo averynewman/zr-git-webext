@@ -40,7 +40,7 @@ export function changeBranch (payload) {
     console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
     console.log('startBranchChange dispatched')
-    return git.checkout({ dir: repoDirectory, ref: branchName }).then(
+    return git.checkout({ dir: repoDirectory, ref: branchName, remote: 'origin' }).then(
       () => {
         dispatch(branchChangeSuccess({ branchName: branchName }))
       }, error => {
@@ -53,10 +53,11 @@ export function changeBranch (payload) {
 
 export async function updateBranches (dispatch) {
   dispatch(startBranchListUpdate())
-  return git.listBranches({ dir: repoDirectory }).then(
-    branches => {
-      dispatch(branchListUpdateSuccess({ branchList: branches }))
-      console.log(`branchList updated to ${branches}`)
+  return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
+    async branches => {
+      let branchesUpdated = branches.filter(word => word !== 'HEAD')
+      dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
+      console.log(`branchList updated to ${branchesUpdated}`)
       return branches
     }, error => {
       console.log(`updateBranches failed with error ${error}`)

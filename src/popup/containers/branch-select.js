@@ -36,7 +36,7 @@ class BranchSelect extends React.Component {
     return (
       <div>
         <h1>{ this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`) }</h1>
-        <Select defaultValue={{ value: 'master', label: 'master' }} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+        <Select /* defaultValue={{ value: 'master', label: 'master' }} */ isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
         <button className='change-repo' onClick={this.reloadBranches}>
           Reload Branches
         </button>

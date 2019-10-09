@@ -11,3 +11,4 @@ export const BRANCH_CHANGE_SUCCESS = 'BRANCH_CHANGE_SUCCESS'
 export const RELOAD_BRANCHES = 'RELOAD_BRANCHES'
 
 export const repoDirectory = '/'
+export const branchDefault = '!NO BRANCH SELECTED YET!'
