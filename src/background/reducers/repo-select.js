@@ -24,7 +24,7 @@ export default (state = defaultSubstate, action) => {
       output.cloning = false
       output.erasing = false
       output.validRepo = true
-      output.repoUrl = action.payload.repoPath
+      output.repoUrl = action.payload.repoUrl
       break
     case REPO_CHANGE_FAILURE:
       output.cloning = false

@@ -9,6 +9,8 @@ export const BRANCH_LIST_UPDATE_SUCCESS = 'BRANCH_LIST_UPDATE_SUCCESS'
 export const START_BRANCH_CHANGE = 'START_BRANCH_CHANGE'
 export const BRANCH_CHANGE_SUCCESS = 'BRANCH_CHANGE_SUCCESS'
 export const RELOAD_BRANCHES = 'RELOAD_BRANCHES'
+// export const START_FETCH = 'START_FETCH'
+// export const START_COMMIT = 'START_COMMIT'
 
 export const repoDirectory = '/'
 export const branchDefault = '!NO BRANCH SELECTED YET!'

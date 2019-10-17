@@ -4,9 +4,10 @@ import { connect } from 'react-redux'
 
 import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
+// import FetchButton from './fetch-button'
 // import * as repoActionCreator from '../action-creators/repo-select'
 
-class Popup extends React.Component { // NEEDS FIX TO CONVERT TO OBJ NOTATION
+class Popup extends React.Component {
   render () {
     return (
       <div className='popup'>

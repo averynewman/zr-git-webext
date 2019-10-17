@@ -9,18 +9,20 @@ class BranchSelect extends React.Component {
     super(props)
     this.state = { selectedBranch: '' }
     this.handleBranchChange = this.handleBranchChange.bind(this)
-    this.reloadBranches = this.reloadBranches.bind(this)
+    this.handleBranchReload = this.handleBranchReload.bind(this)
   }
 
-  handleBranchChange () {
-    let newBranch = this.state.selectedBranch
-    console.log(`dispatching branch change to branch ${newBranch}`)
-    this.props.dispatch(changeBranch(newBranch))
+  handleBranchChange (option) {
+    let branchName = option.value
+    this.setState({ selectedBranch: branchName })
+    let repoUrl = this.props.repoUrl
+    console.log(`dispatching branch change to branch ${branchName}`)
+    this.props.changeBranch({ branchName: branchName, repoUrl: repoUrl })
   }
 
-  reloadBranches () {
+  handleBranchReload () {
     console.log('reloading branches')
-    this.props.dispatch(reloadBranches())
+    this.props.reloadBranches()
   }
 
   render () {
@@ -35,9 +37,9 @@ class BranchSelect extends React.Component {
     }
     return (
       <div>
-        <h1>{ this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`) }</h1>
+        <h3>{ this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`) }</h3>
         <Select /* defaultValue={{ value: 'master', label: 'master' }} */ isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
-        <button className='change-repo' onClick={this.reloadBranches}>
+        <button className='change-repo' onClick={this.handleBranchReload}>
           Reload Branches
         </button>
       </div>
@@ -53,5 +55,8 @@ export default connect(
     updating: state.branches.updating,
     repoUrl: state.repoSelect.repoUrl
   }),
-  null
+  {
+    changeBranch,
+    reloadBranches
+  }
 )(BranchSelect)

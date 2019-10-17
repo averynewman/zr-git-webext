@@ -43,7 +43,7 @@ const actions = {
 
 createBackgroundStore({ store, actions })
 
-const recursiveObjectPrinter = (obj) => {
+const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes, but our store state should never contain a function, unless future me does something stupid
   let outputString = ''
   Object.keys(obj).forEach((key, index) => {
     let value = obj[key]
@@ -52,7 +52,7 @@ const recursiveObjectPrinter = (obj) => {
     }
     if (value === Object(value) && Object.prototype.toString.call(value) !== '[object Array]') { // if value is a non-array object
       outputString = outputString + `${key} : { ${recursiveObjectPrinter(value)} }`
-    } else { // if value is primitive, null, array
+    } else { // if value is primitive, null, or array
       outputString = outputString + `${key} : ${value}`
     }
   })

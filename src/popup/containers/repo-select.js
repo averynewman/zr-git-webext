@@ -25,10 +25,10 @@ class RepoSelect extends React.Component {
   } */
 
   handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
-    let repoPath = this.state.input
+    let repoUrl = this.state.input
     this.setState({ input: '' })
     // console.log(`dispatching repo change request in popup with path ${repoPath}`)
-    this.props.changeRepo(repoPath)
+    this.props.changeRepo({ repoUrl: repoUrl })
   }
 
   updateInput (input) {

@@ -6,7 +6,7 @@ import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, rep
 import { clearFilesystem } from './clear-filesystem'
 import { updateBranches } from './branches'
 
-export function startClone (payload) {
+function startClone (payload) {
   // console.log('clone starting in background')
   return {
     type: START_CLONE,
@@ -14,7 +14,7 @@ export function startClone (payload) {
   }
 }
 
-export function repoChangeFailure (payload) {
+function repoChangeFailure (payload) {
   // console.log('clone failed in background')
   return {
     type: REPO_CHANGE_FAILURE,
@@ -22,7 +22,7 @@ export function repoChangeFailure (payload) {
   }
 }
 
-export function repoChangeSuccess (payload) {
+function repoChangeSuccess (payload) {
   // console.log(`clone succeeded with path ${payload.repoPath}`)
   return {
     type: REPO_CHANGE_SUCCESS,
@@ -30,7 +30,7 @@ export function repoChangeSuccess (payload) {
   }
 }
 
-export function startErase (payload) {
+function startErase (payload) {
   // console.log('erase starting in background')
   return {
     type: START_ERASE,
@@ -39,8 +39,8 @@ export function startErase (payload) {
 }
 
 export function changeRepo (payload) {
-  const repoPath = payload.payload
-  // console.log(`changeRepo request received with url https://github.com/${repoPath}.git`)
+  const repoUrl = payload.payload.repoUrl
+  // console.log(`changeRepo request received with url https://github.com/${repoUrl}.git`)
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
     dispatch(startErase())
@@ -51,7 +51,7 @@ export function changeRepo (payload) {
         return git.clone({
           dir: repoDirectory,
           corsProxy: 'https://cors.isomorphic-git.org',
-          url: `https://github.com/${repoPath}.git`,
+          url: `https://github.com/${repoUrl}.git`,
           depth: 2,
           singleBranch: false,
           noCheckout: true/* ,
@@ -66,7 +66,7 @@ export function changeRepo (payload) {
     ).then(
       success => {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
-        dispatch(repoChangeSuccess({ repoPath: repoPath }))
+        dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
         console.log('successful git clone, updating branches')
         return updateBranches(dispatch)
       },
