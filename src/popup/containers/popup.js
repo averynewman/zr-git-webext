@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 
 import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
-// import FetchButton from './fetch-button'
-// import * as repoActionCreator from '../action-creators/repo-select'
+import FetchButton from './fetch-button'
 
 class Popup extends React.Component {
   render () {

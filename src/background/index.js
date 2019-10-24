@@ -7,6 +7,7 @@ import 'babel-polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranchesThunk } from './action-creators/branches'
+import { fetch } from './action-creators/fetch-commit'
 import rootReducer from './reducers'
 // import EventEmitter from 'events'
 
@@ -28,9 +29,10 @@ const store = createStore(
 )
 
 const actions = {
-  CHANGE_REPO: changeRepo,
-  CHANGE_BRANCH: changeBranch,
-  RELOAD_BRANCHES: updateBranchesThunk
+  POPUP_CHANGE_REPO: changeRepo,
+  POPUP_CHANGE_BRANCH: changeBranch,
+  POPUP_RELOAD_BRANCHES: updateBranchesThunk,
+  POPUP_FETCH: fetch
 }
 
 /* const logStoreState = () => {

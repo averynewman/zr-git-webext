@@ -1,10 +1,11 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, branchDefault } from '../../constants'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_FETCH, FETCH_FAILURE, FETCH_SUCCESS, branchDefault } from '../../constants'
 
 var defaultSubstate = {
   currentBranch: branchDefault,
   branchList: [],
   switching: false,
-  updating: false
+  updating: false,
+  fetching: false
 }
 
 export default (state = defaultSubstate, action) => {
@@ -23,6 +24,15 @@ export default (state = defaultSubstate, action) => {
     case BRANCH_CHANGE_SUCCESS:
       output.currentBranch = action.payload.branchName
       output.switching = false
+      break
+    case START_FETCH:
+      output.fetching = true
+      break
+    case FETCH_SUCCESS:
+      output.fetching = false
+      break
+    case FETCH_FAILURE:
+      output.fetching = false
       break
   }
   return output

@@ -28,7 +28,7 @@ class RepoSelect extends React.Component {
     let repoUrl = this.state.input
     this.setState({ input: '' })
     // console.log(`dispatching repo change request in popup with path ${repoPath}`)
-    this.props.changeRepo({ repoUrl: repoUrl })
+    this.props.changeRepo({ repoUrl: `https://github.com/${repoUrl}.git` }) // change this when switching to non-github repositories
   }
 
   updateInput (input) {

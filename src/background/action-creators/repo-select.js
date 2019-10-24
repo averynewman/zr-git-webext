@@ -2,7 +2,7 @@ import * as git from 'isomorphic-git'
 import 'babel-polyfill'
 
 // import { logStoreState } from '../index'
-import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory } from '../../constants'
+import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
 import { clearFilesystem } from './clear-filesystem'
 import { updateBranches } from './branches'
 
@@ -50,12 +50,11 @@ export function changeRepo (payload) {
         dispatch(startClone())
         return git.clone({
           dir: repoDirectory,
-          corsProxy: 'https://cors.isomorphic-git.org',
-          url: `https://github.com/${repoUrl}.git`,
+          corsProxy: proxyUrl,
+          url: repoUrl,
           depth: 2,
           singleBranch: false,
-          noCheckout: true/* ,
-          ref: 'greenkeeper/update-all' */
+          noCheckout: true
         })
       },
       error => {

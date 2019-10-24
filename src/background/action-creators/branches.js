@@ -40,7 +40,7 @@ export function changeBranch (payload) {
     console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
     console.log('startBranchChange dispatched')
-    return git.fetch({ dir: repoDirectory, ref: branchName, depth: 2, corsProxy: 'https://cors.isomorphic-git.org', url: `https://github.com/${payload.payload.repoUrl}.git` }).then(
+    return git.fetch({ dir: repoDirectory, ref: branchName, depth: 2, corsProxy: 'https://cors.isomorphic-git.org', url: payload.payload.repoUrl }).then(
       () => {
         dispatch(branchChangeSuccess({ branchName: branchName }))
       }, error => {
