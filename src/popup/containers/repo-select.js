@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { changeRepo } from '../action-creators/repo-select'
+import { repoDefault } from '../../constants'
 
 class RepoSelect extends React.Component {
   constructor (props) {
@@ -46,7 +47,7 @@ class RepoSelect extends React.Component {
               return 'Cloning new repo...'
             } else if (validRepo === false) {
               return 'Clone failed. Check your path and try again.'
-            } else if (repoUrl === 'default') {
+            } else if (repoUrl === repoDefault) {
               return 'No repo selected yet.'
             } else {
               return (`Active repo: ${repoUrl}`)

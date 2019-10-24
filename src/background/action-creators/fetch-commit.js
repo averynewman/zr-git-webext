@@ -1,5 +1,6 @@
 import * as git from 'isomorphic-git'
 import 'babel-polyfill'
+import { recursiveObjectPrinter } from '../index'
 import { START_FETCH, START_COMMIT, FETCH_FAILURE, FETCH_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
 
 function startFetch (payload) {
@@ -26,13 +27,19 @@ function fetchFailure (payload) {
   }
 }
 
-/* export function fetch () {
+export function fetchReplace () {
+  return async function (dispatch, getState) {
+    return dispatch(fetch())
+  }
+}
+
+function fetch () {
   console.log('fetching')
   return async function (dispatch, getState) {
     dispatch(startFetch())
     let state = getState()
-    git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
-      console.log('fetch succeeded')
+    return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
+      console.log(`fetch succeeded, returning ${recursiveObjectPrinter(success)}`)
       dispatch(fetchFailure())
       return success
     }, (error) => {
@@ -41,4 +48,4 @@ function fetchFailure (payload) {
       throw error
     })
   }
-} */
+}

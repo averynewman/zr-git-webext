@@ -3,6 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 import { changeBranch, reloadBranches } from '../action-creators/branches'
+import { repoDefault } from '../../constants'
 
 class BranchSelect extends React.Component {
   constructor (props) {
@@ -30,7 +31,7 @@ class BranchSelect extends React.Component {
     for (let i = 0; i < this.props.branchList.length; i++) {
       selectOptions.push({ value: this.props.branchList[i], label: this.props.branchList[i] })
     }
-    if (this.props.repoUrl === 'default') {
+    if (this.props.repoUrl === repoDefault) {
       return (
         null
       )
@@ -38,7 +39,7 @@ class BranchSelect extends React.Component {
     return (
       <div>
         <h3>{ this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`) }</h3>
-        <Select /* defaultValue={{ value: 'master', label: 'master' }} */ isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+        <Select defaultValue={{ value: this.props.currentBranch, label: this.props.currentBranch }} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
         <button className='change-repo' onClick={this.handleBranchReload}>
           Reload Branches
         </button>

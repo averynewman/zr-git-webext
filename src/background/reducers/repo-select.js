@@ -1,10 +1,10 @@
-import { START_CLONE, START_ERASE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE } from '../../constants'
+import { START_CLONE, START_ERASE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE, repoDefault } from '../../constants'
 
 var defaultSubstate = {
   erasing: false,
   cloning: false,
   validRepo: true,
-  repoUrl: 'default'
+  repoUrl: repoDefault
 }
 
 export default (state = defaultSubstate, action) => {

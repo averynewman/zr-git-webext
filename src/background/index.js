@@ -7,8 +7,9 @@ import 'babel-polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranchesThunk } from './action-creators/branches'
-import { fetch } from './action-creators/fetch-commit'
+import { fetchReplace } from './action-creators/fetch-commit'
 import rootReducer from './reducers'
+import { repoDefault } from '../constants'
 // import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
@@ -18,7 +19,7 @@ const initialState = {
     erasing: false,
     cloning: false,
     validRepo: true,
-    repoUrl: 'default'
+    repoUrl: repoDefault
   }
 }
 
@@ -32,7 +33,7 @@ const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
   POPUP_RELOAD_BRANCHES: updateBranchesThunk,
-  POPUP_FETCH: fetch
+  POPUP_FETCH_REPLACE: fetchReplace
 }
 
 /* const logStoreState = () => {

@@ -13,6 +13,7 @@ class Popup extends React.Component {
         <h1>zr-git-webext dev version</h1>
         <RepoSelect />
         <BranchSelect />
+        <FetchButton />
       </div>
     )
   }
