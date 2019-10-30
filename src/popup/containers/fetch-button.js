@@ -19,7 +19,6 @@ class RepoSelect extends React.Component {
         null
       )
     }
-
     return (
       <div>
         <button className='change-repo' onClick={this.handleFetch}>

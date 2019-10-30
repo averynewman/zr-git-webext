@@ -36,14 +36,6 @@ const actions = {
   POPUP_FETCH_REPLACE: fetchReplace
 }
 
-/* const logStoreState = () => {
-  let state = store.getState()
-  Object.keys(state).forEach((key) => {
-    let substate = state[key]
-    Object.keys(substate).forEach((key2) => console.log(`${key2} : ${substate[key2]}`))
-  }) // This is really messy but I don't trust Chrome console to show me objects correctly
-} */
-
 createBackgroundStore({ store, actions })
 
 const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes, but our store state should never contain a function, unless future me does something stupid
@@ -54,13 +46,14 @@ const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attr
       outputString = outputString + ', '
     }
     if (value === Object(value) && Object.prototype.toString.call(value) !== '[object Array]') { // if value is a non-array object
-      outputString = outputString + `${key} : { ${recursiveObjectPrinter(value)} }`
+      outputString = outputString + `${key} : ${recursiveObjectPrinter(value)}`
     } else { // if value is primitive, null, or array
       outputString = outputString + `${key} : ${value}`
     }
   })
-  return outputString
+  return `{ ${outputString} }`
 }
+
 const logStoreState = () => {
   let state = store.getState()
   console.log(recursiveObjectPrinter(state))

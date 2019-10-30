@@ -1,7 +1,9 @@
 import * as git from 'isomorphic-git'
 import 'babel-polyfill'
-import { recursiveObjectPrinter } from '../index'
-import { START_FETCH, START_COMMIT, FETCH_FAILURE, FETCH_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
+
+import { recursiveObjectPrinter, fs } from '../index'
+import { START_FETCH, START_COMMIT, FETCH_FAILURE, FETCH_SUCCESS, repoDirectory, proxyUrl, ZRCodePath } from '../../constants'
+import { setDoc } from '../../content-scripts/set-editor-text'
 
 function startFetch (payload) {
   // console.log('clone starting in background')
@@ -29,7 +31,8 @@ function fetchFailure (payload) {
 
 export function fetchReplace () {
   return async function (dispatch, getState) {
-    return dispatch(fetch())
+    await dispatch(fetch())
+    let editorContents = fs.readFile(repoDirectory + ZRCodePath, { encoding: 'utf8' })
   }
 }
 
