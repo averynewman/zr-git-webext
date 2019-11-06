@@ -33,7 +33,9 @@ function setDocInjected (doc) {
     // window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
     //   console.log(response)
     // })
-    browser.runtime.sendMessage({ doc: e.detail })
+    window.chrome.runtime.sendMessage({doc: e.detail}, function (response) {
+      console.log(response)
+    })
   });
 
   (document.head || document.documentElement).appendChild(s)
@@ -43,11 +45,11 @@ export function setDoc (doc) {
   return new Promise((resolve, reject) => {
     const scrubbedDoc = doc.replace(/`/g, '\\`')
     console.log(scrubbedDoc)
-    browser.tabs.executeScript({ code: setDocInjected + `setDoc(\`${scrubbedDoc}\`)` })
+    window.chrome.tabs.executeScript({code: setDocInjected + `setDoc(\`${scrubbedDoc}\`)`})
 
-    browser.runtime.connect()
+    window.chrome.runtime.connect()
 
-    browser.runtime.onMessage.addListener(
+    window.chrome.runtime.onMessage.addListener(
       function (request, sender, sendResponse) {
         resolve(request.doc)
         sendResponse({ ok: true })
