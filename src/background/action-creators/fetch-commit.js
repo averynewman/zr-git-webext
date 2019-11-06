@@ -43,11 +43,11 @@ function fetch () {
     let state = getState()
     return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
       console.log(`fetch succeeded, returning ${recursiveObjectPrinter(success)}`)
-      dispatch(fetchFailure())
+      dispatch(fetchSuccess())
       return success
     }, (error) => {
       console.log(`fetch failed with error ${error}`)
-      dispatch(fetchSuccess())
+      dispatch(fetchFailure())
       throw error
     })
   }

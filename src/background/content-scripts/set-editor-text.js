@@ -30,9 +30,10 @@ function setDocInjected (doc) {
   console.log('script tag', s)
 
   document.addEventListener('ZRGITHUB_extension_communication_set', function (e) {
-    window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
-      console.log(response)
-    })
+    // window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
+    //   console.log(response)
+    // })
+    browser.runtime.sendMessage({ doc: e.detail })
   });
 
   (document.head || document.documentElement).appendChild(s)
@@ -42,11 +43,11 @@ export function setDoc (doc) {
   return new Promise((resolve, reject) => {
     const scrubbedDoc = doc.replace(/`/g, '\\`')
     console.log(scrubbedDoc)
-    window.chrome.tabs.executeScript({ code: setDocInjected + `setDoc(\`${scrubbedDoc}\`)` })
+    browser.tabs.executeScript({ code: setDocInjected + `setDoc(\`${scrubbedDoc}\`)` })
 
-    window.chrome.runtime.connect()
+    browser.runtime.connect()
 
-    window.chrome.runtime.onMessage.addListener(
+    browser.runtime.onMessage.addListener(
       function (request, sender, sendResponse) {
         resolve(request.doc)
         sendResponse({ ok: true })
