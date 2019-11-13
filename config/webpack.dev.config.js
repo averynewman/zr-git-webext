@@ -10,6 +10,7 @@ const DEFAULT_PORT = 3004
 const devHotClient = require.resolve('./webpackHotDevClient')
 
 module.exports = {
+  mode: 'development',
   devtool: 'cheap-module-source-map',
   entry: {
     background: [
