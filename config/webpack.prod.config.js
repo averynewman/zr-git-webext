@@ -34,14 +34,11 @@ module.exports = {
       include: [paths.source]
     }, {
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({ //BROKEN RIGHT NOW due to change to mini-css-extract-plugin
-        fallback: 'style-loader',
-        use: ['css-loader', 'sass-loader']
-      })
+      use: ['style-loader', 'css-loader', 'sass-loader']
     }]
   },
   plugins: [
-    new ExtractTextPlugin('css/style.css'),
+    // new ExtractTextPlugin('css/style.css'),
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.popupHtml,
