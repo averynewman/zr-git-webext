@@ -16,6 +16,7 @@ export const POPUP_COMMIT = 'POPUP_COMMIT'
 export const FETCH_REPLACE_FAILURE = 'FETCH_REPLACE_FAILURE'
 export const START_REPLACE = 'START_REPLACE'
 export const START_CHECKOUT = 'START_CHECKOUT'
+export const REPLACE_SUCCESS = 'REPLACE_SUCCESS'
 
 export const repoDirectory = '/'
 export const branchDefault = '!default currentBranch value'

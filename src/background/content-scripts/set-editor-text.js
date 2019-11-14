@@ -6,7 +6,7 @@
  * ZR set Ace up, it will be automatically synced with Drive.
  */
 
-import { recursiveObjectPrinter } from '../index'
+// import { recursiveObjectPrinter } from '../index'
 
 function setDocInjected (doc) {
   console.log('setDoc content script is running')

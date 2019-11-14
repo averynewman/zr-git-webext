@@ -11,6 +11,7 @@ const devHotClient = require.resolve('./webpackHotDevClient')
 
 module.exports = {
   devtool: 'cheap-module-source-map',
+  mode: 'development',
   entry: {
     background: [
       devHotClient,

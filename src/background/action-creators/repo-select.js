@@ -1,11 +1,11 @@
 import * as git from 'isomorphic-git'
-import 'babel-polyfill'
+import '@babel/polyfill'
 
 // import { logStoreState } from '../index'
 import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
 import { clearFilesystem } from './clear-filesystem'
 import { updateBranches } from './branches'
-import { recursiveObjectPrinter } from '../index'
+// import { recursiveObjectPrinter } from '../index'
 
 function startClone (payload) {
   // console.log('clone starting in background')

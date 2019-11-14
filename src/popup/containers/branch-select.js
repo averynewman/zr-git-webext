@@ -14,9 +14,9 @@ class BranchSelect extends React.Component {
   }
 
   handleBranchChange (option) {
-    let branchName = option.value
+    const branchName = option.value
     this.setState({ selectedBranch: branchName })
-    let repoUrl = this.props.repoUrl
+    const repoUrl = this.props.repoUrl
     console.log(`dispatching branch change to branch ${branchName}`)
     this.props.changeBranch({ branchName: branchName, repoUrl: repoUrl })
   }
@@ -27,7 +27,7 @@ class BranchSelect extends React.Component {
   }
 
   render () {
-    let selectOptions = []
+    const selectOptions = []
     for (let i = 0; i < this.props.branchList.length; i++) {
       selectOptions.push({ value: this.props.branchList[i], label: this.props.branchList[i] })
     }
@@ -38,7 +38,7 @@ class BranchSelect extends React.Component {
     }
     return (
       <div>
-        <h3>{ this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`) }</h3>
+        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : `Current branch is ${this.props.currentBranch}`)}</h3>
         <Select defaultValue={{ value: this.props.currentBranch, label: this.props.currentBranch }} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
         <button className='change-repo' onClick={this.handleBranchReload}>
           Reload Branches

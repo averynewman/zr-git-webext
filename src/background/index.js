@@ -3,7 +3,7 @@ import { createBackgroundStore } from 'redux-webext'
 import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import thunkMiddleware from 'redux-thunk'
-import 'babel-polyfill'
+import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranchesThunk } from './action-creators/branches'
@@ -41,7 +41,7 @@ createBackgroundStore({ store, actions })
 const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes, but our store state should never contain a function, unless future me does something stupid
   let outputString = ''
   Object.keys(obj).forEach((key, index) => {
-    let value = obj[key]
+    const value = obj[key]
     if (index !== 0) {
       outputString = outputString + ', '
     }
@@ -55,7 +55,7 @@ const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attr
 }
 
 const logStoreState = () => {
-  let state = store.getState()
+  const state = store.getState()
   console.log(recursiveObjectPrinter(state))
 }
 

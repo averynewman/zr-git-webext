@@ -5,9 +5,9 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
   var contents = []
   contents = await fs.promises.readdir(path)
   console.log(`deleteFolderRecursive: contents of ${path} are ${contents}`)
-  let handleIndividual = async function (file) {
-    let curPath = path + '/' + file
-    let curPathStat = await fs.promises.lstat(curPath)
+  const handleIndividual = async function (file) {
+    const curPath = path + '/' + file
+    const curPathStat = await fs.promises.lstat(curPath)
     if (curPathStat.isDirectory()) { // recurse
       // console.log(`deleteFolderRecursive: ${curPath} is a directory, recursing`)
       await deleteFolderRecursive(curPath)
@@ -20,7 +20,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
       })
     }
   }
-  let contentPromises = []
+  const contentPromises = []
   for (let i = 0; i < contents.length; i++) {
     contentPromises.push(handleIndividual(contents[i]))
   }
@@ -29,7 +29,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
     console.log(`deleteFolderRecursive: rmdir on ${path} succeeded`)
   }, async function (err) {
     console.log(`deleteFolderRecursive: rmdir on ${path} failed with error ${err}`)
-    let contents = await fs.promises.readdir(path)
+    const contents = await fs.promises.readdir(path)
     console.log(`current contents of of ${path} are ${contents}`)
     throw err
   })
@@ -37,7 +37,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
 }
 
 export async function clearFilesystem () {
-  let path = '/'
+  const path = '/'
   var contents = []
   contents = await fs.promises.readdir(path).catch((err) => {
     console.log(`clearFilesystem: readdir of ${path} failed with error ${err}`)
@@ -45,8 +45,8 @@ export async function clearFilesystem () {
   })
   console.log(`clearFilesystem: contents of ${path} are ${contents}`)
   contents.forEach(async function (file, index) {
-    let curPath = path + file
-    let curPathStat = await fs.promises.lstat(curPath)
+    const curPath = path + file
+    const curPathStat = await fs.promises.lstat(curPath)
     if (curPathStat.isDirectory()) { // call delFoldRec
       console.log(`clearFilesystem: ${curPath} is a directory, calling deleteFolderRecursive`)
       await deleteFolderRecursive(curPath)

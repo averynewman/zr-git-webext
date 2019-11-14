@@ -1,11 +1,12 @@
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import ExtractTextPlugin from 'mini-css-extract-plugin'
 
 import paths from './paths'
 
 module.exports = {
+  mode: 'production',
   entry: {
     // In this boilerplate, we only enable the popup script for demo
     // You can still create your own background or content scripts under src folder
@@ -33,7 +34,7 @@ module.exports = {
       include: [paths.source]
     }, {
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
+      use: ExtractTextPlugin.extract({ //BROKEN RIGHT NOW due to change to mini-css-extract-plugin
         fallback: 'style-loader',
         use: ['css-loader', 'sass-loader']
       })

@@ -8,7 +8,7 @@ var defaultSubstate = {
 }
 
 export default (state = defaultSubstate, action) => {
-  let output = state
+  const output = state
   switch (action.type) {
     case START_ERASE:
       output.cloning = false
