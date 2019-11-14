@@ -5,6 +5,9 @@
  * `Editor` class to set the document contents. Because of how
  * ZR set Ace up, it will be automatically synced with Drive.
  */
+
+import { recursiveObjectPrinter } from '../index'
+
 function setDocInjected (doc) {
   console.log('setDoc content script is running')
   var scrubbedDoc = doc.replace(/`/g, '\\`')
@@ -33,7 +36,7 @@ function setDocInjected (doc) {
     // window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
     //   console.log(response)
     // })
-    window.chrome.runtime.sendMessage({doc: e.detail}, function (response) {
+    window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
       console.log(response)
     })
   });
@@ -45,12 +48,18 @@ export function setDoc (doc) {
   return new Promise((resolve, reject) => {
     const scrubbedDoc = doc.replace(/`/g, '\\`')
     console.log(scrubbedDoc)
-    window.chrome.tabs.executeScript({code: setDocInjected + `setDoc(\`${scrubbedDoc}\`)`})
+    window.chrome.tabs.executeScript({ code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
 
-    window.chrome.runtime.connect()
+    /* window.chrome.runtime.onConnect.addListener(p => {
+      console.log('received connection from background script')
+      p.onMessage.addListener(m => {
+        console.log(`received message ${recursiveObjectPrinter(m)} from background script`)
+      })
+    }) */
 
     window.chrome.runtime.onMessage.addListener(
       function (request, sender, sendResponse) {
+        console.log('resolving setDoc promise')
         resolve(request.doc)
         sendResponse({ ok: true })
       })

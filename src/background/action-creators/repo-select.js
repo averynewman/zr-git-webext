@@ -41,8 +41,8 @@ function startErase (payload) {
 
 export function changeRepo (payload) {
   const repoUrl = payload.payload.repoUrl // why on earth is this payload.payload instead of just payload? because redux-webext gives as the argument of background changeRepo
-  // the ENTIRE object returned by popup changeRepo, whose two attributes are type and payload.
-  console.log(recursiveObjectPrinter(payload)) // tests the above assertion
+  // the ENTIRE object returned by popup changeRepo, minus type. I think. who the hell knows.
+  // console.log(recursiveObjectPrinter(payload)) // tests the above assertion
   console.log(`changeRepo request received with url https://github.com/${repoUrl}.git`)
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
