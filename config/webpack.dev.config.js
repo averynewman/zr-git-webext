@@ -41,8 +41,8 @@ module.exports = {
       include: [paths.source]
     }, {
       test: /\.scss$/,
-      use: ['style-loader', 'css-loader', 'sass-loader'] /*,
-      include: [paths.source] */
+      use: ['style-loader', 'css-loader', 'sass-loader'],
+      include: [paths.source]
     }]
   },
   plugins: [
@@ -59,10 +59,14 @@ module.exports = {
       'process.env.PORT': process.env.PORT || DEFAULT_PORT
     }),
     new WriteFilePlugin({
-      test: /\.bundle(\.js|\.js\.map)$|\.html$/
+      test: /\.bundle(\.js|\.js\.map)$|\.html$|\.json|\.png/
     }),
     new CopyWebpackPlugin([
-      { from: paths.extension }
+      {
+        from: paths.extension,
+        to: paths.devBuild,
+        writeToDisk: true
+      }
     ])
   ]
 }
