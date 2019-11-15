@@ -1,11 +1,15 @@
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import ExtractTextPlugin from 'extract-text-webpack-plugin'
+// import ExtractTextPlugin from 'mini-css-extract-plugin'
 
 import paths from './paths'
 
 module.exports = {
+  optimization: {
+    minimize: true
+  },
+  mode: 'production',
   entry: {
     // In this boilerplate, we only enable the popup script for demo
     // You can still create your own background or content scripts under src folder
@@ -33,14 +37,11 @@ module.exports = {
       include: [paths.source]
     }, {
       test: /\.scss$/,
-      use: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader', 'sass-loader']
-      })
+      use: ['style-loader', 'css-loader', 'sass-loader']
     }]
   },
   plugins: [
-    new ExtractTextPlugin('css/style.css'),
+    // new ExtractTextPlugin('css/style.css'),
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.popupHtml,
@@ -63,20 +64,6 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true, // React doesn't support IE8
-        warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
-    }),
     new CopyWebpackPlugin([
       { from: paths.extension }
     ])

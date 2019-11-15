@@ -2,7 +2,7 @@ import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHAN
 import * as git from 'isomorphic-git'
 
 function startBranchListUpdate (payload) {
-  console.log(`starting branch list update`)
+  console.log('starting branch list update')
   return {
     type: START_BRANCH_LIST_UPDATE,
     payload
@@ -55,7 +55,7 @@ export async function updateBranches (dispatch) {
   dispatch(startBranchListUpdate())
   return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
     async branches => {
-      let branchesUpdated = branches.filter(word => word !== 'HEAD')
+      const branchesUpdated = branches.filter(word => word !== 'HEAD')
       dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
       console.log(`branchList updated to ${branchesUpdated}`)
       return branches

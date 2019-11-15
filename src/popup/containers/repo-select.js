@@ -26,7 +26,7 @@ class RepoSelect extends React.Component {
   } */
 
   handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
-    let repoUrl = this.state.input
+    const repoUrl = this.state.input
     this.setState({ input: '' })
     // console.log(`dispatching repo change request in popup with path ${repoPath}`)
     this.props.changeRepo({ repoUrl: `https://github.com/${repoUrl}.git` }) // change this when switching to non-github repositories
@@ -53,7 +53,8 @@ class RepoSelect extends React.Component {
               return (`Active repo: ${repoUrl}`)
             }
           })(this.props.cloning, this.props.repoUrl, this.props.validRepo, this.props.erasing)
-        }</p>
+        }
+        </p>
         <input
           onChange={e => this.updateInput(e.target.value)}
           value={this.state.input}

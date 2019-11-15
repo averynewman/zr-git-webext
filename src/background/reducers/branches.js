@@ -1,4 +1,4 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_FETCH, FETCH_FAILURE, FETCH_SUCCESS, branchDefault } from '../../constants'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_ERASE, START_FETCH, FETCH_REPLACE_FAILURE, REPLACE_SUCCESS, branchDefault } from '../../constants'
 
 var defaultSubstate = {
   currentBranch: branchDefault,
@@ -9,8 +9,12 @@ var defaultSubstate = {
 }
 
 export default (state = defaultSubstate, action) => {
-  let output = state
+  const output = state
   switch (action.type) {
+    case START_ERASE:
+      output.banchList = []
+      output.currentBranch = branchDefault
+      break
     case START_BRANCH_LIST_UPDATE:
       output.updating = true
       break
@@ -28,10 +32,10 @@ export default (state = defaultSubstate, action) => {
     case START_FETCH:
       output.fetching = true
       break
-    case FETCH_SUCCESS:
+    case REPLACE_SUCCESS:
       output.fetching = false
       break
-    case FETCH_FAILURE:
+    case FETCH_REPLACE_FAILURE:
       output.fetching = false
       break
   }

@@ -32,7 +32,7 @@ function getDocInjected (cb) {
   (document.head || document.documentElement).appendChild(s)
 }
 
-function getDoc () {
+export function getDoc () {
   return new Promise((resolve, reject) => {
     window.chrome.tabs.executeScript({code: getDocInjected + 'getDoc();'})
     console.log('waiting on injected script')

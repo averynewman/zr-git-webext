@@ -12,6 +12,7 @@ const devHotClient = require.resolve('./webpackHotDevClient')
 module.exports = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
+  mode: 'development',
   entry: {
     background: [
       devHotClient,
@@ -59,10 +60,14 @@ module.exports = {
       'process.env.PORT': process.env.PORT || DEFAULT_PORT
     }),
     new WriteFilePlugin({
-      test: /\.bundle(\.js|\.js\.map)$|\.html$/
+      test: /\.bundle(\.js|\.js\.map)$|\.html$|\.json|\.png/
     }),
     new CopyWebpackPlugin([
-      { from: paths.extension }
+      {
+        from: paths.extension,
+        to: paths.devBuild,
+        writeToDisk: true
+      }
     ])
   ]
 }
