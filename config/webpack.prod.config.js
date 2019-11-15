@@ -1,11 +1,14 @@
 import webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import ExtractTextPlugin from 'mini-css-extract-plugin'
+// import ExtractTextPlugin from 'mini-css-extract-plugin'
 
 import paths from './paths'
 
 module.exports = {
+  optimization: {
+    minimize: true
+  },
   mode: 'production',
   entry: {
     // In this boilerplate, we only enable the popup script for demo
@@ -61,20 +64,6 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true, // React doesn't support IE8
-        warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
-    }),
     new CopyWebpackPlugin([
       { from: paths.extension }
     ])

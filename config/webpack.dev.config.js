@@ -41,8 +41,8 @@ module.exports = {
       include: [paths.source]
     }, {
       test: /\.scss$/,
-      use: ['style-loader', 'css-loader', 'sass-loader'],
-      include: [paths.source]
+      use: ['style-loader', 'css-loader', 'sass-loader'] /*,
+      include: [paths.source] */
     }]
   },
   plugins: [
