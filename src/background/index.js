@@ -67,6 +67,7 @@ logStoreState()
 store.subscribe(() => logStoreState())
 
 const fs = new LightningFS('fs', { wipe: true })
+// console.log(recursiveObjectPrinter(fs))
 git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */

@@ -51,19 +51,21 @@ export function changeBranch (payload) {
   }
 }
 
-export async function updateBranches (dispatch) {
-  dispatch(startBranchListUpdate())
-  return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
-    async branches => {
-      const branchesUpdated = branches.filter(word => word !== 'HEAD')
-      dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
-      console.log(`branchList updated to ${branchesUpdated}`)
-      return branches
-    }, error => {
-      console.log(`updateBranches failed with error ${error}`)
-      throw error
-    }
-  )
+export function updateBranches () {
+  return async function (dispatch, getState) {
+    dispatch(startBranchListUpdate())
+    return await git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
+      async branches => {
+        const branchesUpdated = branches.filter(word => word !== 'HEAD')
+        dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
+        console.log(`branchList updated to ${branchesUpdated}`)
+        return branches
+      }, error => {
+        console.log(`updateBranches failed with error ${error}`)
+        throw error
+      }
+    )
+  }
 }
 
 export function updateBranchesThunk (payload) {
