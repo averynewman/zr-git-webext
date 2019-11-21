@@ -7,9 +7,10 @@ import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranchesThunk } from './action-creators/branches'
-import { fetchReplace } from './action-creators/fetch-commit'
+import { fetchReplace } from './action-creators/fetch-replace'
 import rootReducer from './reducers'
 import { repoDefault } from '../constants'
+import { setUserInfo, deleteUserInfo } from '../background/action-creators/authentication'
 // import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
@@ -33,7 +34,9 @@ const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
   POPUP_RELOAD_BRANCHES: updateBranchesThunk,
-  POPUP_FETCH_REPLACE: fetchReplace
+  POPUP_FETCH_REPLACE: fetchReplace,
+  POPUP_SET_USER_INFO: setUserInfo,
+  POPUP_DELETE_USER_INFO: deleteUserInfo
 }
 
 createBackgroundStore({ store, actions })

@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { changeRepo } from '../action-creators/repo-select'
-import { repoDefault } from '../../constants'
+import { setUserInfo, deleteUserInfo } from '../action-creators/authentication'
 
-class RepoSelect extends React.Component {
+class Authentication extends React.Component {
   constructor (props) {
     super(props)
     this.state = { input: '' }
@@ -62,11 +61,6 @@ class RepoSelect extends React.Component {
 }
 
 export default connect(
-  state => ({
-    repoUrl: state.repoSelect.repoUrl,
-    validRepo: state.repoSelect.validRepo,
-    cloning: state.repoSelect.cloning,
-    erasing: state.repoSelect.erasing
-  }),
+  null,
   { changeRepo }
 )(RepoSelect)
