@@ -3,8 +3,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 import { changeBranch, reloadBranches } from '../action-creators/branches'
-import { repoDefault } from '../../constants'
-import { branchDefault } from '../../constants'
+import { repoDefault, branchDefault } from '../../constants'
 
 class BranchSelect extends React.Component {
   constructor (props) {
@@ -37,10 +36,21 @@ class BranchSelect extends React.Component {
         null
       )
     }
+    if (this.props.currentBranch === branchDefault) {
+      return (
+        <div>
+        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch == branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
+        <Select isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+        <button className='change-repo' onClick={this.handleBranchReload}>
+          Reload Branches
+        </button>
+      </div>
+      )
+    }
     return (
       <div>
         <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch == branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
-        <Select defaultValue={(this.props.currentBranch == branchDefault ? null : { value: this.props.currentBranch, label: this.props.currentBranch})} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+        <Select defaultValue={(this.props.currentBranch == branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch})} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
         <button className='change-repo' onClick={this.handleBranchReload}>
           Reload Branches
         </button>

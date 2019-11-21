@@ -48,29 +48,25 @@ export function changeRepo (payload) {
     // console.log('changeRepo thunk started')
     dispatch(startErase())
     // console.log('startErase dispatched')
-    return clearFilesystem().then(
-      success => {
-        dispatch(startClone())
-        return git.clone({
-          dir: repoDirectory,
-          corsProxy: proxyUrl,
-          url: repoUrl,
-          depth: 2,
-          singleBranch: false,
-          noCheckout: true
-        })
-      },
-      error => {
-        console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
-        dispatch(repoChangeFailure())
-        throw error
-      }
-    ).then(
+    await clearFilesystem().catch(error => {
+      console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
+      dispatch(repoChangeFailure())
+      throw error
+    })
+    dispatch(startClone())
+    await git.clone({
+      dir: repoDirectory,
+      corsProxy: proxyUrl,
+      url: repoUrl,
+      depth: 2,
+      singleBranch: false,
+      noCheckout: true
+    }).then(
       success => {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
         console.log('successful git clone, updating branches')
-        dispatch(updateBranches())
+        return dispatch(updateBranches())
       },
       error => {
         console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)

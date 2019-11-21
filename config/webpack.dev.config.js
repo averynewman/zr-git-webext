@@ -60,7 +60,7 @@ module.exports = {
       'process.env.PORT': process.env.PORT || DEFAULT_PORT
     }),
     new WriteFilePlugin({
-      test: /\.bundle(\.js|\.js\.map)$|\.html$|manifest\.json|\.png/
+      test: /\.bundle(\.js|\.js\.map)$|\.html$|manifest\.json|messages\.json|\.png/
     }),
     new CopyWebpackPlugin([
       {

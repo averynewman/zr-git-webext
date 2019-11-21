@@ -18,7 +18,7 @@ export const START_REPLACE = 'START_REPLACE'
 export const START_CHECKOUT = 'START_CHECKOUT'
 export const REPLACE_SUCCESS = 'REPLACE_SUCCESS'
 
-export const repoDirectory = '/'
+export const repoDirectory = '/repoDirectory'
 export const branchDefault = '!default currentBranch value'
 export const repoDefault = '!default repoUrl value'
 export const proxyUrl = 'https://cors.isomorphic-git.org'
