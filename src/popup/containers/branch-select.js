@@ -39,18 +39,18 @@ class BranchSelect extends React.Component {
     if (this.props.currentBranch === branchDefault) {
       return (
         <div>
-        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch == branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
-        <Select isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
-        <button className='change-repo' onClick={this.handleBranchReload}>
-          Reload Branches
-        </button>
-      </div>
+          <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
+          <Select isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+          <button className='change-repo' onClick={this.handleBranchReload}>
+            Reload Branches
+          </button>
+        </div>
       )
     }
     return (
       <div>
-        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch == branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
-        <Select defaultValue={(this.props.currentBranch == branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch})} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
+        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
+        <Select defaultValue={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
         <button className='change-repo' onClick={this.handleBranchReload}>
           Reload Branches
         </button>

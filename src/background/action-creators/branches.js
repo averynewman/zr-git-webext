@@ -54,7 +54,7 @@ export function changeBranch (payload) {
 export function updateBranches () {
   return async function (dispatch, getState) {
     dispatch(startBranchListUpdate())
-    return await git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
+    return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
       async branches => {
         const branchesUpdated = branches.filter(word => word !== 'HEAD')
         dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
