@@ -3,7 +3,7 @@ import '@babel/polyfill'
 
 // import { logStoreState } from '../index'
 import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
-import { clearFilesystem } from './clear-filesystem'
+import { deleteFolderRecursive } from './clear-filesystem'
 import { updateBranches } from './branches'
 // import { recursiveObjectPrinter } from '../index'
 
@@ -48,7 +48,7 @@ export function changeRepo (payload) {
     // console.log('changeRepo thunk started')
     dispatch(startErase())
     // console.log('startErase dispatched')
-    await clearFilesystem().catch(error => {
+    await deleteFolderRecursive('/').catch(error => {
       console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
       dispatch(repoChangeFailure())
       throw error
