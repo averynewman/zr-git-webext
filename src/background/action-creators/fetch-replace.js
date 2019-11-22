@@ -35,7 +35,7 @@ export function fetchReplace () {
     await dispatch(checkout())
     const dirContents = await fs.promises.readdir(repoDirectory)
     console.log(`dirContents: ${dirContents}`)
-    const editorContents = await fs.promises.readFile(repoDirectory + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
+    const editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
       console.log('file read succeeded')
       return success
     }, (error) => {

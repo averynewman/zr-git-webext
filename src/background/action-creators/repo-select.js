@@ -3,8 +3,8 @@ import '@babel/polyfill'
 
 // import { logStoreState } from '../index'
 import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
-import { deleteFolderRecursive } from './clear-filesystem'
 import { updateBranches } from './branches'
+import { fs } from '../index'
 // import { recursiveObjectPrinter } from '../index'
 
 function startClone (payload) {
@@ -39,6 +39,46 @@ function startErase (payload) {
   }
 }
 
+async function deleteFolderRecursive (path) { // clears nonempty folders by recursion
+  // console.log(`deleteFolderRecursive called on ${path}`)
+  let contents = await fs.promises.readdir(path)
+  // console.log(`contents of ${path} are ${contents}`)
+  const handleIndividual = async function (item) {
+    const curPath = path + item
+    const curPathStat = await fs.promises.lstat(curPath)
+    if (curPathStat.isDirectory()) { // recurse
+      // console.log(`${curPath} is a directory, recursing`)
+      await deleteFolderRecursive(curPath + '/')
+    } else { // delete file
+      return fs.promises.unlink(curPath).then(async function () {
+        // console.log(`unlink on ${curPath} succeeded `)
+        const contentsTesting = await fs.promises.readdir(path)
+        // console.log(`after unlinking: contents of ${path} are ${contentsTesting}`)
+        return true
+      }, (err) => {
+        // console.log(`unlink on ${curPath} failed with error ${err}`)
+        throw err
+      })
+    }
+  }
+  const contentLength = contents.length
+  for (let i = 0; i < contentLength; i++) {
+    await handleIndividual(contents[i])
+  }
+  if (path === '/') {
+    return true
+  }
+  return fs.promises.rmdir(path).then(() => {
+    // console.log(`rmdir on ${path} succeeded`)
+    return true
+  }, async function (err) {
+    // console.log(`rmdir on ${path} failed with error ${err}`)
+    const contents = await fs.promises.readdir(path)
+    // console.log(`current contents of of ${path} are ${contents}`)
+    throw err
+  })
+}
+
 export function changeRepo (payload) {
   const repoUrl = payload.payload.repoUrl // why on earth is this payload.payload instead of just payload? because redux-webext gives as the argument of background changeRepo
   // the ENTIRE object returned by popup changeRepo, minus type. I think. who the hell knows.
@@ -54,7 +94,7 @@ export function changeRepo (payload) {
       throw error
     })
     dispatch(startClone())
-    await git.clone({
+    return git.clone({
       dir: repoDirectory,
       corsProxy: proxyUrl,
       url: repoUrl,
@@ -65,7 +105,7 @@ export function changeRepo (payload) {
       success => {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
-        console.log('successful git clone, updating branches')
+        // console.log('successful git clone, updating branches')
         return dispatch(updateBranches())
       },
       error => {
@@ -73,7 +113,10 @@ export function changeRepo (payload) {
         dispatch(repoChangeFailure())
         throw error
       }
-    ).catch((error) => {
+    ).then(success => {
+      console.log('updateBranches successful')
+      return success
+    }, error => {
       console.log(`changeRepo: error ${error} in updateBranches`)
       throw error
     })
