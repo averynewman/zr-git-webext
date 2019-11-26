@@ -5,7 +5,7 @@ function startBranchListUpdate (payload) {
   console.log('starting branch list update')
   return {
     type: START_BRANCH_LIST_UPDATE,
-    payload
+    ...payload
   }
 }
 
@@ -13,7 +13,7 @@ function branchListUpdateSuccess (payload) {
   console.log(`successfully updated branch list to ${payload.branchList}`)
   return {
     type: BRANCH_LIST_UPDATE_SUCCESS,
-    payload
+    ...payload
   }
 }
 
@@ -21,7 +21,7 @@ function startBranchChange (payload) {
   console.log(`starting change to branch ${payload.branchName}`)
   return {
     type: START_BRANCH_CHANGE,
-    payload
+    ...payload
   }
 }
 
@@ -29,18 +29,18 @@ function branchChangeSuccess (payload) {
   console.log(`successfully changed to branch ${payload.branchName}`)
   return {
     type: BRANCH_CHANGE_SUCCESS,
-    payload
+    ...payload
   }
 }
 
 export function changeBranch (payload) {
-  const branchName = payload.payload.branchName
+  const branchName = payload.branchName
   console.log(`changeBranch request received to branch ${branchName}`)
   return async function (dispatch) {
     console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
     console.log('startBranchChange dispatched')
-    return git.fetch({ dir: repoDirectory, ref: branchName, depth: 2, corsProxy: 'https://cors.isomorphic-git.org', url: payload.payload.repoUrl }).then(
+    return git.fetch({ dir: repoDirectory, ref: branchName, depth: 2, corsProxy: 'https://cors.isomorphic-git.org', url: payload.repoUrl }).then(
       () => {
         dispatch(branchChangeSuccess({ branchName: branchName }))
       }, error => {

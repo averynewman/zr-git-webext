@@ -11,10 +11,9 @@ export default (state = defaultSubstate, action) => {
   const output = state
   switch (action.type) {
     case SET_USER_INFO:
-      console.log(recursiveObjectPrinter(action))
-      output.token = action.payload.payload.token
-      output.name = action.payload.payload.name
-      output.email = action.payload.payload.email
+      output.token = action.token
+      output.name = action.name
+      output.email = action.email
       break
     case DELETE_USER_INFO:
       output.token = tokenDefault

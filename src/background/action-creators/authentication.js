@@ -3,16 +3,15 @@ import { recursiveObjectPrinter } from '..'
 
 
 export function setUserInfo (payload) {
-  console.log(`setting user info to ${recursiveObjectPrinter(payload)}`)
   return {
     type: SET_USER_INFO,
-    payload
+    ...payload
   }
 }
 
 export function deleteUserInfo (payload) {
   return {
     type: DELETE_USER_INFO,
-    payload
+    ...payload
   }
 }

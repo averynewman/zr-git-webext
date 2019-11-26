@@ -11,7 +11,7 @@ function startClone (payload) {
   // console.log('clone starting in background')
   return {
     type: START_CLONE,
-    payload
+    ...payload
   }
 }
 
@@ -19,7 +19,7 @@ function repoChangeFailure (payload) {
   // console.log('clone failed in background')
   return {
     type: REPO_CHANGE_FAILURE,
-    payload
+    ...payload
   }
 }
 
@@ -27,7 +27,7 @@ function repoChangeSuccess (payload) {
   // console.log(`clone succeeded with path ${payload.repoPath}`)
   return {
     type: REPO_CHANGE_SUCCESS,
-    payload
+    ...payload
   }
 }
 
@@ -35,7 +35,7 @@ function startErase (payload) {
   // console.log('erase starting in background')
   return {
     type: START_ERASE,
-    payload
+    ...payload
   }
 }
 
@@ -80,8 +80,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
 }
 
 export function changeRepo (payload) {
-  const repoUrl = payload.payload.repoUrl // why on earth is this payload.payload instead of just payload? because redux-webext gives as the argument of background changeRepo
-  // the ENTIRE object returned by popup changeRepo, minus type. I think. who the hell knows.
+  const repoUrl = payload.repoUrl
   // console.log(recursiveObjectPrinter(payload)) // tests the above assertion
   console.log(`changeRepo request received with url https://github.com/${repoUrl}.git`)
   return async function (dispatch) {

@@ -25,9 +25,7 @@ class Authentication extends React.Component {
   }
 
   handleSubmit () {
-    console.log('???')
     this.props.setUserInfo({ name: this.state.input.name, email: this.state.input.email, token: this.state.input.token })
-    console.log(`setting user info to ${recursiveObjectPrinter({ name: this.state.input.name, email: this.state.input.email, token: this.state.input.token })}`)
     this.setState({ inputActive: false, input: { name: '', email: '', token: '' } })
   }
 
@@ -60,16 +58,16 @@ class Authentication extends React.Component {
         <div>
           <form onSubmit={this.handleSubmit}>
             <label>
-              Name:
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'name')} value={this.state.input.name} />
+              Name:<br />
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'name')} value={this.state.input.name} /><br />
             </label>
             <label>
-              Email:
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'email')} value={this.state.input.email} />
+              Email:<br />
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'email')} value={this.state.input.email} /><br />
             </label>
             <label>
-              Token:
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'token')} value={this.state.input.token} />
+              Token:<br />
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'token')} value={this.state.input.token} /><br />
             </label>
             <input type='submit' value='Submit User Info' />
           </form>

@@ -18,14 +18,14 @@ export default (state = defaultSubstate, action) => {
       output.updating = true
       break
     case BRANCH_LIST_UPDATE_SUCCESS:
-      output.branchList = action.payload.branchList
+      output.branchList = action.branchList
       output.updating = false
       break
     case START_BRANCH_CHANGE:
       output.switching = true
       break
     case BRANCH_CHANGE_SUCCESS:
-      output.currentBranch = action.payload.branchName
+      output.currentBranch = action.branchName
       output.switching = false
       break
   }

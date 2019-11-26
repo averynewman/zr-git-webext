@@ -9,7 +9,7 @@ function startCommitPush (payload) {
   // console.log('clone starting in background')
   return {
     type: START_COMMIT_PUSH,
-    payload
+    ...payload
   }
 }
 
@@ -17,7 +17,7 @@ function commitPushFailure (payload) {
   // console.log('clone starting in background')
   return {
     type: COMMIT_PUSH_FAILURE,
-    payload
+    ...payload
   }
 }
 
@@ -25,7 +25,7 @@ function commitPushSuccess (payload) {
   // console.log('clone starting in background')
   return {
     type: COMMIT_PUSH_SUCCESS,
-    payload
+    ...payload
   }
 }
 

@@ -9,7 +9,7 @@ function startFetchReplace (payload) {
   // console.log('clone starting in background')
   return {
     type: START_FETCH_REPLACE,
-    payload
+    ...payload
   }
 }
 
@@ -17,7 +17,7 @@ function fetchReplaceFailure (payload) {
   // console.log('clone starting in background')
   return {
     type: FETCH_REPLACE_FAILURE,
-    payload
+    ...payload
   }
 }
 
@@ -25,7 +25,7 @@ function fetchReplaceSuccess (payload) {
   // console.log('clone starting in background')
   return {
     type: FETCH_REPLACE_SUCCESS,
-    payload
+    ...payload
   }
 }
 
