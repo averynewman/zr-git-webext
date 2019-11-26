@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
+import Authentication from './authentication'
 
 class Popup extends React.Component {
   render () {
@@ -14,6 +15,7 @@ class Popup extends React.Component {
         <RepoSelect />
         <BranchSelect />
         <FetchButton />
+        <Authentication />
       </div>
     )
   }

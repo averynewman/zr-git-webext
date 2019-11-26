@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { startFetch } from '../action-creators/fetch-commit'
 import { branchDefault } from '../../constants'
 
-class RepoSelect extends React.Component {
+class FetchButton extends React.Component {
   constructor (props) {
     super(props)
     this.handleFetch = this.handleFetch.bind(this)
@@ -32,4 +32,4 @@ class RepoSelect extends React.Component {
 export default connect(
   state => ({ currentBranch: state.branches.currentBranch }),
   { startFetch }
-)(RepoSelect)
+)(FetchButton)

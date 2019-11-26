@@ -41,7 +41,7 @@ function startErase (payload) {
 
 async function deleteFolderRecursive (path) { // clears nonempty folders by recursion
   // console.log(`deleteFolderRecursive called on ${path}`)
-  let contents = await fs.promises.readdir(path)
+  const contents = await fs.promises.readdir(path)
   // console.log(`contents of ${path} are ${contents}`)
   const handleIndividual = async function (item) {
     const curPath = path + item
@@ -52,7 +52,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
     } else { // delete file
       return fs.promises.unlink(curPath).then(async function () {
         // console.log(`unlink on ${curPath} succeeded `)
-        const contentsTesting = await fs.promises.readdir(path)
+        // const contentsTesting = await fs.promises.readdir(path)
         // console.log(`after unlinking: contents of ${path} are ${contentsTesting}`)
         return true
       }, (err) => {
@@ -73,8 +73,8 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
     return true
   }, async function (err) {
     // console.log(`rmdir on ${path} failed with error ${err}`)
-    const contents = await fs.promises.readdir(path)
-    // console.log(`current contents of of ${path} are ${contents}`)
+    // const contentsError = await fs.promises.readdir(path)
+    // console.log(`current contents of of ${path} are ${contentsError}`)
     throw err
   })
 }

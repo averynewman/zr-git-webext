@@ -2,65 +2,88 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { setUserInfo, deleteUserInfo } from '../action-creators/authentication'
+import { recursiveObjectPrinter } from '../../background/index'
 
 class Authentication extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { input: '' }
+    this.state = { input: { username: '', email: '', token: '' }, inputActive: false }
     this.handleKeyPress = this.handleKeyPress.bind(this)
-    this.handleRepoChange = this.handleRepoChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.startInput = this.startInput.bind(this)
   }
 
   handleKeyPress (event) {
     if (event.keyCode === 13) {
-      this.handleRepoChange()
+      this.submitUserInfo()
     }
   }
 
-  handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
-    const repoUrl = this.state.input
-    this.setState({ input: '' })
-    // console.log(`dispatching repo change request in popup with path ${repoPath}`)
-    this.props.changeRepo({ repoUrl: `https://github.com/${repoUrl}.git` }) // change this when switching to non-github repositories
+  startInput () {
+    this.setState({ inputActive: true })
   }
 
-  updateInput (input) {
-    this.setState({ input })
+  handleSubmit () {
+    console.log('???')
+    this.props.setUserInfo({ name: this.state.input.name, email: this.state.input.email, token: this.state.input.token })
+    console.log(`setting user info to ${recursiveObjectPrinter({ name: this.state.input.name, email: this.state.input.email, token: this.state.input.token })}`)
+    this.setState({ inputActive: false, input: { name: '', email: '', token: '' } })
+  }
+
+  handleDelete () {
+    this.props.deleteUserInfo()
+  }
+
+  updateInput (input, key) {
+    this.setState((state, props) => {
+      const output = state
+      output.input[key] = input
+      return output
+    })
   }
 
   render () {
-    return (
-      <div>
-        <p>{
-          ((cloning, repoUrl, validRepo, erasing) => {
-            if (erasing === true) {
-              return 'Clearing filesystem...'
-            } else if (cloning === true) {
-              return 'Cloning new repo...'
-            } else if (validRepo === false) {
-              return 'Clone failed. Check your path and try again.'
-            } else if (repoUrl === repoDefault) {
-              return 'No repo selected yet.'
-            } else {
-              return (`Active repo: ${repoUrl}`)
-            }
-          })(this.props.cloning, this.props.repoUrl, this.props.validRepo, this.props.erasing)
-        }
-        </p>
-        <input
-          onChange={e => this.updateInput(e.target.value)}
-          value={this.state.input}
-          onKeyDown={e => this.handleKeyPress(e)}
-        />
-        <button className='change-repo' onClick={this.handleRepoChange}>
-          Change Repo
-        </button>
-      </div>
-    )
+    if (this.state.inputActive === false) {
+      return (
+        <div>
+          <button className='set-user-info' onClick={this.startInput}>
+            Set User Info
+          </button>
+          <button className='delete-user-info' onClick={this.handleDelete}>
+            Delete User Info
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <form onSubmit={this.handleSubmit}>
+            <label>
+              Name:
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'name')} value={this.state.input.name} />
+            </label>
+            <label>
+              Email:
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'email')} value={this.state.input.email} />
+            </label>
+            <label>
+              Token:
+              <input type='text' onChange={e => this.updateInput(e.target.value, 'token')} value={this.state.input.token} />
+            </label>
+            <input type='submit' value='Submit User Info' />
+          </form>
+          <button className='delete-user-info' onClick={this.handleDelete}>
+            Delete User Info
+          </button>
+          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
+        </div>
+      )
+    }
   }
 }
 
 export default connect(
-  null,
-  { changeRepo }
-)(RepoSelect)
+  state => ({ userInfo: state.authentication }),
+  { setUserInfo, deleteUserInfo }
+)(Authentication)
