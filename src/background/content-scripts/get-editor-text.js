@@ -34,7 +34,7 @@ function getDocInjected (cb) {
 
 export function getDoc () {
   return new Promise((resolve, reject) => {
-    window.chrome.tabs.executeScript({code: getDocInjected + 'getDoc();'})
+    window.chrome.tabs.executeScript({code: getDocInjected + 'getDocInjected();'})
     console.log('waiting on injected script')
     window.chrome.runtime.connect()
 

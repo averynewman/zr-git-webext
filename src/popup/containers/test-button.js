@@ -6,7 +6,7 @@ import { branchDefault } from '../../constants'
 class TestButton extends React.Component {
   constructor (props) {
     super(props)
-    this.handleFetch = this.handleFetch.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   handleClick () {
