@@ -1,6 +1,4 @@
 import { DELETE_USER_INFO, SET_USER_INFO } from '../../constants'
-import { recursiveObjectPrinter } from '..'
-
 
 export function setUserInfo (payload) {
   return {

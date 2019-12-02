@@ -8,6 +8,7 @@ import '@babel/polyfill'
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranchesThunk } from './action-creators/branches'
 import { fetchReplace } from './action-creators/fetch-replace'
+import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
 import { repoDefault } from '../constants'
 import { setUserInfo, deleteUserInfo } from '../background/action-creators/authentication'
@@ -35,6 +36,7 @@ const actions = {
   POPUP_CHANGE_BRANCH: changeBranch,
   POPUP_RELOAD_BRANCHES: updateBranchesThunk,
   POPUP_FETCH_REPLACE: fetchReplace,
+  POPUP_COMMIT_PUSH: commitPush,
   POPUP_SET_USER_INFO: setUserInfo,
   POPUP_DELETE_USER_INFO: deleteUserInfo
 }

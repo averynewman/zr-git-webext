@@ -1,5 +1,4 @@
 import { tokenDefault, nameDefault, emailDefault, SET_USER_INFO, DELETE_USER_INFO } from '../../constants'
-import { recursiveObjectPrinter } from '..'
 
 const defaultSubstate = {
   token: tokenDefault,

@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { startFetch } from '../action-creators/fetch-commit'
+import { startCommit } from '../action-creators/fetch-commit'
 import { branchDefault } from '../../constants'
 
-class FetchButton extends React.Component {
+class CommitButton extends React.Component {
   constructor (props) {
     super(props)
-    this.handleFetch = this.handleFetch.bind(this)
+    this.handleCommit = this.handleCommit.bind(this)
   }
 
-  handleFetch () {
-    this.props.startFetch()
+  handleCommit () {
+    this.props.startCommit()
   }
 
   render () {
@@ -21,8 +21,8 @@ class FetchButton extends React.Component {
     }
     return (
       <div>
-        <button className='fetch-replace' onClick={this.handleFetch}>
-          Fetch and replace
+        <button className='commit-push' onClick={this.handleCommit}>
+          Commit and push
         </button>
       </div>
     )
@@ -31,5 +31,5 @@ class FetchButton extends React.Component {
 
 export default connect(
   state => ({ currentBranch: state.branches.currentBranch }),
-  { startFetch }
-)(FetchButton)
+  { startCommit }
+)(CommitButton)
