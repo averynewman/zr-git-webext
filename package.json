@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://github.com/jonahweissman/zr-github-crx.git"
   },
-  "author": "Jonah Newman",
+  "author": "Jonah Newman and Alex Ralston, with help from Jonah Weissman",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.7.2",
