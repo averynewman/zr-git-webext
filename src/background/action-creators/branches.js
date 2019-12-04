@@ -40,11 +40,20 @@ export function changeBranch (payload) {
     console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
     console.log('startBranchChange dispatched')
-    return git.fetch({ dir: repoDirectory, ref: branchName, depth: 2, corsProxy: 'https://cors.isomorphic-git.org', url: payload.repoUrl }).then(
-      () => {
-        dispatch(branchChangeSuccess({ branchName: branchName }))
+    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, corsProxy: 'https://cors.isomorphic-git.org', url: payload.repoUrl }).then(
+      (success) => {
+        return success
       }, error => {
-        console.log(`branchChange failed with error ${error}`)
+        console.log(`fetch failed with error ${error}`)
+        throw error
+      }
+    )
+    return git.checkout({ dir: repoDirectory, ref: branchName }).then(
+      (success) => {
+        dispatch(branchChangeSuccess({ branchName: branchName }))
+        return success
+      }, error => {
+        console.log(`checkout failed with error ${error}`)
         throw error
       }
     )

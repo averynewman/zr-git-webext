@@ -1,7 +1,7 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs } from '../index'
+import { fs, recursiveObjectPrinter } from '../index'
 import { getDoc } from '../content-scripts/get-editor-text'
 import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, proxyUrl, ZRCodePath, START_COMMIT_PUSH } from '../../constants'
 
@@ -29,9 +29,10 @@ function commitPushSuccess (payload) {
   }
 }
 
-export function commitPush (editorContents) {
+export function commitPush () {
   return async function (dispatch, getState) {
     dispatch(startCommitPush())
+    const state = getState()
     const editorContents = await getDoc().then((success) => {
       console.log('getDoc succeeded')
       return success
@@ -48,7 +49,12 @@ export function commitPush (editorContents) {
       dispatch(commitPushFailure())
       throw error
     })
-    await git.commit({ dir: repoDirectory, message: 'Placeholder commit message' }).then((success) => {
+    await git.commit({
+      dir: repoDirectory,
+      message: 'Placeholder commit message',
+      author: { name: state.authentication.name, email: state.authentication.email },
+      ref: state.branches.currentBranch
+    }).then((success) => {
       console.log('commit succeeded')
       return success
     }, (error) => {
@@ -56,8 +62,12 @@ export function commitPush (editorContents) {
       dispatch(commitPushFailure())
       throw error
     })
-    const state = getState()
-    return git.push({ dir: repoDirectory, remote: 'origin', corsProxy: proxyUrl, token: state.token, oauth2format: 'github' }).then((success) => {
+    console.log('git log output before push below')
+    const logOutput = await git.log({ dir: repoDirectory, depth: 5, ref: state.branches.currentBranch })
+    for (let i = 0; i < logOutput.length; i++) {
+      console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
+    }
+    return git.push({ dir: repoDirectory, ref: state.branches.currentBranch, remote: 'origin', corsProxy: proxyUrl, token: state.authentication.token, oauth2format: 'github' }).then((success) => {
       console.log('push succeeded')
       dispatch(commitPushSuccess())
       return success

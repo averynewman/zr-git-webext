@@ -6,7 +6,7 @@ import thunkMiddleware from 'redux-thunk'
 import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
-import { changeBranch, updateBranchesThunk } from './action-creators/branches'
+import { changeBranch, updateBranches } from './action-creators/branches'
 import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
@@ -34,7 +34,7 @@ const store = createStore(
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
-  POPUP_RELOAD_BRANCHES: updateBranchesThunk,
+  POPUP_RELOAD_BRANCHES: updateBranches,
   POPUP_FETCH_REPLACE: fetchReplace,
   POPUP_COMMIT_PUSH: commitPush,
   POPUP_SET_USER_INFO: setUserInfo,

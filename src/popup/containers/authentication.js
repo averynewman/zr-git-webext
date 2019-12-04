@@ -11,7 +11,7 @@ class Authentication extends React.Component {
     this.handleKeyPress = this.handleKeyPress.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
-    this.startInput = this.startInput.bind(this)
+    this.handleStartInput = this.handleStartInput.bind(this)
   }
 
   handleKeyPress (event) {
@@ -20,7 +20,7 @@ class Authentication extends React.Component {
     }
   }
 
-  startInput () {
+  handleStartInput () {
     this.setState({ inputActive: true })
   }
 
@@ -45,12 +45,13 @@ class Authentication extends React.Component {
     if (this.state.inputActive === false) {
       return (
         <div>
-          <button className='set-user-info' onClick={this.startInput}>
+          <button className='set-user-info' onClick={this.handleStartInput}>
             Set User Info
           </button>
           <button className='delete-user-info' onClick={this.handleDelete}>
             Delete User Info
           </button>
+          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
         </div>
       )
     } else {

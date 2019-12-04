@@ -6,6 +6,7 @@ import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
 import Authentication from './authentication'
+import CommitButton from './commit-button'
 
 class Popup extends React.Component {
   render () {
@@ -15,6 +16,7 @@ class Popup extends React.Component {
         <RepoSelect />
         <BranchSelect />
         <FetchButton />
+        <CommitButton />
         <Authentication />
       </div>
     )

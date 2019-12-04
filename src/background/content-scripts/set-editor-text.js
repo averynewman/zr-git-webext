@@ -58,10 +58,12 @@ export function setDoc (doc) {
     }) */
 
     window.chrome.runtime.onMessage.addListener(
-      function (request, sender, sendResponse) {
+      function listenerFunction (request, sender, sendResponse) {
         console.log('resolving setDoc promise')
         resolve(request.doc)
         sendResponse({ ok: true })
+        window.chrome.runtime.onMessage.removeListener(listenerFunction)
+        console.log('listener removed at end of execution')
       })
   })
 }

@@ -1,7 +1,7 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs /*, recursiveObjectPrinter */ } from '../index'
+import { fs, recursiveObjectPrinter } from '../index'
 import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, proxyUrl, ZRCodePath } from '../../constants'
 import { setDoc } from '../content-scripts/set-editor-text'
 
@@ -60,6 +60,7 @@ function fetch () {
   return async function (dispatch, getState) {
     dispatch(startFetchReplace())
     const state = getState()
+    console.log(`fetching with params ${recursiveObjectPrinter({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch })}`)
     return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
       console.log('fetch succeeded')
       return success
