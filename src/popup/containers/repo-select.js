@@ -33,10 +33,10 @@ class RepoSelect extends React.Component {
     return (
       <div>
         <p>{
-          ((cloning, repoUrl, validRepo, erasing) => {
+          ((switching, repoUrl, validRepo, erasing) => {
             if (erasing === true) {
               return 'Clearing filesystem...'
-            } else if (cloning === true) {
+            } else if (switching === true) {
               return 'Cloning new repo...'
             } else if (validRepo === false) {
               return 'Clone failed. Check your path and try again.'
@@ -45,15 +45,16 @@ class RepoSelect extends React.Component {
             } else {
               return (`Active repo: ${repoUrl}`)
             }
-          })(this.props.cloning, this.props.repoUrl, this.props.validRepo, this.props.erasing)
+          })(this.props.switching, this.props.repoUrl, this.props.validRepo, this.props.erasing)
         }
         </p>
         <input
           onChange={e => this.updateInput(e.target.value)}
           value={this.state.input}
           onKeyDown={e => this.handleKeyPress(e)}
+          disabled={this.props.locked}
         />
-        <button className='change-repo' onClick={this.handleRepoChange}>
+        <button className='change-repo' onClick={this.handleRepoChange} disabled={this.props.locked}>
           Change Repo
         </button>
       </div>
@@ -63,9 +64,10 @@ class RepoSelect extends React.Component {
 
 export default connect(
   state => ({
+    locked: state.status.locked,
     repoUrl: state.repoSelect.repoUrl,
     validRepo: state.repoSelect.validRepo,
-    cloning: state.repoSelect.cloning,
+    switching: state.repoSelect.switching,
     erasing: state.repoSelect.erasing
   }),
   { changeRepo }
