@@ -67,8 +67,18 @@ export function commitPush () {
     for (let i = 0; i < logOutput.length; i++) {
       console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
     }
-    return git.push({ dir: repoDirectory, ref: state.branches.currentBranch, remote: 'origin', corsProxy: proxyUrl, token: state.authentication.token, oauth2format: 'github' }).then((success) => {
+    return git.push({
+      dir: repoDirectory,
+      noGitSuffix: true,
+      ref: state.branches.currentBranch,
+      remote: 'origin',
+      corsProxy: proxyUrl,
+      token: state.authentication.token,
+      oauth2format: 'github',
+      remoteRef: `refs/heads/${state.branches.currentBranch}`
+    }).then((success) => {
       console.log('push succeeded')
+      console.log(`push info was ${recursiveObjectPrinter(success)}`)
       dispatch(commitPushSuccess())
       return success
     }, (error) => {
