@@ -2,15 +2,15 @@ import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
 // import { logStoreState } from '../index'
-import { START_CLONE, START_ERASE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
+import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
 import { updateBranches } from './branches'
 import { fs } from '../index'
 // import { recursiveObjectPrinter } from '../index'
 
-function startClone (payload) {
+function startRepoChange (payload) {
   // console.log('clone starting in background')
   return {
-    type: START_CLONE,
+    type: START_REPO_CHANGE,
     ...payload
   }
 }
@@ -27,14 +27,6 @@ function repoChangeSuccess (payload) {
   // console.log(`clone succeeded with path ${payload.repoPath}`)
   return {
     type: REPO_CHANGE_SUCCESS,
-    ...payload
-  }
-}
-
-function startErase (payload) {
-  // console.log('erase starting in background')
-  return {
-    type: START_ERASE,
     ...payload
   }
 }
@@ -85,14 +77,13 @@ export function changeRepo (payload) {
   console.log(`changeRepo request received with url https://github.com/${repoUrl}.git`)
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
-    dispatch(startErase())
+    dispatch(startRepoChange())
     // console.log('startErase dispatched')
     await deleteFolderRecursive('/').catch(error => {
       console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
       dispatch(repoChangeFailure())
       throw error
     })
-    dispatch(startClone())
     return git.clone({
       dir: repoDirectory,
       corsProxy: proxyUrl,

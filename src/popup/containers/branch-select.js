@@ -36,22 +36,11 @@ class BranchSelect extends React.Component {
         null
       )
     }
-    if (this.props.currentBranch === branchDefault) {
-      return (
-        <div>
-          <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
-          <Select isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
-          <button className='change-repo' onClick={this.handleBranchReload}>
-            Reload Branches
-          </button>
-        </div>
-      )
-    }
     return (
       <div>
         <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
-        <Select defaultValue={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} />
-        <button className='change-repo' onClick={this.handleBranchReload}>
+        <Select defaultValue={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} isDisabled={this.props.locked} />
+        <button className='change-repo' onClick={this.handleBranchReload} disabled={this.props.locked}>
           Reload Branches
         </button>
       </div>
@@ -61,6 +50,7 @@ class BranchSelect extends React.Component {
 
 export default connect(
   state => ({
+    locked: state.status.locked,
     currentBranch: state.branches.currentBranch,
     branchList: state.branches.branchList,
     switching: state.branches.switching,

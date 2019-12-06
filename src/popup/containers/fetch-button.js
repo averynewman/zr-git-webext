@@ -21,7 +21,7 @@ class FetchButton extends React.Component {
     }
     return (
       <div>
-        <button className='fetch-replace' onClick={this.handleFetch}>
+        <button className='fetch-replace' onClick={this.handleFetch} disabled={this.props.locked}>
           Fetch and replace
         </button>
       </div>
@@ -30,6 +30,9 @@ class FetchButton extends React.Component {
 }
 
 export default connect(
-  state => ({ currentBranch: state.branches.currentBranch }),
+  state => ({
+    locked: state.status.locked,
+    currentBranch: state.branches.currentBranch
+  }),
   { startFetch }
 )(FetchButton)

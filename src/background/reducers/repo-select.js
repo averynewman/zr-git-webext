@@ -1,8 +1,7 @@
-import { START_CLONE, START_ERASE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE, repoDefault } from '../../constants'
+import { REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE, repoDefault, START_REPO_CHANGE } from '../../constants'
 
 var defaultSubstate = {
-  erasing: false,
-  cloning: false,
+  switching: false,
   validRepo: true,
   repoUrl: repoDefault
 }
@@ -10,25 +9,17 @@ var defaultSubstate = {
 export default (state = defaultSubstate, action) => {
   const output = state
   switch (action.type) {
-    case START_ERASE:
-      output.cloning = false
-      output.erasing = true
-      output.validRepo = false
-      break
-    case START_CLONE:
-      output.cloning = true
-      output.erasing = false
+    case START_REPO_CHANGE:
+      output.switching = true
       output.validRepo = false
       break
     case REPO_CHANGE_SUCCESS:
-      output.cloning = false
-      output.erasing = false
+      output.switching = false
       output.validRepo = true
       output.repoUrl = action.repoUrl
       break
     case REPO_CHANGE_FAILURE:
-      output.cloning = false
-      output.erasing = false
+      output.switching = false
       output.validRepo = false
       break
   }

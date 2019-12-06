@@ -1,4 +1,4 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_ERASE, branchDefault } from '../../constants'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, branchDefault, START_REPO_CHANGE } from '../../constants'
 
 var defaultSubstate = {
   currentBranch: branchDefault,
@@ -10,8 +10,8 @@ var defaultSubstate = {
 export default (state = defaultSubstate, action) => {
   const output = state
   switch (action.type) {
-    case START_ERASE:
-      output.banchList = []
+    case START_REPO_CHANGE:
+      output.branchList = []
       output.currentBranch = branchDefault
       break
     case START_BRANCH_LIST_UPDATE:

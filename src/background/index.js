@@ -18,8 +18,7 @@ const middlewares = [thunkMiddleware]
 
 const initialState = {
   repoSelect: {
-    erasing: false,
-    cloning: false,
+    switching: false,
     validRepo: true,
     repoUrl: repoDefault
   }
