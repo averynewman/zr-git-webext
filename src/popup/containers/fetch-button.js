@@ -21,7 +21,7 @@ class FetchButton extends React.Component {
     }
     return (
       <div>
-        <button className='change-repo' onClick={this.handleFetch} disabled={this.props.locked}>
+        <button className='fetch-replace' onClick={this.handleFetch} disabled={this.props.locked}>
           Fetch and replace
         </button>
       </div>

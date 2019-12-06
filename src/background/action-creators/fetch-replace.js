@@ -1,7 +1,7 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs /*, recursiveObjectPrinter */ } from '../index'
+import { fs, recursiveObjectPrinter } from '../index'
 import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, proxyUrl, ZRCodePath } from '../../constants'
 import { setDoc } from '../content-scripts/set-editor-text'
 
@@ -31,10 +31,9 @@ function fetchReplaceSuccess (payload) {
 
 export function fetchReplace () {
   return async function (dispatch, getState) {
+    dispatch(startFetchReplace())
     await dispatch(fetch())
     await dispatch(checkout())
-    const dirContents = await fs.promises.readdir(repoDirectory)
-    console.log(`dirContents: ${dirContents}`)
     const editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
       console.log('file read succeeded')
       return success
@@ -58,8 +57,8 @@ export function fetchReplace () {
 function fetch () {
   console.log('fetching')
   return async function (dispatch, getState) {
-    dispatch(startFetchReplace())
     const state = getState()
+    console.log(`fetching with params ${recursiveObjectPrinter({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch })}`)
     return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
       console.log('fetch succeeded')
       return success

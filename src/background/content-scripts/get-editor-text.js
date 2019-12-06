@@ -24,7 +24,7 @@ function getDocInjected (cb) {
 
   document.addEventListener('ZRGITHUB_extension_communication_get', function (e) {
     console.log('received', e.detail)
-    window.chrome.runtime.sendMessage({doc: e.detail}, function (response) {
+    window.chrome.runtime.sendMessage({ doc: e.detail }, function (response) {
       console.log(response)
     })
   });
@@ -34,22 +34,25 @@ function getDocInjected (cb) {
 
 export function getDoc () {
   return new Promise((resolve, reject) => {
-    window.chrome.tabs.executeScript({code: getDocInjected + 'getDocInjected();'})
+    window.chrome.tabs.executeScript({ code: getDocInjected + 'getDocInjected();' })
     console.log('waiting on injected script')
     window.chrome.runtime.connect()
 
     window.chrome.runtime.onMessage.addListener(
-      function (request, sender, sendResponse) {
-        console.log('received doc from injected script', request.doc)
+      function listenerFunction (request, sender, sendResponse) {
+        console.log('received editor contents from injected script:', request.doc)
         var cleanDoc = request.doc
-        var headMatch = cleanDoc.match(/^\/\/(.*)/)
-        try {
+        var headMatch = cleanDoc // cleanDoc.match(/^\/\/(.*)/)
+        /* try {
           var head = JSON.parse(headMatch[1]) // [1] is the capture group
-          resolve({text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head})
+          resolve({ text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head })
         } catch (e) {
           reject(e)
-        }
-        sendResponse({ok: true})
+        } */
+        resolve({ text: headMatch })
+        sendResponse({ ok: true })
+        window.chrome.runtime.onMessage.removeListener(listenerFunction)
+        console.log('listener removed at end of execution')
       })
   })
 }

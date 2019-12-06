@@ -1,4 +1,4 @@
-import { POPUP_FETCH_REPLACE, POPUP_COMMIT } from '../../constants'
+import { POPUP_FETCH_REPLACE, POPUP_COMMIT_PUSH } from '../../constants'
 
 export function startFetch (payload) {
   return {
@@ -9,7 +9,7 @@ export function startFetch (payload) {
 
 export function startCommit (payload) {
   return {
-    type: POPUP_COMMIT,
+    type: POPUP_COMMIT_PUSH,
     ...payload
   }
 }

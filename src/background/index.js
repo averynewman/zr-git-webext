@@ -6,8 +6,9 @@ import thunkMiddleware from 'redux-thunk'
 import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
-import { changeBranch, updateBranchesThunk } from './action-creators/branches'
+import { changeBranch, updateBranches } from './action-creators/branches'
 import { fetchReplace } from './action-creators/fetch-replace'
+import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
 import { repoDefault } from '../constants'
 import { setUserInfo, deleteUserInfo } from '../background/action-creators/authentication'
@@ -32,8 +33,9 @@ const store = createStore(
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
-  POPUP_RELOAD_BRANCHES: updateBranchesThunk,
+  POPUP_RELOAD_BRANCHES: updateBranches,
   POPUP_FETCH_REPLACE: fetchReplace,
+  POPUP_COMMIT_PUSH: commitPush,
   POPUP_SET_USER_INFO: setUserInfo,
   POPUP_DELETE_USER_INFO: deleteUserInfo
 }
@@ -71,4 +73,5 @@ git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
-export { fs, logStoreState, recursiveObjectPrinter }
+export { fs, logStoreState, recursiveObjectPrinter } // NEVER import any of these in a popup file, it will cause webpack to bundle this with the popup and
+// break your filesystem every time you open the popup
