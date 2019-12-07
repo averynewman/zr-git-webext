@@ -73,18 +73,17 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
 
 export function changeRepo (payload) {
   const repoUrl = payload.repoUrl
-  // console.log(recursiveObjectPrinter(payload)) // tests the above assertion
-  console.log(`changeRepo request received with url https://github.com/${repoUrl}.git`)
+  // console.log(`changeRepo request received with url ${repoUrl}`)
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
     dispatch(startRepoChange())
     // console.log('startErase dispatched')
     await deleteFolderRecursive('/').catch(error => {
-      console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
+      // console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
       dispatch(repoChangeFailure())
       throw error
     })
-    return git.clone({
+    await git.clone({
       dir: repoDirectory,
       corsProxy: proxyUrl,
       url: repoUrl,
@@ -96,18 +95,19 @@ export function changeRepo (payload) {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
         // console.log('successful git clone, updating branches')
-        return dispatch(updateBranches())
+        return success
       },
       error => {
-        console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)
+        // console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)
         dispatch(repoChangeFailure())
         throw error
       }
-    ).then(success => {
-      console.log('updateBranches successful')
+    )
+    return dispatch(updateBranches()).then(success => {
+      // console.log('updateBranches successful')
       return success
     }, error => {
-      console.log(`changeRepo: error ${error} in updateBranches`)
+      // console.log(`changeRepo: error ${error} in updateBranches`)
       throw error
     })
   }

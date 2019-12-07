@@ -2,7 +2,7 @@ import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHAN
 import * as git from 'isomorphic-git'
 
 function startBranchListUpdate (payload) {
-  console.log('starting branch list update')
+  // console.log('starting branch list update')
   return {
     type: START_BRANCH_LIST_UPDATE,
     ...payload
@@ -10,7 +10,7 @@ function startBranchListUpdate (payload) {
 }
 
 function branchListUpdateSuccess (payload) {
-  console.log(`successfully updated branch list to ${payload.branchList}`)
+  // console.log(`successfully updated branch list to ${payload.branchList}`)
   return {
     type: BRANCH_LIST_UPDATE_SUCCESS,
     ...payload
@@ -18,7 +18,7 @@ function branchListUpdateSuccess (payload) {
 }
 
 function startBranchChange (payload) {
-  console.log(`starting change to branch ${payload.branchName}`)
+  // console.log(`starting change to branch ${payload.branchName}`)
   return {
     type: START_BRANCH_CHANGE,
     ...payload
@@ -26,7 +26,7 @@ function startBranchChange (payload) {
 }
 
 function branchChangeSuccess (payload) {
-  console.log(`successfully changed to branch ${payload.branchName}`)
+  // console.log(`successfully changed to branch ${payload.branchName}`)
   return {
     type: BRANCH_CHANGE_SUCCESS,
     ...payload
@@ -35,11 +35,11 @@ function branchChangeSuccess (payload) {
 
 export function changeBranch (payload) {
   const branchName = payload.branchName
-  console.log(`changeBranch request received to branch ${branchName}`)
+  console.log(`switching to branch ${branchName}`)
   return async function (dispatch) {
-    console.log('changeBranch thunk started')
+    // console.log('changeBranch thunk started')
     dispatch(startBranchChange({ branchName: branchName }))
-    console.log('startBranchChange dispatched')
+    // console.log('startBranchChange dispatched')
     await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, corsProxy: 'https://cors.isomorphic-git.org', url: payload.repoUrl }).then(
       (success) => {
         return success
