@@ -2,6 +2,7 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import Status from './status'
 import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
@@ -13,6 +14,7 @@ class Popup extends React.Component {
     return (
       <div className='popup'>
         <h1>zr-git-webext dev version</h1>
+        <Status />
         <RepoSelect />
         <BranchSelect />
         <FetchButton />

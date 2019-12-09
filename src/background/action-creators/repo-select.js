@@ -96,7 +96,7 @@ export function changeRepo (payload) {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
         // console.log('successful git clone, updating branches')
-        return dispatch(updateBranches())
+        return dispatch(updateBranches({ manual: false }))
       },
       error => {
         console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)

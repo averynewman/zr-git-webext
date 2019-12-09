@@ -21,7 +21,7 @@ class CommitButton extends React.Component {
     }
     return (
       <div>
-        <button className='commit-push' onClick={this.handleCommit}>
+        <button className='commit-push' onClick={this.handleCommit} disabled={this.props.locked}>
           Commit and push
         </button>
       </div>
@@ -30,6 +30,9 @@ class CommitButton extends React.Component {
 }
 
 export default connect(
-  state => ({ currentBranch: state.branches.currentBranch }),
+  state => ({
+    currentBranch: state.branches.currentBranch,
+    locked: state.status.locked
+  }),
   { startCommit }
 )(CommitButton)

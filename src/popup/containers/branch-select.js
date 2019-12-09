@@ -23,7 +23,7 @@ class BranchSelect extends React.Component {
 
   handleBranchReload () {
     console.log('reloading branches')
-    this.props.reloadBranches()
+    this.props.reloadBranches({ manual: true })
   }
 
   render () {
