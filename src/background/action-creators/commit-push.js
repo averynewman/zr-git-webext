@@ -33,7 +33,7 @@ export function commitPush () {
   return async function (dispatch, getState) {
     dispatch(startCommitPush())
     const state = getState()
-    const editorContents = await getDoc().then((success) => {
+    const contentResponse = await getDoc().then((success) => {
       console.log('getDoc succeeded')
       return success
     }, (error) => {
@@ -41,7 +41,9 @@ export function commitPush () {
       dispatch(commitPushFailure())
       throw error
     })
-    await fs.promises.writeFile(repoDirectory + ZRCodePath, editorContents).then((success) => {
+    const editorContents = contentResponse.text
+    console.log(`editorContents are ${editorContents}`)
+    await fs.promises.writeFile(repoDirectory + '/' + ZRCodePath, editorContents).then((success) => {
       console.log('file write succeeded')
       return success
     }, (error) => {
@@ -49,6 +51,21 @@ export function commitPush () {
       dispatch(commitPushFailure())
       throw error
     })
+    let mainStatus = await git.status({ dir: repoDirectory, filepath: ZRCodePath })
+    console.log(mainStatus)
+    await git.add({
+      dir: repoDirectory,
+      filepath: ZRCodePath
+    }).then((success) => {
+      console.log('git add succeeded')
+      return success
+    }, (error) => {
+      console.log(`git add failed with error ${error}`)
+      dispatch(commitPushFailure())
+      throw error
+    })
+    mainStatus = await git.status({ dir: repoDirectory, filepath: ZRCodePath })
+    console.log(mainStatus)
     await git.commit({
       dir: repoDirectory,
       message: 'Placeholder commit message',

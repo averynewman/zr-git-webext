@@ -40,19 +40,20 @@ export function getDoc () {
 
     window.chrome.runtime.onMessage.addListener(
       function listenerFunction (request, sender, sendResponse) {
-        console.log('received editor contents from injected script:', request.doc)
+        // console.log('received editor contents from injected script:', request.doc)
         var cleanDoc = request.doc
-        var headMatch = cleanDoc // cleanDoc.match(/^\/\/(.*)/)
+        // var headMatch = cleanDoc.match(/^\/\/(.*)/)
+        // console.log(`headmatch is ${headMatch}`)
         /* try {
           var head = JSON.parse(headMatch[1]) // [1] is the capture group
           resolve({ text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head })
         } catch (e) {
           reject(e)
         } */
-        resolve({ text: headMatch })
+        resolve({ text: cleanDoc })
         sendResponse({ ok: true })
         window.chrome.runtime.onMessage.removeListener(listenerFunction)
-        console.log('listener removed at end of execution')
+        // console.log('listener removed at end of execution')
       })
   })
 }
