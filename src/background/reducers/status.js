@@ -16,11 +16,11 @@ export default (state = defaultSubstate, action) => {
       output.statusMessage = 'Changing repos...'
       break
     case REPO_CHANGE_SUCCESS:
-      output.statusMessage = 'Successfully changed repos'
+      output.statusMessage = 'Successfully changed repos.'
       break
     case REPO_CHANGE_FAILURE:
       output.locked = false
-      output.statusMessage = 'Failed to change repo'
+      output.statusMessage = 'Failed to change repo, check your path and try again.'
       break
     case START_BRANCH_LIST_UPDATE:
       output.locked = true
@@ -31,7 +31,7 @@ export default (state = defaultSubstate, action) => {
     case BRANCH_LIST_UPDATE_SUCCESS:
       output.locked = false
       if (action.manual) {
-        output.statusMessage = 'Successfully updated branch list'
+        output.statusMessage = 'Successfully updated branch list.'
       }
       break
     case START_BRANCH_CHANGE:
@@ -40,7 +40,7 @@ export default (state = defaultSubstate, action) => {
       break
     case BRANCH_CHANGE_SUCCESS:
       output.locked = false
-      output.statusMessage = 'Successfully switched branches'
+      output.statusMessage = 'Successfully switched branches.'
       break
     case START_FETCH_REPLACE:
       output.locked = true
@@ -48,11 +48,11 @@ export default (state = defaultSubstate, action) => {
       break
     case FETCH_REPLACE_SUCCESS:
       output.locked = false
-      output.statusMessage = 'Successfully fetched and replaced'
+      output.statusMessage = 'Successfully fetched and replaced.'
       break
     case FETCH_REPLACE_FAILURE:
       output.locked = false
-      output.statusMessage = 'Failed to fetch and replace'
+      output.statusMessage = 'Failed to fetch and replace.'
       break
     case START_COMMIT_PUSH:
       output.locked = true
@@ -60,11 +60,11 @@ export default (state = defaultSubstate, action) => {
       break
     case COMMIT_PUSH_SUCCESS:
       output.locked = false
-      output.statusMessage = 'Successfully committed and pushed'
+      output.statusMessage = 'Successfully committed and pushed.'
       break
     case COMMIT_PUSH_FAILURE:
       output.locked = false
-      output.statusMessage = 'Failed to commit and push'
+      output.statusMessage = 'Failed to commit and push.'
       break
   }
   return output
