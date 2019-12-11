@@ -32,14 +32,32 @@ function fetchReplaceSuccess (payload) {
 export function fetchReplace () {
   return async function (dispatch, getState) {
     dispatch(startFetchReplace())
-    await dispatch(fetch())
-    await dispatch(checkout())
+    await dispatch(fetch()).catch((error) => {
+      dispatch(fetchReplaceFailure())
+      throw error
+    })
+    await dispatch(checkout()).catch((error) => {
+      dispatch(fetchReplaceFailure())
+      throw error
+    })
+    await dispatch(writeDoc()).then((success) => {
+      return success
+    }, (error) => {
+      dispatch(fetchReplaceFailure())
+      throw error
+    })
+    dispatch(fetchReplaceSuccess())
+  }
+}
+
+export function writeDoc () {
+  console.log('writing doc')
+  return async function (dispatch, getState) {
     let editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
       console.log('file read succeeded')
       return success
     }, (error) => {
       console.log(`file read failed with error ${error}`)
-      dispatch(fetchReplaceFailure())
       throw error
     })
     const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
@@ -54,10 +72,8 @@ export function fetchReplace () {
       return success
     }, (error) => {
       console.log(`setDoc failed with error ${error}`)
-      dispatch(fetchReplaceFailure())
       throw error
     })
-    dispatch(fetchReplaceSuccess())
   }
 }
 
@@ -70,7 +86,6 @@ function fetch () {
       return success
     }, (error) => {
       console.log(`fetch failed with error ${error}`)
-      dispatch(fetchReplaceFailure())
       throw error
     })
   }
@@ -84,7 +99,6 @@ function checkout () {
       return success
     }, (error) => {
       console.log(`checkout failed with error ${error}`)
-      dispatch(fetchReplaceFailure())
       throw error
     })
   }

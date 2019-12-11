@@ -47,7 +47,7 @@ export function getDoc () {
       console.log('getDoc timed out waiting for injected script')
       reject(new TimeoutError('getDoc timed out waiting for injected script'))
     }
-    const timeoutID = window.setTimeout(timeoutFunction, 3000)
+    const timeoutID = window.setTimeout(timeoutFunction, 5000)
     window.chrome.runtime.connect()
 
     window.chrome.runtime.onMessage.addListener(

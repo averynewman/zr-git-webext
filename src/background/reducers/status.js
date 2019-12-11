@@ -56,7 +56,7 @@ export default (state = defaultSubstate, action) => {
       break
     case START_COMMIT_PUSH:
       output.locked = true
-      output.statusMessage = 'Committing and Pushing...'
+      output.statusMessage = 'Committing and pushing...'
       break
     case COMMIT_PUSH_SUCCESS:
       output.locked = false
