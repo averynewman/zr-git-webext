@@ -32,25 +32,37 @@ function getDocInjected (cb) {
   (document.head || document.documentElement).appendChild(s)
 }
 
+class TimeoutError extends Error {
+  constructor (message) {
+    super(message)
+    this.name = 'TimeoutError'
+  }
+}
+
 export function getDoc () {
   return new Promise((resolve, reject) => {
     window.chrome.tabs.executeScript({ code: getDocInjected + 'getDocInjected();' })
     console.log('waiting on injected script')
+    function timeoutFunction () {
+      console.log('getDoc timed out waiting for injected script')
+      reject(new TimeoutError('getDoc timed out waiting for injected script'))
+    }
+    const timeoutID = window.setTimeout(timeoutFunction, 3000)
     window.chrome.runtime.connect()
 
     window.chrome.runtime.onMessage.addListener(
       function listenerFunction (request, sender, sendResponse) {
         // console.log('received editor contents from injected script:', request.doc)
-        var cleanDoc = request.doc
-        // var headMatch = cleanDoc.match(/^\/\/(.*)/)
+        const cleanDoc = request.doc
+        const headMatch = cleanDoc.match(/^\/\/(.*)/) // if the first line is a comment, matches the first line minus the leading slashes. Otherwise matches nothing
         // console.log(`headmatch is ${headMatch}`)
-        /* try {
-          var head = JSON.parse(headMatch[1]) // [1] is the capture group
+        try {
+          const head = JSON.parse(headMatch[1]) // [1] is the capture group in a .match return. parsing it gives us the contents of our header (should be a sha)
           resolve({ text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head })
         } catch (e) {
           reject(e)
-        } */
-        resolve({ text: cleanDoc })
+        }
+        window.clearTimeout(timeoutID)
         sendResponse({ ok: true })
         window.chrome.runtime.onMessage.removeListener(listenerFunction)
         // console.log('listener removed at end of execution')

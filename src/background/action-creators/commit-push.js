@@ -29,10 +29,11 @@ function commitPushSuccess (payload) {
   }
 }
 
-export function commitPush () {
+export function commitPush (payload) {
   return async function (dispatch, getState) {
+    const commitMessage = payload.message
+    console.log(`commit message is ${commitMessage}`)
     dispatch(startCommitPush())
-    const state = getState()
     const contentResponse = await getDoc().then((success) => {
       console.log('getDoc succeeded')
       return success
@@ -42,6 +43,18 @@ export function commitPush () {
       throw error
     })
     const editorContents = contentResponse.text
+    const documentHeader = contentResponse.head
+    const sha = documentHeader.sha
+    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    console.log('git log output before commit below')
+    for (let i = 0; i < logOutput.length; i++) {
+      console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
+    }
+    if (sha !== logOutput[0].oid) {
+      console.log(`commits not equal. Document is ${sha}, most recent is ${logOutput[0].oid}`)
+      return dispatch(commitPushFailure())
+    }
+    console.log(`commits equal. Document is ${sha}, most recent is ${logOutput[0].oid}`)
     console.log(`editorContents are ${editorContents}`)
     await fs.promises.writeFile(repoDirectory + '/' + ZRCodePath, editorContents).then((success) => {
       console.log('file write succeeded')
@@ -51,8 +64,7 @@ export function commitPush () {
       dispatch(commitPushFailure())
       throw error
     })
-    let mainStatus = await git.status({ dir: repoDirectory, filepath: ZRCodePath })
-    console.log(mainStatus)
+
     await git.add({
       dir: repoDirectory,
       filepath: ZRCodePath
@@ -64,13 +76,11 @@ export function commitPush () {
       dispatch(commitPushFailure())
       throw error
     })
-    mainStatus = await git.status({ dir: repoDirectory, filepath: ZRCodePath })
-    console.log(mainStatus)
     await git.commit({
       dir: repoDirectory,
-      message: 'Placeholder commit message',
-      author: { name: state.authentication.name, email: state.authentication.email },
-      ref: state.branches.currentBranch
+      message: commitMessage,
+      author: { name: getState().authentication.name, email: getState().authentication.email },
+      ref: getState().branches.currentBranch
     }).then((success) => {
       console.log('commit succeeded')
       return success
@@ -79,20 +89,20 @@ export function commitPush () {
       dispatch(commitPushFailure())
       throw error
     })
-    console.log('git log output before push below')
-    const logOutput = await git.log({ dir: repoDirectory, depth: 5, ref: state.branches.currentBranch })
+    /* console.log('git log output before push below')
+    logOutput = await git.log({ dir: repoDirectory, depth: 5, ref: getState().branches.currentBranch })
     for (let i = 0; i < logOutput.length; i++) {
       console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
-    }
+    } */
     return git.push({
       dir: repoDirectory,
       noGitSuffix: true,
-      ref: state.branches.currentBranch,
+      ref: getState().branches.currentBranch,
       remote: 'origin',
       corsProxy: proxyUrl,
-      token: state.authentication.token,
+      token: getState().authentication.token,
       oauth2format: 'github',
-      remoteRef: `refs/heads/${state.branches.currentBranch}`
+      remoteRef: `refs/heads/${getState().branches.currentBranch}`
     }).then((success) => {
       console.log('push succeeded')
       console.log(`push info was ${recursiveObjectPrinter(success)}`)

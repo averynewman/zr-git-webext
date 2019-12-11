@@ -10,7 +10,7 @@ class CommitButton extends React.Component {
   }
 
   handleCommit () {
-    this.props.startCommit()
+    this.props.startCommit({ message: 'test commit message' })
   }
 
   render () {

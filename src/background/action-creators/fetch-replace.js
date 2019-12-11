@@ -34,7 +34,7 @@ export function fetchReplace () {
     dispatch(startFetchReplace())
     await dispatch(fetch())
     await dispatch(checkout())
-    const editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
+    let editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
       console.log('file read succeeded')
       return success
     }, (error) => {
@@ -42,6 +42,13 @@ export function fetchReplace () {
       dispatch(fetchReplaceFailure())
       throw error
     })
+    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    console.log('git log output for sha checking:')
+    for (let i = 0; i < logOutput.length; i++) {
+      console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
+    }
+    const sha = logOutput[0].oid
+    editorContents = `// { "sha": "${sha}" } \n` + editorContents
     await setDoc(editorContents).then((success) => {
       console.log('setDoc succeeded')
       return success
@@ -57,9 +64,8 @@ export function fetchReplace () {
 function fetch () {
   console.log('fetching')
   return async function (dispatch, getState) {
-    const state = getState()
-    console.log(`fetching with params ${recursiveObjectPrinter({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch })}`)
-    return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: state.repoSelect.repoUrl, ref: state.branches.currentBranch }).then((success) => {
+    console.log(`fetching with params ${recursiveObjectPrinter({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch })}`)
+    return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
       console.log('fetch succeeded')
       return success
     }, (error) => {
@@ -73,8 +79,7 @@ function fetch () {
 function checkout () {
   console.log('checking out')
   return async function (dispatch, getState) {
-    const state = getState()
-    return git.checkout({ dir: repoDirectory, ref: state.branches.currentBranch }).then((success) => {
+    return git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch }).then((success) => {
       console.log('checkout succeeded')
       return success
     }, (error) => {
