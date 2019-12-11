@@ -103,7 +103,7 @@ export function changeRepo (payload) {
         throw error
       }
     )
-    return dispatch(updateBranches()).then(success => {
+    return dispatch(updateBranches({ manual: false })).then(success => {
       // console.log('updateBranches successful')
       return success
     }, error => {

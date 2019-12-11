@@ -8,7 +8,7 @@ import { repoDefault, branchDefault } from '../../constants'
 class BranchSelect extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { selectedBranch: '' }
+    this.state = { selectedBranch: '', input: '' }
     this.handleBranchChange = this.handleBranchChange.bind(this)
     this.handleBranchReload = this.handleBranchReload.bind(this)
   }
@@ -23,7 +23,7 @@ class BranchSelect extends React.Component {
 
   handleBranchReload () {
     console.log('reloading branches')
-    this.props.reloadBranches()
+    this.props.reloadBranches({ manual: true })
   }
 
   render () {
@@ -31,14 +31,15 @@ class BranchSelect extends React.Component {
     for (let i = 0; i < this.props.branchList.length; i++) {
       selectOptions.push({ value: this.props.branchList[i], label: this.props.branchList[i] })
     }
-    if (this.props.repoUrl === repoDefault) {
+    if (this.props.repoUrl === repoDefault || this.props.validRepo === false) {
       return (
         null
       )
     }
     return (
       <div>
-        <h3>{this.props.updating ? 'Updating branches...' : (this.props.switching ? 'Switching branch...' : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3>
+        {/* <h3>{(this.props.switching ? null : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3> */}
+        <p>Branch:</p>
         <Select defaultValue={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })} isClearable isSearchable options={selectOptions} onChange={this.handleBranchChange} isDisabled={this.props.locked} />
         <button className='change-repo' onClick={this.handleBranchReload} disabled={this.props.locked}>
           Reload Branches
@@ -54,8 +55,8 @@ export default connect(
     currentBranch: state.branches.currentBranch,
     branchList: state.branches.branchList,
     switching: state.branches.switching,
-    updating: state.branches.updating,
-    repoUrl: state.repoSelect.repoUrl
+    repoUrl: state.repoSelect.repoUrl,
+    validRepo: state.repoSelect.validRepo
   }),
   {
     changeBranch,

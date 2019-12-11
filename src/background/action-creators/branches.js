@@ -60,13 +60,14 @@ export function changeBranch (payload) {
   }
 }
 
-export function updateBranches () {
+export function updateBranches (payload) {
+  const manual = payload.manual
   return async function (dispatch, getState) {
-    dispatch(startBranchListUpdate())
+    dispatch(startBranchListUpdate({ manual: manual }))
     return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
       async branches => {
         const branchesUpdated = branches.filter(word => word !== 'HEAD')
-        dispatch(branchListUpdateSuccess({ branchList: branchesUpdated }))
+        dispatch(branchListUpdateSuccess({ branchList: branchesUpdated, manual: manual }))
         console.log(`branchList updated to ${branchesUpdated}`)
         return branches
       }, error => {

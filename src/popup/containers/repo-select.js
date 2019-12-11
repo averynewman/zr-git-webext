@@ -33,19 +33,15 @@ class RepoSelect extends React.Component {
     return (
       <div>
         <p>{
-          ((switching, repoUrl, validRepo, erasing) => {
-            if (erasing === true) {
-              return 'Clearing filesystem...'
-            } else if (switching === true) {
-              return 'Cloning new repo...'
+          ((repoUrl, validRepo) => {
+            if (repoUrl === repoDefault) {
+              return 'No repo currently selected.'
             } else if (validRepo === false) {
-              return 'Clone failed. Check your path and try again.'
-            } else if (repoUrl === repoDefault) {
-              return 'No repo selected yet.'
+              return null
             } else {
               return (`Active repo: ${repoUrl}`)
             }
-          })(this.props.switching, this.props.repoUrl, this.props.validRepo, this.props.erasing)
+          })(this.props.repoUrl, this.props.validRepo)
         }
         </p>
         <input
@@ -66,9 +62,7 @@ export default connect(
   state => ({
     locked: state.status.locked,
     repoUrl: state.repoSelect.repoUrl,
-    validRepo: state.repoSelect.validRepo,
-    switching: state.repoSelect.switching,
-    erasing: state.repoSelect.erasing
+    validRepo: state.repoSelect.validRepo
   }),
   { changeRepo }
 )(RepoSelect)
