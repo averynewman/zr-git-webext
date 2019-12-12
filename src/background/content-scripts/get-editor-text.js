@@ -32,20 +32,13 @@ function getDocInjected (cb) {
   (document.head || document.documentElement).appendChild(s)
 }
 
-class TimeoutError extends Error {
-  constructor (message) {
-    super(message)
-    this.name = 'TimeoutError'
-  }
-}
-
 export function getDoc () {
   return new Promise((resolve, reject) => {
     window.chrome.tabs.executeScript({ code: getDocInjected + 'getDocInjected();' })
     console.log('waiting on injected script')
     function timeoutFunction () {
       console.log('getDoc timed out waiting for injected script')
-      reject(new TimeoutError('getDoc timed out waiting for injected script'))
+      reject(new Error('getDoc timed out waiting for injected script'))
     }
     const timeoutID = window.setTimeout(timeoutFunction, 5000)
     window.chrome.runtime.connect()

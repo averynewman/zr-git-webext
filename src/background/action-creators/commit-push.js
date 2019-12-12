@@ -77,6 +77,12 @@ export function commitPush (payload) {
       token: getState().authentication.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
+    }).then((success) => {
+      if (success.ok[0] === 'unpack') {
+        return success
+      } else {
+        throw new Error(`push failed with errors ${recursiveObjectPrinter(success.errors)}`)
+      }
     }).then(async function (success) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
       await dispatch(writeDoc())
