@@ -5,18 +5,11 @@
   "main": "index.js",
   "scripts": {
     "start": "node -r @babel/register scripts/start.js",
-    "build": "node -r @babel/register scripts/build.js",
-    "test": "jest",
-    "test:coverage": "jest --coverage"
-  },
-  "jest": {
-    "setupFiles": [
-      "jest-webextension-mock"
-    ]
+    "build": "node -r @babel/register scripts/build.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jonahweissman/zr-github-crx.git"
+    "url": "https://github.com/jonahnewman/zr-github-webext.git"
   },
   "author": "Jonah Newman and Alex Ralston, with help from Jonah Weissman",
   "license": "MIT",
@@ -45,7 +38,6 @@
     "ansi-html": "^0.0.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
-    "babel-jest": "^23.4.2",
     "babel-loader": "^8.0.6",
     "chalk": "^3.0.0",
     "copy-webpack-plugin": "^5.0.5",
@@ -54,8 +46,6 @@
     "fs-extra": "^8.1.0",
     "html-entities": "^1.2.1",
     "html-webpack-plugin": "^3.2.0",
-    "jest": "^24.9.0",
-    "jest-webextension-mock": "^3.4.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.5.3",
     "react-test-renderer": "^16.8.6",
