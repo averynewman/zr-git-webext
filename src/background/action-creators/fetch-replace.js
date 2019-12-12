@@ -80,8 +80,7 @@ export function writeDoc () {
 function fetch () {
   console.log('fetching')
   return async function (dispatch, getState) {
-    console.log(`fetching with params ${recursiveObjectPrinter({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch })}`)
-    return git.fetch({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
+    return git.pull({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
       console.log('fetch succeeded')
       return success
     }, (error) => {

@@ -73,7 +73,7 @@ async function deleteFolderRecursive (path) { // clears nonempty folders by recu
 
 export function changeRepo (payload) {
   const repoUrl = payload.repoUrl
-  // console.log(`changeRepo request received with url ${repoUrl}`)
+  console.log(`changing repo to ${repoUrl}`)
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
     dispatch(startRepoChange())

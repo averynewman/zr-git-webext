@@ -5,6 +5,8 @@ import { fs, recursiveObjectPrinter } from '../index'
 import { getDoc } from '../content-scripts/get-editor-text'
 import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, proxyUrl, ZRCodePath, START_COMMIT_PUSH } from '../../constants'
 import { writeDoc } from './fetch-replace'
+import { changeRepo } from './repo-select'
+import { changeBranch } from './branches'
 
 function startCommitPush (payload) {
   // console.log('clone starting in background')
@@ -75,16 +77,18 @@ export function commitPush (payload) {
       token: getState().authentication.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
-    }).then((success) => {
+    }).then(async function (success) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
+      await dispatch(writeDoc())
       dispatch(commitPushSuccess())
       return success
-    }, (error) => {
-      console.log(`push failed with error ${error}`)
+    }, async function (error) {
+      console.log(`push failed with error ${error}. fetching now`)
+      const oldBranch = getState().branches.currentBranch
+      await dispatch(changeRepo({ repoUrl: getState().repoSelect.repoUrl }))
+      await dispatch(changeBranch({ branchName: oldBranch }))
       dispatch(commitPushFailure())
       throw error
     })
-
-    await dispatch(writeDoc())
   }
 }

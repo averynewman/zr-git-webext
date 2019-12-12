@@ -51,7 +51,7 @@ class Authentication extends React.Component {
     } else {
       return (
         <div>
-          <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit} autocomplete='off'>
             <label>
               Name:<br />
               <input name='name' type='text' onChange={this.handleInputChange} value={this.state.inputs.name} disabled={this.props.locked} /><br />
