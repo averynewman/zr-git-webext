@@ -7,17 +7,11 @@ import { recursiveObjectPrinter } from '../index'
 class Authentication extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { input: { username: '', email: '', token: '' }, inputActive: false }
-    this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.state = { inputs: { username: '', email: '', token: '' }, inputActive: false }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.handleStartInput = this.handleStartInput.bind(this)
-  }
-
-  handleKeyPress (event) {
-    if (event.keyCode === 13) {
-      this.submitUserInfo()
-    }
+    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   handleStartInput () {
@@ -25,20 +19,20 @@ class Authentication extends React.Component {
   }
 
   handleSubmit () {
-    this.props.setUserInfo({ name: this.state.input.name, email: this.state.input.email, token: this.state.input.token })
-    this.setState({ inputActive: false, input: { name: '', email: '', token: '' } })
+    this.props.setUserInfo({ name: this.state.inputs.name, email: this.state.inputs.email, token: this.state.inputs.token })
+    this.setState({ inputActive: false, inputs: { name: '', email: '', token: '' } })
   }
 
   handleDelete () {
     this.props.deleteUserInfo()
   }
 
-  updateInput (input, key) {
-    this.setState((state, props) => {
-      const output = state
-      output.input[key] = input
-      return output
-    })
+  handleInputChange (event) {
+    const target = event.target
+    const value = target.value
+    const name = target.name
+
+    this.setState({ inputs: { [name]: value } })
   }
 
   render () {
@@ -60,15 +54,15 @@ class Authentication extends React.Component {
           <form onSubmit={this.handleSubmit}>
             <label>
               Name:<br />
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'name')} value={this.state.input.name} disabled={this.props.locked} /><br />
+              <input name='name' type='text' onChange={this.handleInputChange} value={this.state.inputs.name} disabled={this.props.locked} /><br />
             </label>
             <label>
               Email:<br />
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'email')} value={this.state.input.email} disabled={this.props.locked} /><br />
+              <input name='email' type='text' onChange={this.handleInputChange} value={this.state.inputs.email} disabled={this.props.locked} /><br />
             </label>
             <label>
               Token:<br />
-              <input type='text' onChange={e => this.updateInput(e.target.value, 'token')} value={this.state.input.token} disabled={this.props.locked} /><br />
+              <input name='token' type='text' onChange={this.handleInputChange} value={this.state.inputs.token} disabled={this.props.locked} /><br />
             </label>
             <input type='submit' value='Submit User Info' disabled={this.props.locked} />
           </form>
