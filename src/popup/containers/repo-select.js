@@ -7,26 +7,24 @@ import { repoDefault } from '../../constants'
 class RepoSelect extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { input: '' }
-    this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.state = { inputs: { repoUrl: '' } }
+    this.handleInputChange = this.handleInputChange.bind(this)
     this.handleRepoChange = this.handleRepoChange.bind(this)
   }
 
-  handleKeyPress (event) {
-    if (event.keyCode === 13) {
-      this.handleRepoChange()
-    }
+  handleRepoChange (event) {
+    const repoUrl = this.state.inputs.repoUrl
+    this.setState({ inputs: { repoUrl: '' } })
+    this.props.changeRepo({ repoUrl: `https://github.com/${repoUrl}.git` }) // change this to implement switching to non-github repositories
+    event.preventDefault()
   }
 
-  handleRepoChange () { // Possible race condition with multiple changeRepo dispatches before the previous one finishes in background?
-    const repoUrl = this.state.input
-    this.setState({ input: '' })
-    // console.log(`dispatching repo change request in popup with path ${repoPath}`)
-    this.props.changeRepo({ repoUrl: `https://github.com/${repoUrl}.git` }) // change this when switching to non-github repositories
-  }
+  handleInputChange (event) {
+    const target = event.target
+    const value = target.value
+    const name = target.name
 
-  updateInput (input) {
-    this.setState({ input })
+    this.setState({ inputs: { [name]: value } })
   }
 
   render () {
@@ -37,22 +35,19 @@ class RepoSelect extends React.Component {
             if (repoUrl === repoDefault) {
               return 'No repo currently selected.'
             } else if (validRepo === false) {
-              return null
+              return 'placeholder'
             } else {
               return (`Active repo: ${repoUrl}`)
             }
           })(this.props.repoUrl, this.props.validRepo)
         }
         </p>
-        <input
-          onChange={e => this.updateInput(e.target.value)}
-          value={this.state.input}
-          onKeyDown={e => this.handleKeyPress(e)}
-          disabled={this.props.locked}
-        />
-        <button className='change-repo' onClick={this.handleRepoChange} disabled={this.props.locked}>
-          Change Repo
-        </button>
+        <form onSubmit={this.handleRepoChange} autoComplete='off'>
+          <label>
+            <input name='repoUrl' type='text' onChange={this.handleInputChange} value={this.state.inputs.repoUrl} disabled={this.props.locked} />
+          </label>
+          <input type='submit' value='Change Repo' disabled={this.props.locked} />
+        </form>
       </div>
     )
   }

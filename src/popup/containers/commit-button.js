@@ -16,9 +16,10 @@ class CommitButton extends React.Component {
     this.setState({ inputActive: true })
   }
 
-  handleCommit () {
+  handleCommit (event) {
     this.props.startCommit({ message: this.state.inputs.message })
     this.setState({ inputActive: false, inputs: { message: '' } })
+    event.preventDefault()
   }
 
   handleInputChange (event) {
@@ -42,7 +43,7 @@ class CommitButton extends React.Component {
       )
     } else {
       return (
-        <form onSubmit={this.handleCommit} autocomplete='off'>
+        <form onSubmit={this.handleCommit} autoComplete='off'>
           <label>
             Commit message:<br />
             <input name='message' type='text' onChange={this.handleInputChange} value={this.state.inputs.message} disabled={this.props.locked} />

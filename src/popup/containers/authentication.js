@@ -18,9 +18,10 @@ class Authentication extends React.Component {
     this.setState({ inputActive: true })
   }
 
-  handleSubmit () {
+  handleSubmit (event) {
     this.props.setUserInfo({ name: this.state.inputs.name, email: this.state.inputs.email, token: this.state.inputs.token })
     this.setState({ inputActive: false, inputs: { name: '', email: '', token: '' } })
+    event.preventDefault()
   }
 
   handleDelete () {
@@ -51,7 +52,7 @@ class Authentication extends React.Component {
     } else {
       return (
         <div>
-          <form onSubmit={this.handleSubmit} autocomplete='off'>
+          <form onSubmit={this.handleSubmit} autoComplete='off'>
             <label>
               Name:<br />
               <input name='name' type='text' onChange={this.handleInputChange} value={this.state.inputs.name} disabled={this.props.locked} /><br />

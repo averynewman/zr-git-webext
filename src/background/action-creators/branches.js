@@ -36,10 +36,10 @@ function branchChangeSuccess (payload) {
 export function changeBranch (payload) {
   const branchName = payload.branchName
   console.log(`switching to branch ${branchName}`)
-  return async function (dispatch) {
+  return async function (dispatch, getState) {
     dispatch(startBranchChange({ branchName: branchName }))
     // console.log('changeBranch thunk started')
-    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, corsProxy: 'https://cors.isomorphic-git.org', url: payload.repoUrl }).then(
+    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, corsProxy: 'https://cors.isomorphic-git.org', url: getState().repoUrl }).then(
       (success) => {
         return success
       }, error => {
