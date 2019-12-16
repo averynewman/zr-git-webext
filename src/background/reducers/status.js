@@ -1,6 +1,6 @@
 import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_REPO_CHANGE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE,
-  START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault
+  START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault, START_BRANCH_CREATION, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE
 } from '../../constants'
 
 var defaultSubstate = {
@@ -41,6 +41,18 @@ export default (state = defaultSubstate, action) => {
     case BRANCH_CHANGE_SUCCESS:
       output.locked = false
       output.statusMessage = 'Successfully switched branches.'
+      break
+    case START_BRANCH_CREATION:
+      output.locked = true
+      output.statusMessage = `Creating branch ${action.branchName}...`
+      break
+    case BRANCH_CREATION_SUCCESS:
+      output.locked = false
+      output.statusMessage = 'Successfully created new branch.'
+      break
+    case BRANCH_CREATION_FAILURE:
+      output.locked = false
+      output.statusMessage = 'Failed to create branch.'
       break
     case START_FETCH_REPLACE:
       output.locked = true

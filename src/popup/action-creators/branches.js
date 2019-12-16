@@ -1,4 +1,4 @@
-import { POPUP_CHANGE_BRANCH, POPUP_RELOAD_BRANCHES } from '../../constants'
+import { POPUP_CHANGE_BRANCH, POPUP_RELOAD_BRANCHES, POPUP_CREATE_BRANCH } from '../../constants'
 
 export function changeBranch (payload) {
   return {
@@ -10,6 +10,13 @@ export function changeBranch (payload) {
 export function reloadBranches (payload) {
   return {
     type: POPUP_RELOAD_BRANCHES,
+    ...payload
+  }
+}
+
+export function createBranch (payload) {
+  return {
+    type: POPUP_CREATE_BRANCH,
     ...payload
   }
 }

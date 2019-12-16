@@ -1,4 +1,7 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory } from '../../constants'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION, proxyUrl, branchDefault } from '../../constants'
+import { recursiveObjectPrinter } from '../index'
+import { writeDoc } from './fetch-replace'
+import { changeRepo } from './repo-select'
 import * as git from 'isomorphic-git'
 
 function startBranchListUpdate (payload) {
@@ -33,8 +36,31 @@ function branchChangeSuccess (payload) {
   }
 }
 
+function startBranchCreation (payload) {
+  return {
+    type: START_BRANCH_CREATION,
+    ...payload
+  }
+}
+
+function branchCreationSuccess (payload) {
+  return {
+    type: BRANCH_CREATION_SUCCESS,
+    ...payload
+  }
+}
+
+function branchCreationFailure (payload) {
+  return {
+    type: BRANCH_CREATION_FAILURE,
+    ...payload
+  }
+}
 export function changeBranch (payload) {
   const branchName = payload.branchName
+  if (branchName === branchDefault) {
+    return true
+  }
   console.log(`switching to branch ${branchName}`)
   return async function (dispatch) {
     dispatch(startBranchChange({ branchName: branchName }))
@@ -74,6 +100,54 @@ export function updateBranches (payload) {
         throw error
       }
     )
+  }
+}
+
+export function createBranch (payload) {
+  const branchName = payload.name
+  console.log(`Creating new branch ${branchName}`)
+  return async function (dispatch, getState) {
+    const oldBranch = getState().branches.currentBranch
+    console.log('createBranch thunk started')
+    dispatch(startBranchCreation({ branchName: branchName }))
+    console.log('startBranchCreation dispatched')
+    await git.branch({ dir: repoDirectory, ref: branchName, checkout: true }).then(
+      (success) => {
+        return success
+      }, async function (error) {
+        console.log(`creation failed with error ${error}`)
+        dispatch(branchCreationFailure({ branchName: branchName, reset: true }))
+        await dispatch(changeBranch({ branchName: oldBranch }))
+        throw error
+      }
+    )
+    await git.push({
+      dir: repoDirectory,
+      noGitSuffix: true,
+      ref: getState().branches.currentBranch,
+      remote: 'origin',
+      corsProxy: proxyUrl,
+      token: getState().authentication.token,
+      oauth2format: 'github',
+      remoteRef: `refs/heads/${getState().branches.currentBranch}`
+    }).then((success) => {
+      if (success.ok[0] === 'unpack') {
+        return success
+      } else {
+        throw new Error(`push failed with errors ${recursiveObjectPrinter(success.errors)}`)
+      }
+    }).then(async function (success) {
+      console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
+      await dispatch(writeDoc())
+      dispatch(branchCreationSuccess())
+      return success
+    }, async function (error) {
+      console.log(`push failed with error ${error}. fetching now`)
+      await dispatch(changeRepo({ repoUrl: getState().repoSelect.repoUrl }))
+      await dispatch(changeBranch({ branchName: oldBranch }))
+      dispatch(branchCreationFailure({ reset: false }))
+      throw error
+    })
   }
 }
 
