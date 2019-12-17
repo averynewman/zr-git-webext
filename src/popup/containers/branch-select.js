@@ -19,9 +19,8 @@ class BranchSelect extends React.Component {
   handleBranchChange (option) {
     const branchName = option.value
     this.setState({ selectedBranch: branchName })
-    const repoUrl = this.props.repoUrl
     // console.log(`dispatching branch change to branch ${branchName}`)
-    this.props.changeBranch({ branchName: branchName, repoUrl: repoUrl })
+    this.props.changeBranch({ branchName: branchName })
   }
 
   handleBranchReload () {

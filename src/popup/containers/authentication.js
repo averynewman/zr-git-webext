@@ -18,9 +18,10 @@ class Authentication extends React.Component {
     this.setState({ inputActive: true })
   }
 
-  handleSubmit () {
+  handleSubmit (event) {
     this.props.setUserInfo({ name: this.state.inputs.name, email: this.state.inputs.email, token: this.state.inputs.token })
     this.setState({ inputActive: false, inputs: { name: '', email: '', token: '' } })
+    event.preventDefault()
   }
 
   handleDelete () {
@@ -32,7 +33,11 @@ class Authentication extends React.Component {
     const value = target.value
     const name = target.name
 
-    this.setState({ inputs: { [name]: value } })
+    this.setState((state) => {
+      const output = state
+      output.inputs[name] = value
+      return output
+    })
   }
 
   render () {
@@ -45,13 +50,13 @@ class Authentication extends React.Component {
           <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
             Delete User Info
           </button>
-          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
+          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
         </div>
       )
     } else {
       return (
         <div>
-          <form onSubmit={this.handleSubmit} autocomplete='off'>
+          <form onSubmit={this.handleSubmit} autoComplete='off'>
             <label>
               Name:<br />
               <input name='name' type='text' onChange={this.handleInputChange} value={this.state.inputs.name} disabled={this.props.locked} /><br />
@@ -69,7 +74,7 @@ class Authentication extends React.Component {
           <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
             Delete User Info
           </button>
-          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
+          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
         </div>
       )
     }
