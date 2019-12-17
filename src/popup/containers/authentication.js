@@ -50,7 +50,7 @@ class Authentication extends React.Component {
           <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
             Delete User Info
           </button>
-          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
+          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
         </div>
       )
     } else {
@@ -74,7 +74,7 @@ class Authentication extends React.Component {
           <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
             Delete User Info
           </button>
-          <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p>
+          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
         </div>
       )
     }

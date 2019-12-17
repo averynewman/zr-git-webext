@@ -27,7 +27,11 @@ class CommitButton extends React.Component {
     const value = target.value
     const name = target.name
 
-    this.setState({ inputs: { [name]: value } })
+    this.setState((state) => {
+      const output = state
+      output.inputs[name] = value
+      return output
+    })
   }
 
   render () {
