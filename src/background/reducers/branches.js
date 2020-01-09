@@ -14,6 +14,9 @@ export default (state = defaultSubstate, action) => {
       break
     case BRANCH_LIST_UPDATE_SUCCESS:
       output.branchList = action.branchList
+      if (!output.branchList.includes(state.currentBranch)) {
+        output.currentBranch = 'master'
+      }
       break
     case START_BRANCH_CHANGE:
       output.switching = true

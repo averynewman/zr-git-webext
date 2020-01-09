@@ -32,7 +32,7 @@ function fetchReplaceSuccess (payload) {
 export function fetchReplace () {
   return async function (dispatch, getState) {
     dispatch(startFetchReplace())
-    await dispatch(fetch()).catch((error) => {
+    await dispatch(pull()).catch((error) => {
       dispatch(fetchReplaceFailure())
       throw error
     })
@@ -77,10 +77,10 @@ export function writeDoc () {
   }
 }
 
-function fetch () {
+function pull () {
   console.log('fetching')
   return async function (dispatch, getState) {
-    return git.pull({ dir: repoDirectory, corsProxy: proxyUrl, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
+    return git.pull({ dir: repoDirectory, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
       console.log('fetch succeeded')
       return success
     }, (error) => {
