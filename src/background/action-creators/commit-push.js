@@ -44,7 +44,7 @@ export function commitPush (payload) {
     const editorContents = contentResponse.text
     const documentHeader = contentResponse.head
     const sha = documentHeader.sha
-    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    let logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     if (sha !== logOutput[0].oid) {
       console.log(`commits not equal, aborting. Document is ${sha}, most recent is ${logOutput[0].oid}`)
       return dispatch(commitPushFailure())
@@ -86,6 +86,7 @@ export function commitPush (payload) {
     }).then(async function (success) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
       await dispatch(writeDoc())
+      await git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch })
       dispatch(commitPushSuccess())
       return success
     }, async function (error) {
@@ -96,5 +97,7 @@ export function commitPush (payload) {
       dispatch(commitPushFailure())
       throw error
     })
+    logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    console.log(recursiveObjectPrinter(logOutput))
   }
 }

@@ -1,6 +1,5 @@
 import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION, proxyUrl, branchDefault } from '../../constants'
 import { recursiveObjectPrinter } from '../index'
-import { writeDoc } from './fetch-replace'
 import { changeRepo } from './repo-select'
 import * as git from 'isomorphic-git'
 
@@ -138,7 +137,6 @@ export function createBranch (payload) {
       }
     }).then(async function (success) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
-      await dispatch(writeDoc())
       dispatch(branchCreationSuccess())
       return success
     }, async function (error) {
@@ -148,10 +146,7 @@ export function createBranch (payload) {
       dispatch(branchCreationFailure({ reset: false }))
       throw error
     })
+    let logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    console.log(recursiveObjectPrinter(logOutput))
   }
-}
-
-export function updateBranchesThunk (payload) {
-  console.log('updateBranchesThunk called')
-  return updateBranches
 }
