@@ -65,7 +65,7 @@ export function changeBranch (payload) {
   return async function (dispatch, getState) {
     dispatch(startBranchChange({ branchName: branchName }))
     // console.log('changeBranch thunk started')
-    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, corsProxy: 'https://cors.isomorphic-git.org', url: getState().repoUrl }).then(
+    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, url: getState().repoUrl }).then(
       (success) => {
         return success
       }, error => {
@@ -90,12 +90,16 @@ export function updateBranches (payload) {
   const manual = payload.manual
   return async function (dispatch, getState) {
     dispatch(startBranchListUpdate({ manual: manual }))
-    return git.listBranches({ dir: repoDirectory, remote: 'origin' }).then(
-      async branches => {
-        const branchesUpdated = branches.filter(word => word !== 'HEAD')
-        dispatch(branchListUpdateSuccess({ branchList: branchesUpdated, manual: manual }))
-        console.log(`branchList updated to ${branchesUpdated}`)
-        return branches
+    console.log('test1')
+    remoteInfo = await git.getRemoteInfo({ url: getState().repoSelect.repoUrl, corsProxy: proxyUrl }).then(
+      output => {
+        console.log('test2')
+        console.log(recursiveObjectPrinter(output))
+        const branches = Object.keys(output.refs.heads)
+        const branchesFiltered = branches.filter(word => word !== 'HEAD')
+        dispatch(branchListUpdateSuccess({ branchList: branchesFiltered, manual: manual }))
+        console.log(`branchList updated to ${branchesFiltered}`)
+        return output
       }, error => {
         console.log(`updateBranches failed with error ${error}`)
         throw error
@@ -127,7 +131,6 @@ export function createBranch (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      corsProxy: proxyUrl,
       token: getState().authentication.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`

@@ -73,7 +73,6 @@ export function commitPush (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      corsProxy: proxyUrl,
       token: getState().authentication.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
