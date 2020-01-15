@@ -2,7 +2,7 @@ import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHAN
 import { recursiveObjectPrinter } from '../index'
 import { changeRepo } from './repo-select'
 import * as git from 'isomorphic-git'
-import { writeDoc } from './fetch-replace';
+import { writeDoc } from './fetch-replace'
 
 function startBranchListUpdate (payload) {
   // console.log('starting branch list update')
