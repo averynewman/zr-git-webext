@@ -68,6 +68,14 @@ logStoreState()
 // set up debug every time state changes
 store.subscribe(() => logStoreState())
 
+chrome.runtime.onConnect.addListener(function(port) {
+  console.assert(port.name == "branchListPort")
+  port.onMessage.addListener(function(msg) {
+    if (msg.request == "give branchList plz")
+      port.postMessage({branchList: store.branchList})
+  })
+})
+
 const fs = new LightningFS('fs', { wipe: true })
 // console.log(recursiveObjectPrinter(fs))
 git.plugins.set('fs', fs)
