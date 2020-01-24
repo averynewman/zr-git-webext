@@ -1,8 +1,8 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs, recursiveObjectPrinter } from '../index'
-import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, proxyUrl, ZRCodePath } from '../../constants'
+import { fs } from '../index'
+import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, ZRCodePath, recursiveObjectPrinter } from '../../constants'
 import { setDoc } from '../content-scripts/set-editor-text'
 
 function startFetchReplace (payload) {
@@ -77,20 +77,20 @@ export function writeDoc () {
   }
 }
 
-function pull () {
-  console.log('fetching')
+export function pull () {
+  console.log('pulling')
   return async function (dispatch, getState) {
     return git.pull({ dir: repoDirectory, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
-      console.log('fetch succeeded')
+      console.log('pull succeeded')
       return success
     }, (error) => {
-      console.log(`fetch failed with error ${error}`)
+      console.log(`pull failed with error ${error}`)
       throw error
     })
   }
 }
 
-function checkout () {
+export function checkout () {
   console.log('checking out')
   return async function (dispatch, getState) {
     return git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch }).then((success) => {

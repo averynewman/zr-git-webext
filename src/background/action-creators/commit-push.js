@@ -1,10 +1,10 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs, recursiveObjectPrinter } from '../index'
+import { fs } from '../index'
 import { getDoc } from '../content-scripts/get-editor-text'
-import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, proxyUrl, ZRCodePath, START_COMMIT_PUSH } from '../../constants'
-import { writeDoc } from './fetch-replace'
+import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, ZRCodePath, START_COMMIT_PUSH, recursiveObjectPrinter } from '../../constants'
+import { writeDoc, pull, checkout } from './fetch-replace'
 import { changeRepo } from './repo-select'
 import { changeBranch } from './branches'
 
@@ -36,6 +36,19 @@ export function commitPush (payload) {
   return async function (dispatch, getState) {
     const commitMessage = payload.message
     dispatch(startCommitPush())
+
+    console.log('doing preliminary pull/checkout')
+    await dispatch(pull()).catch((error) => {
+      dispatch(commitPushFailure())
+      console.log(`preliminary pull/checkout failed with ${error}`)
+      throw error
+    })
+    await dispatch(checkout()).catch((error) => {
+      dispatch(commitPushFailure())
+      console.log(`preliminary pull/checkout failed with ${error}`)
+      throw error
+    })
+    console.log('preliminary pull/checkout succeeded')
 
     const contentResponse = await getDoc().catch((error) => {
       dispatch(commitPushFailure())

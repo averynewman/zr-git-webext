@@ -35,3 +35,28 @@ export const tokenDefault = '!default token value'
 export const proxyUrl = 'https://cors.isomorphic-git.org'
 export const ZRCodePath = 'main.cpp'
 export const statusDefault = 'Nothing to report'
+
+export const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes. don't use it for those.
+  if (Object.prototype.toString.call(obj) === '[object Array]') { // if value is just an array
+    return `[${obj}]`
+  } else if (obj !== Object(obj)) { // if value is not an object (and not an array), primitive or null
+    return `${obj}`
+  }
+  let outputString = ''
+  Object.keys(obj).forEach((key, index) => {
+    const value = obj[key]
+    if (index !== 0) {
+      outputString = outputString + ', '
+    }
+    if (value === Object(value) && Object.prototype.toString.call(value) !== '[object Array]') { // if value is a non-array object
+      outputString = outputString + `${key} : ${recursiveObjectPrinter(value)}`
+    } else if (Object.prototype.toString.call(value) === '[object Array]') { // if value is array
+      outputString = outputString + `${key} : [${value}]`
+    } else if (typeof value === 'string' || value instanceof String) { // if value is string
+      outputString = outputString + `${key} : ${JSON.stringify(value)}` // convert to string literal (turn special characters into other stuff)
+    } else { // if value is non-string primitive or null
+      outputString = outputString + `${key} : ${value}`
+    }
+  })
+  return `{ ${outputString} }`
+}

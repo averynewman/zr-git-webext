@@ -5,7 +5,7 @@ import '@babel/polyfill'
 import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
 import { updateBranches } from './branches'
 import { fs } from '../index'
-// import { recursiveObjectPrinter } from '../index'
+// import { recursiveObjectPrinter } from '../../constants'
 
 function startRepoChange (payload) {
   // console.log('clone starting in background')

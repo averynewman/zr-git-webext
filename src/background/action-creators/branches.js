@@ -1,5 +1,4 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION, proxyUrl, branchDefault } from '../../constants'
-import { recursiveObjectPrinter } from '../index'
+import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION, proxyUrl, branchDefault, recursiveObjectPrinter } from '../../constants'
 import { changeRepo } from './repo-select'
 import * as git from 'isomorphic-git'
 
@@ -89,7 +88,7 @@ export function updateBranches (payload) {
   return async function (dispatch, getState) {
     dispatch(startBranchListUpdate({ manual: manual }))
     console.log('test1')
-    remoteInfo = await git.getRemoteInfo({ url: getState().repoSelect.repoUrl, corsProxy: proxyUrl }).then(
+    await git.getRemoteInfo({ url: getState().repoSelect.repoUrl, corsProxy: proxyUrl }).then(
       output => {
         console.log('test2')
         console.log(recursiveObjectPrinter(output))
@@ -149,7 +148,7 @@ export function createBranch (payload) {
       dispatch(branchCreationFailure({ reset: false }))
       throw error
     })
-    let logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     console.log(recursiveObjectPrinter(logOutput))
   }
 }
