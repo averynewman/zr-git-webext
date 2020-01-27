@@ -68,11 +68,18 @@ logStoreState()
 // set up debug every time state changes
 store.subscribe(() => logStoreState())
 
-chrome.runtime.onConnect.addListener(function(port) {
-  console.assert(port.name == "branchListPort")
-  port.onMessage.addListener(function(msg) {
-    if (msg.request == "give branchList plz")
-      port.postMessage({branchList: store.branchList})
+window.chrome.runtime.onConnect.addListener(function (port) {
+  console.log(port)
+  console.assert(port.name == 'branchListPort')
+  port.onMessage.addListener(async function (msg) {
+    console.log(`recieved msg: ${msg}`)
+    if (msg.request === 'branchList') {
+      port.postMessage({ branchList: store.getState().branches.branchList })
+    }
+    if (msg.request === 'contents') {
+      //contents = await getContents(msg.branch)
+      //port.postMessage({ contents: contents })
+    }
   })
 })
 

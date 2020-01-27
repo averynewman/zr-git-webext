@@ -1,17 +1,15 @@
 console.log('page loaded')
-
-var port = chrome.runtime.connect({name: "branchListPort"})
-port.onMessage.addListener(function(msg) {
-  branchlist = msg.branchList
-  console.log(`updated branchList to ${branchList}`)
-})
+var port = window.chrome.runtime.connect({ name: 'branchListPort' })
 
 const simulateButtons = document.querySelectorAll('[ng-click="openSimDialog()"]')
 simulateButtons.forEach(element => element.addEventListener('click', () => {
-  port.postMessage({request: "give branchList plz"}).then((msg) => {
-    setTimeout(() => { addMenu(msg.branches) }, 100)
-  })
-  setTimeout(() => { addMenu(branchList) }, 100)
+  var listenerFunction = function (msg) {
+    console.log(`recieved branchList ${msg.branchList}`)
+    port.onMessage.removeListener(listenerFunction)
+    setTimeout(() => { addMenu(msg.branchList) }, 100)
+  }
+  port.onMessage.addListener(listenerFunction)
+  port.postMessage({ request: 'branchList' })
 }))
 
 function addMenu (branches) {
@@ -36,13 +34,36 @@ function addMenu (branches) {
     const el = document.createElement('li')
     el.setAttribute('role', 'menuitem')
     const link = document.createElement('a')
-    link.innerText = e.name
+    link.innerText = e
     link.setAttribute('href', '')
     el.appendChild(link)
     branchList.appendChild(el)
-    // el.addEventListener('click', () => { pickGithubOpponent(e.name) })
+    el.addEventListener('click', () => {
+      var listenerFunction = function (msg) {
+        console.log(`recieved contents of ${e}`)
+        port.onMessage.removeListener(listenerFunction)
+        pickGithubOpponent(e, msg.contents)
+      }
+      port.onMessage.addListener(listenerFunction)
+      port.postMessage({ request: 'contents', branch: e })
+    })
   })
   wrapper.appendChild(button)
   wrapper.appendChild(branchList)
   playerSelect.parentNode.parentNode.appendChild(wrapper)
+}
+
+function pickGithubOpponent (branch, data) {
+  console.log(data)
+  var s = document.createElement('script')
+  s.innerText = `
+  var scope = angular.element(document.getElementById('std-player-select')).scope();
+  scope.data.opponentCode[0] = \`${data.text.replace(/\n/g, '\\n')}\`;
+  scope.opponentTitle = \`${branch}\`;
+  scope.$digest();
+  `
+  s.onload = function () {
+  this.remove()
+  };
+  (document.head || document.documentElement).appendChild(s)
 }
