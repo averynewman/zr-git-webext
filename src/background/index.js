@@ -6,7 +6,7 @@ import thunkMiddleware from 'redux-thunk'
 import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
-import { changeBranch, updateBranches, createBranch } from './action-creators/branches'
+import { changeBranch, updateBranches, createBranch, getContents } from './action-creators/branches'
 import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
@@ -77,8 +77,8 @@ window.chrome.runtime.onConnect.addListener(function (port) {
       port.postMessage({ branchList: store.getState().branches.branchList })
     }
     if (msg.request === 'contents') {
-      //contents = await getContents(msg.branch)
-      //port.postMessage({ contents: contents })
+      let contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
+      port.postMessage({ contents: contents })
     }
   })
 })

@@ -54,16 +54,16 @@ function addMenu (branches) {
 }
 
 function pickGithubOpponent (branch, data) {
-  console.log(data)
+  console.log(`contents are: ${data}`)
   var s = document.createElement('script')
   s.innerText = `
   var scope = angular.element(document.getElementById('std-player-select')).scope();
-  scope.data.opponentCode[0] = \`${data.text.replace(/\n/g, '\\n')}\`;
+  scope.data.opponentCode[0] = \`${data.replace(/\n/g, '\\n')}\`;
   scope.opponentTitle = \`${branch}\`;
   scope.$digest();
   `
   s.onload = function () {
-  this.remove()
+    this.remove()
   };
   (document.head || document.documentElement).appendChild(s)
 }

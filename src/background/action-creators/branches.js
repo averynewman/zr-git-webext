@@ -1,5 +1,8 @@
-import { START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION, proxyUrl, branchDefault } from '../../constants'
-import { recursiveObjectPrinter } from '../index'
+import {
+  START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE,
+  START_BRANCH_CREATION, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, proxyUrl, branchDefault, ZRCodePath
+} from '../../constants'
+import { recursiveObjectPrinter, fs } from '../index'
 import { changeRepo } from './repo-select'
 import * as git from 'isomorphic-git'
 import { writeDoc } from './fetch-replace'
@@ -32,6 +35,27 @@ function branchChangeSuccess (payload) {
   // console.log(`successfully changed to branch ${payload.branchName}`)
   return {
     type: BRANCH_CHANGE_SUCCESS,
+    ...payload
+  }
+}
+
+function startGetContents (payload) {
+  return {
+    type: START_GET_CONTENTS,
+    ...payload
+  }
+}
+
+function getContentsSuccess (payload) {
+  return {
+    type: GET_CONTENTS_SUCCESS,
+    ...payload
+  }
+}
+
+function getContentsFailure (payload) {
+  return {
+    type: GET_CONTENTS_FAILURE,
     ...payload
   }
 }
@@ -86,12 +110,70 @@ export function changeBranch (payload) {
   }
 }
 
+export function getContents (payload) {
+  const branchName = payload.branchName
+  const oldBranchName = payload.oldBranchName
+  if (branchName === branchDefault) {
+    return true
+  }
+  console.log(`GETCONTENTS temporarily switching to branch ${branchName}`)
+  return async (dispatch, getState) => {
+    console.log('sdfguiguiguiuiodfhkghkdfjghklsjdgklsjdfhgjklsdhfhjjhyhyghghhhhhhhhhh')
+    await dispatch(startGetContents({ branchName: branchName }))
+    console.log('testtesttesttest')
+    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, url: getState().repoUrl }).then(
+      (success) => {
+        console.log('GETCONTENTS fetched successfully')
+        return success
+      }, error => {
+        console.log(`GETCONTENTS fetch failed with error ${error}`)
+        throw error
+      }
+    )
+    var editorContents = await git.checkout({ dir: repoDirectory, ref: branchName }).then(
+      async function () {
+        let editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
+          console.log('GETCONTENTS file read succeeded')
+          console.log(editorContents)
+          return success
+        }, (error) => {
+          console.log(`GETCONTENTS file read failed with error ${error}`)
+          throw error
+        })
+        return editorContents
+      }, error => {
+        console.log(`GETCONTENTS checkout failed with error ${error}`)
+        throw error
+      }
+    )
+    await git.fetch({ dir: repoDirectory, ref: oldBranchName, depth: 5, url: getState().repoUrl }).then(
+      (success) => {
+        return success
+      }, error => {
+        console.log(`GETCONTENTS fetch failed with error ${error}`)
+        throw error
+      }
+    )
+
+    await git.checkout({ dir: repoDirectory, ref: branchName }).then(
+      async function (success) {
+        dispatch(getContentsSuccess())
+        return success
+      }, error => {
+        console.log(`GETCONTENTS checkout failed with error ${error}`)
+        throw error
+      }
+    )
+    return editorContents
+  }
+}
+
 export function updateBranches (payload) {
   const manual = payload.manual
   return async function (dispatch, getState) {
     dispatch(startBranchListUpdate({ manual: manual }))
     console.log('test1')
-    remoteInfo = await git.getRemoteInfo({ url: getState().repoSelect.repoUrl, corsProxy: proxyUrl }).then(
+    await git.getRemoteInfo({ url: getState().repoSelect.repoUrl, corsProxy: proxyUrl }).then(
       output => {
         console.log('test2')
         console.log(recursiveObjectPrinter(output))
