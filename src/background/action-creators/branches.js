@@ -82,6 +82,7 @@ function branchCreationFailure (payload) {
 }
 export function changeBranch (payload) {
   const branchName = payload.branchName
+  const write = payload.write
   if (branchName === branchDefault) {
     return true
   }
@@ -99,8 +100,10 @@ export function changeBranch (payload) {
     )
     return git.checkout({ dir: repoDirectory, ref: branchName }).then(
       async function (success) {
-        await dispatch(writeDoc())
-        dispatch(branchChangeSuccess({ branchName: branchName }))
+        if (write) {
+          await dispatch(writeDoc())
+          dispatch(branchChangeSuccess({ branchName: branchName }))
+        }
         return success
       }, error => {
         console.log(`checkout failed with error ${error}`)
@@ -113,19 +116,40 @@ export function changeBranch (payload) {
 export function getContents (payload) {
   const branchName = payload.branchName
   const oldBranchName = payload.oldBranchName
+  let editorContents
+  let failed = false
   if (branchName === branchDefault) {
     return true
   }
-  console.log(`GETCONTENTS temporarily switching to branch ${branchName}`)
   return async (dispatch, getState) => {
-    console.log('sdfguiguiguiuiodfhkghkdfjghklsjdgklsjdfhgjklsdhfhjjhyhyghghhhhhhhhhh')
-    await dispatch(startGetContents({ branchName: branchName }))
-    console.log('testtesttesttest')
+    dispatch(startGetContents({ branchName: branchName }))
+    await dispatch(changeBranch({ branchName: branchName, write: false }))
+
+    editorContents = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).then((success) => {
+      console.log('GETCONTENTS file read succeeded')
+      console.log(editorContents)
+      return success
+    }, (error) => {
+      failed = true
+      console.log(`GETCONTENTS file read failed with error ${error}`)
+      throw error
+    })
+
+    await dispatch(changeBranch({ branchName: oldBranchName, write: false }))
+    if (!failed) {
+      dispatch(getContentsSuccess({ branchName: oldBranchName }))
+      return editorContents
+    }
+    else {
+      dispatch(getContentsFailure({ branchName: oldBranchName }))
+      return null
+    }
+    /*
     await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, url: getState().repoUrl }).then(
       (success) => {
-        console.log('GETCONTENTS fetched successfully')
         return success
       }, error => {
+        dispatch(getContentsFailure({ branchName: branchName }))
         console.log(`GETCONTENTS fetch failed with error ${error}`)
         throw error
       }
@@ -137,11 +161,13 @@ export function getContents (payload) {
           console.log(editorContents)
           return success
         }, (error) => {
+          dispatch(getContentsFailure({ branchName: branchName }))
           console.log(`GETCONTENTS file read failed with error ${error}`)
           throw error
         })
         return editorContents
       }, error => {
+        dispatch(getContentsFailure({ branchName: branchName }))
         console.log(`GETCONTENTS checkout failed with error ${error}`)
         throw error
       }
@@ -150,6 +176,7 @@ export function getContents (payload) {
       (success) => {
         return success
       }, error => {
+        dispatch(getContentsFailure({ branchName: branchName }))
         console.log(`GETCONTENTS fetch failed with error ${error}`)
         throw error
       }
@@ -157,14 +184,16 @@ export function getContents (payload) {
 
     await git.checkout({ dir: repoDirectory, ref: branchName }).then(
       async function (success) {
-        dispatch(getContentsSuccess())
+        dispatch(getContentsSuccess({ branchName: branchName }))
         return success
       }, error => {
+        dispatch(getContentsFailure({ branchName: branchName }))
         console.log(`GETCONTENTS checkout failed with error ${error}`)
         throw error
       }
     )
     return editorContents
+    */
   }
 }
 
@@ -204,7 +233,7 @@ export function createBranch (payload) {
       }, async function (error) {
         console.log(`creation failed with error ${error}`)
         dispatch(branchCreationFailure({ branchName: branchName, reset: true }))
-        await dispatch(changeBranch({ branchName: oldBranch }))
+        await dispatch(changeBranch({ branchName: oldBranch, write: true }))
         throw error
       }
     )
@@ -229,7 +258,7 @@ export function createBranch (payload) {
     }, async function (error) {
       console.log(`push failed with error ${error}. fetching now`)
       await dispatch(changeRepo({ repoUrl: getState().repoSelect.repoUrl }))
-      await dispatch(changeBranch({ branchName: oldBranch }))
+      await dispatch(changeBranch({ branchName: oldBranch, write: true }))
       dispatch(branchCreationFailure({ reset: false }))
       throw error
     })

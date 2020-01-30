@@ -48,11 +48,11 @@ export default (state = defaultSubstate, action) => {
       break
     case GET_CONTENTS_SUCCESS:
       output.locked = false
-      output.statusMessage = 'Successfully retrieved contents and switched back to old branch'
+      output.statusMessage = `Successfully retrieved contents and switched back to ${action.branchName}`
       break
     case GET_CONTENTS_FAILURE:
       output.locked = false
-      output.statusMessage = 'Failed to retrieve contents and switched back to old branch'
+      output.statusMessage = `Failed to retrieve contents; switched back to ${action.branchName}`
       break
     case START_BRANCH_CREATION:
       output.locked = true
