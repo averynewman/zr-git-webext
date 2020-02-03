@@ -39,9 +39,11 @@ function addMenu (branches) {
     el.appendChild(link)
     branchList.appendChild(el)
     el.addEventListener('click', () => {
+      button.innerHTML = `Retrieving opponent: ${e}`
       var listenerFunction = function (msg) {
         console.log(`recieved contents of ${e}`)
         port.onMessage.removeListener(listenerFunction)
+        button.innerHTML = `Selected opponent: ${e} <span class="caret"></span>`
         pickGithubOpponent(e, msg.contents)
       }
       port.onMessage.addListener(listenerFunction)

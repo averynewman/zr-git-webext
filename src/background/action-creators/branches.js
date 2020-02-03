@@ -139,8 +139,7 @@ export function getContents (payload) {
     if (!failed) {
       dispatch(getContentsSuccess({ branchName: oldBranchName }))
       return editorContents
-    }
-    else {
+    } else {
       dispatch(getContentsFailure({ branchName: oldBranchName }))
       return null
     }
@@ -262,7 +261,7 @@ export function createBranch (payload) {
       dispatch(branchCreationFailure({ reset: false }))
       throw error
     })
-    let logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     console.log(recursiveObjectPrinter(logOutput))
   }
 }

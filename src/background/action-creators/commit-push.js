@@ -3,7 +3,7 @@ import '@babel/polyfill'
 
 import { fs, recursiveObjectPrinter } from '../index'
 import { getDoc } from '../injected-scripts/get-editor-text'
-import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, proxyUrl, ZRCodePath, START_COMMIT_PUSH } from '../../constants'
+import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, ZRCodePath, START_COMMIT_PUSH } from '../../constants'
 import { writeDoc } from './fetch-replace'
 import { changeRepo } from './repo-select'
 import { changeBranch } from './branches'

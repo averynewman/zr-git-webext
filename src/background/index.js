@@ -77,7 +77,7 @@ window.chrome.runtime.onConnect.addListener(function (port) {
       port.postMessage({ branchList: store.getState().branches.branchList })
     }
     if (msg.request === 'contents') {
-      let contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
+      const contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
       port.postMessage({ contents: contents })
     }
   })

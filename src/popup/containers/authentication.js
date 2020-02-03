@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { setUserInfo, deleteUserInfo } from '../action-creators/authentication'
-import { recursiveObjectPrinter } from '../index'
 
 class Authentication extends React.Component {
   constructor (props) {
