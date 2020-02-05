@@ -24,13 +24,15 @@ export default (state = defaultSubstate, action) => {
       break
     case START_BRANCH_LIST_UPDATE:
       output.locked = true
-      if (action.manual) {
+      if (action.message) {
         output.statusMessage = 'Updating branch list...'
       }
       break
     case BRANCH_LIST_UPDATE_SUCCESS:
-      output.locked = false
-      if (action.manual) {
+      if (action.unlock) {
+        output.locked = false
+      }
+      if (action.message) {
         output.statusMessage = 'Successfully updated branch list.'
       }
       break
@@ -64,7 +66,11 @@ export default (state = defaultSubstate, action) => {
       break
     case BRANCH_CREATION_FAILURE:
       output.locked = false
-      output.statusMessage = 'Failed to create branch.'
+      if (action.nameError) {
+        output.statusMessage = 'That branch name is invalid or already exists, please choose another name and try again.'
+      } else {
+        output.statusMessage = 'Failed to create branch.'
+      }
       break
     case START_FETCH_REPLACE:
       output.locked = true

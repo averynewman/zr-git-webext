@@ -33,7 +33,7 @@ const store = createStore(
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
-  POPUP_RELOAD_BRANCHES: updateBranches,
+  POPUP_UPDATE_BRANCHES: updateBranches,
   POPUP_CREATE_BRANCH: createBranch,
   POPUP_FETCH_REPLACE: fetchReplace,
   POPUP_COMMIT_PUSH: commitPush,
