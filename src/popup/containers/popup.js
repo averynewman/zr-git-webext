@@ -8,20 +8,30 @@ import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
 import Authentication from './authentication'
 import CommitButton from './commit-button'
+// import Merge from './merge'
 
 class Popup extends React.Component {
   render () {
-    return (
-      <div className='popup'>
-        <h1>zr-git-webext dev version</h1>
-        <Status />
-        <RepoSelect />
-        <BranchSelect />
-        <FetchButton />
-        <CommitButton />
-        <Authentication />
-      </div>
-    )
+    if (this.props.merging) {
+      return (
+        <div className='popup'>
+          <h1>zr-git-webext dev version</h1>
+          <div>Merge in progress. Please resolve all conflicts and commit, or abort if you do not wish to proceed.</div>
+        </div>
+      )
+    } else {
+      return (
+        <div className='popup'>
+          <h1>zr-git-webext dev version</h1>
+          <Status />
+          <RepoSelect />
+          <BranchSelect />
+          <FetchButton />
+          <CommitButton />
+          <Authentication />
+        </div>
+      )
+    }
   }
 }
 
@@ -34,5 +44,7 @@ Popup.defaultProps = {
 } */
 
 export default connect(
-  null
+  state => ({
+    merging: state.status.merging
+  })
 )(Popup)

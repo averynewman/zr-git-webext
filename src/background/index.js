@@ -59,7 +59,7 @@ git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
-export { fs, logStoreState, recursiveObjectPrinter } // NEVER import any of these in a popup file, it will cause webpack to bundle this with the popup and
+export { fs, logStoreState } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
 // break your filesystem every time you open the popup
 
 console.log('merge testing below')

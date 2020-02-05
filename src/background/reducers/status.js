@@ -1,6 +1,7 @@
 import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_REPO_CHANGE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE,
-  START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault, START_BRANCH_CREATION, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE
+  START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault, START_BRANCH_CREATION,
+  BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_MERGE, MERGE_SUCCESS, ABORT_MERGE
 } from '../../constants'
 
 var defaultSubstate = {
@@ -77,6 +78,15 @@ export default (state = defaultSubstate, action) => {
     case COMMIT_PUSH_FAILURE:
       output.locked = false
       output.statusMessage = 'Failed to commit and push.'
+      break
+    case START_MERGE:
+      output.merging = true
+      break
+    case MERGE_SUCCESS:
+      output.merging = false
+      break
+    case ABORT_MERGE:
+      output.merging = false
       break
   }
   return output

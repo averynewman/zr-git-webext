@@ -3,10 +3,11 @@ import '@babel/polyfill'
 
 import { fs } from '../index'
 import { getDoc } from '../content-scripts/get-editor-text'
-import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, repoDirectory, ZRCodePath, START_COMMIT_PUSH, recursiveObjectPrinter } from '../../constants'
+import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, START_COMMIT_PUSH, repoDirectory, ZRCodePath, recursiveObjectPrinter } from '../../constants'
 import { writeDoc, pull, checkout } from './fetch-replace'
 import { changeRepo } from './repo-select'
 import { changeBranch } from './branches'
+import { initiateMerge } from './merge'
 
 function startCommitPush (payload) {
   // console.log('clone starting in background')
@@ -34,7 +35,6 @@ function commitPushSuccess (payload) {
 
 export function commitPush (payload) {
   return async function (dispatch, getState) {
-    const commitMessage = payload.message
     dispatch(startCommitPush())
 
     console.log('doing preliminary pull/checkout')
@@ -57,12 +57,29 @@ export function commitPush (payload) {
     const editorContents = contentResponse.text
     const documentHeader = contentResponse.head
     const sha = documentHeader.sha
-    let logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
-    if (sha !== logOutput[0].oid) {
-      console.log(`commits not equal, aborting. Document is ${sha}, most recent is ${logOutput[0].oid}`)
-      return dispatch(commitPushFailure())
+    var logOutput = await git.log({ dir: repoDirectory, ref: getState().branches.currentBranch })
+    var ancestorList = []
+    for (var i = 0; i < logOutput.length; i++) {
+      ancestorList.push(logOutput[i].oid)
     }
+    if (sha !== logOutput[0].oid) {
+      if (!ancestorList.includes(sha)) {
+        console.log(`commits not equal and document commit not ancestor of HEAD, aborting. Document is ${sha}, HEAD is ${ancestorList[0]}`)
+        return dispatch(commitPushFailure())
+      } else {
+        console.log(`document commit (${sha}) is ancestor of HEAD (${ancestorList[0]}). initiating merge`)
+        // await dispatch(initiateMerge({ editorContents: editorContents, ancestorCommit: sha, ...payload }))
+      }
+    } else {
+      await dispatch(commitPushInternal({ editorContents: editorContents, ...payload }))
+    }
+  }
+}
 
+function commitPushInternal (payload) {
+  return async function (dispatch, getState) {
+    const commitMessage = payload.message
+    const editorContents = payload.editorContents
     await fs.promises.writeFile(repoDirectory + '/' + ZRCodePath, editorContents).catch((error) => {
       dispatch(commitPushFailure())
       throw error
@@ -109,7 +126,7 @@ export function commitPush (payload) {
       dispatch(commitPushFailure())
       throw error
     })
-    logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    var logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     console.log(recursiveObjectPrinter(logOutput))
   }
 }
