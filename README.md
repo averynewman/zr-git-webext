@@ -12,7 +12,7 @@ The UI and state storage are built using ReactJS, Redux, and redux-webext. Inter
 ##Contributors/History
 The project was started by Jonah Weissman in 2018 as an attempt to completely rebuild his zr-github-crx extension, which had most of the same functionality but could not switch repositories and thus had to be rebuilt and redistributed repeatedly. The old extension has been deprecated due to compatibility issues, and Jonah Weissman's copy was taken offline, but a fork can be found [here](https://github.com/jonahnewman/zr-github-crx). Weissman abandoned this attempt after a few commits, leaving beind only a slightly modified version of the boilerplate with no functionality.
 
-Jonah Newman then picked up and started building on the project, and has since then been its principal author, though Jonah Weissman has provided help and advice at several points during development. The [content-scripts folder](https://github.com/jonahnewman/zr-git-webext/tree/master/src/background/content-scripts) contains modified versions of code taken from his original zr-github-crx project.
+Jonah Newman then picked up and started building on the project, and has since then been its principal author, though Jonah Weissman has provided help and advice at several points during development. The [injected-scripts folder](https://github.com/jonahnewman/zr-git-webext/tree/master/src/background/injected-scripts) contains modified versions of code taken from his original zr-github-crx project.
 
 Ben Lepsch briefly provided assistance from March to June of 2019. Due to some nonoptimal workflow decisions related to sharing a laptop, a number of the commits authored by him were actually written by Jonah Newman.
 

@@ -2,7 +2,7 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Select from 'react-select'
-import { changeBranch, reloadBranches, createBranch } from '../action-creators/branches'
+import { changeBranch, updateBranches, createBranch } from '../action-creators/branches'
 import { repoDefault, branchDefault } from '../../constants'
 
 class BranchSelect extends React.Component {
@@ -20,12 +20,12 @@ class BranchSelect extends React.Component {
     const branchName = option.value
     this.setState({ selectedBranch: branchName })
     // console.log(`dispatching branch change to branch ${branchName}`)
-    this.props.changeBranch({ branchName: branchName })
+    this.props.changeBranch({ branchName: branchName, write: true })
   }
 
   handleBranchReload () {
     // console.log('reloading branches')
-    this.props.reloadBranches({ manual: true })
+    this.props.updateBranches({ message: true, unlock: true })
   }
 
   handleBranchCreation (event) {
@@ -96,7 +96,7 @@ export default connect(
   }),
   {
     changeBranch,
-    reloadBranches,
+    updateBranches,
     createBranch
   }
 )(BranchSelect)

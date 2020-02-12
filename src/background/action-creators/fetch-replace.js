@@ -2,8 +2,8 @@ import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
 import { fs, recursiveObjectPrinter } from '../index'
-import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, proxyUrl, ZRCodePath } from '../../constants'
-import { setDoc } from '../content-scripts/set-editor-text'
+import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, ZRCodePath } from '../../constants'
+import { setDoc } from '../injected-scripts/set-editor-text'
 
 function startFetchReplace (payload) {
   // console.log('clone starting in background')

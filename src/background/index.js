@@ -6,7 +6,7 @@ import thunkMiddleware from 'redux-thunk'
 import '@babel/polyfill'
 
 import { changeRepo } from './action-creators/repo-select'
-import { changeBranch, updateBranches, createBranch } from './action-creators/branches'
+import { changeBranch, updateBranches, createBranch, getContents } from './action-creators/branches'
 import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
@@ -33,7 +33,7 @@ const store = createStore(
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
   POPUP_CHANGE_BRANCH: changeBranch,
-  POPUP_RELOAD_BRANCHES: updateBranches,
+  POPUP_UPDATE_BRANCHES: updateBranches,
   POPUP_CREATE_BRANCH: createBranch,
   POPUP_FETCH_REPLACE: fetchReplace,
   POPUP_COMMIT_PUSH: commitPush,
@@ -67,6 +67,21 @@ const logStoreState = () => {
 logStoreState()
 // set up debug every time state changes
 store.subscribe(() => logStoreState())
+
+window.chrome.runtime.onConnect.addListener(function (port) {
+  console.log(port)
+  console.assert(port.name == 'branchListPort')
+  port.onMessage.addListener(async function (msg) {
+    console.log(`recieved msg: ${msg}`)
+    if (msg.request === 'branchList') {
+      port.postMessage({ branchList: store.getState().branches.branchList })
+    }
+    if (msg.request === 'contents') {
+      const contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
+      port.postMessage({ contents: contents })
+    }
+  })
+})
 
 const fs = new LightningFS('fs', { wipe: true })
 // console.log(recursiveObjectPrinter(fs))

@@ -21,6 +21,10 @@ module.exports = {
     popup: [
       devHotClient,
       paths.popupSrc
+    ],
+    content: [
+      devHotClient,
+      paths.contentSrc
     ]
   },
   output: {
