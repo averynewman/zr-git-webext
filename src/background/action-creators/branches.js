@@ -1,6 +1,6 @@
 import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE,
-  START_BRANCH_CREATION, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, proxyUrl, branchDefault, ZRCodePath
+  START_BRANCH_CREATION, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, BRANCH_LIST_UPDATE_FAILURE, proxyUrl, branchDefault, ZRCodePath
 } from '../../constants'
 import { recursiveObjectPrinter, fs } from '../index'
 import { changeRepo } from './repo-select'
@@ -19,6 +19,13 @@ function branchListUpdateSuccess (payload) {
   // console.log(`successfully updated branch list to ${payload.branchList}`)
   return {
     type: BRANCH_LIST_UPDATE_SUCCESS,
+    ...payload
+  }
+}
+
+function branchListUpdateFailure (payload) {
+  return {
+    type: BRANCH_LIST_UPDATE_FAILURE,
     ...payload
   }
 }
@@ -97,6 +104,7 @@ export function changeBranch (payload) {
         return success
       }, error => {
         console.log(`fetch failed with error ${error}`)
+        dispatch(branchChangeFailure({ branchName: branchName }))
         throw error
       }
     )
@@ -109,6 +117,7 @@ export function changeBranch (payload) {
         return success
       }, error => {
         console.log(`checkout failed with error ${error}`)
+        dispatch(branchChangeFailure({ branchName: branchName }))
         throw error
       }
     )
@@ -164,6 +173,7 @@ export function updateBranches (payload) {
         return output
       }, error => {
         console.log(`updateBranches failed with error ${error}`)
+        dispatch(branchListUpdateFailure())
         throw error
       }
     )

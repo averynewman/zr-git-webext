@@ -36,6 +36,10 @@ export default (state = defaultSubstate, action) => {
         output.statusMessage = 'Successfully updated branch list.'
       }
       break
+    case BRANCH_LIST_UPDATE_FAILURE:
+      output.locked = false
+      output.statusMessage = 'Failed to update branch list.'
+      break
     case START_BRANCH_CHANGE:
       output.locked = true
       output.statusMessage = 'Switching branches...'
