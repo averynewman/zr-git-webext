@@ -1,6 +1,6 @@
 import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, repoDirectory, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE,
-  START_BRANCH_CREATION, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, BRANCH_LIST_UPDATE_FAILURE, proxyUrl, branchDefault, ZRCodePath
+  START_BRANCH_CREATION, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, BRANCH_LIST_UPDATE_FAILURE, proxyUrl, branchDefault, ZRCodePath, BRANCH_CHANGE_FAILURE
 } from '../../constants'
 import { recursiveObjectPrinter, fs } from '../index'
 import { changeRepo } from './repo-select'
@@ -42,6 +42,13 @@ function branchChangeSuccess (payload) {
   // console.log(`successfully changed to branch ${payload.branchName}`)
   return {
     type: BRANCH_CHANGE_SUCCESS,
+    ...payload
+  }
+}
+
+function branchChangeFailure (payload) {
+  return {
+    type: BRANCH_CHANGE_FAILURE,
     ...payload
   }
 }

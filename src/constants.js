@@ -28,7 +28,6 @@ export const COMMIT_PUSH_SUCCESS = 'PUSH_SUCCESS'
 export const POPUP_SET_USER_INFO = 'POPUP_SET_USER_INFO'
 export const POPUP_DELETE_USER_INFO = 'POPUP_DELETE_USER_INFO'
 export const SET_USER_INFO = 'SET_USER_INFO'
-export const DELETE_USER_INFO = 'DELETE_USER_INFO'
 
 export const repoDirectory = '/repoDirectory'
 export const branchDefault = '!default currentBranch value'

@@ -1,14 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { setUserInfo, deleteUserInfo } from '../action-creators/authentication'
+import { setUserInfo } from '../action-creators/authentication'
+import { nameDefault } from '../../constants'
 
 class Authentication extends React.Component {
   constructor (props) {
     super(props)
     this.state = { inputs: { username: '', email: '', token: '' }, inputActive: false }
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
     this.handleStartInput = this.handleStartInput.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
   }
@@ -18,13 +18,11 @@ class Authentication extends React.Component {
   }
 
   handleSubmit (event) {
-    this.props.setUserInfo({ name: this.state.inputs.name, email: this.state.inputs.email, token: this.state.inputs.token })
-    this.setState({ inputActive: false, inputs: { name: '', email: '', token: '' } })
+    if (this.state.inputs.name !== '' && this.state.inputs.token !== '' && this.state.inputs.email !== '') {
+      this.props.setUserInfo({ name: this.state.inputs.name, email: this.state.inputs.email, token: this.state.inputs.token })
+    }
+    this.setState({ inputActive: false })
     event.preventDefault()
-  }
-
-  handleDelete () {
-    this.props.deleteUserInfo()
   }
 
   handleInputChange (event) {
@@ -46,10 +44,7 @@ class Authentication extends React.Component {
           <button className='set-user-info' onClick={this.handleStartInput} disabled={this.props.locked}>
             Set User Info
           </button>
-          <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
-            Delete User Info
-          </button>
-          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
+          {(this.props.userInfo.name === nameDefault ? '\tNo user data' : `\tCurrent user: ${this.props.userInfo.name}`)}
         </div>
       )
     } else {
@@ -70,10 +65,6 @@ class Authentication extends React.Component {
             </label>
             <input type='submit' value='Submit User Info' disabled={this.props.locked} />
           </form>
-          <button className='delete-user-info' onClick={this.handleDelete} disabled={this.props.locked}>
-            Delete User Info
-          </button>
-          {/* <p>{`User info is currently ${recursiveObjectPrinter(this.props.userInfo)}`}</p> */}
         </div>
       )
     }
@@ -85,5 +76,5 @@ export default connect(
     userInfo: state.authentication,
     locked: state.status.locked
   }),
-  { setUserInfo, deleteUserInfo }
+  { setUserInfo }
 )(Authentication)

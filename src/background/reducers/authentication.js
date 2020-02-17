@@ -1,4 +1,4 @@
-import { tokenDefault, nameDefault, emailDefault, SET_USER_INFO, DELETE_USER_INFO } from '../../constants'
+import { tokenDefault, nameDefault, emailDefault, SET_USER_INFO } from '../../constants'
 
 const defaultSubstate = {
   token: tokenDefault,
@@ -13,11 +13,6 @@ export default (state = defaultSubstate, action) => {
       output.token = action.token
       output.name = action.name
       output.email = action.email
-      break
-    case DELETE_USER_INFO:
-      output.token = tokenDefault
-      output.name = nameDefault
-      output.email = emailDefault
       break
   }
   return output

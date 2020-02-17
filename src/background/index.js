@@ -11,7 +11,7 @@ import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
 import { repoDefault } from '../constants'
-import { setUserInfo, deleteUserInfo } from '../background/action-creators/authentication'
+import { setUserInfo } from '../background/action-creators/authentication'
 // import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
@@ -37,8 +37,7 @@ const actions = {
   POPUP_CREATE_BRANCH: createBranch,
   POPUP_FETCH_REPLACE: fetchReplace,
   POPUP_COMMIT_PUSH: commitPush,
-  POPUP_SET_USER_INFO: setUserInfo,
-  POPUP_DELETE_USER_INFO: deleteUserInfo
+  POPUP_SET_USER_INFO: setUserInfo
 }
 
 createBackgroundStore({ store, actions })
