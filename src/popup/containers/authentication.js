@@ -7,7 +7,7 @@ import { nameDefault } from '../../constants'
 class Authentication extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { inputs: { username: '', email: '', token: '' }, inputActive: false }
+    this.state = { inputs: { name: '', email: '', token: '' }, inputActive: false }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleStartInput = this.handleStartInput.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)

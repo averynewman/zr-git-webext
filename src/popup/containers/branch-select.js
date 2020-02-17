@@ -8,10 +8,12 @@ import { repoDefault, branchDefault } from '../../constants'
 class BranchSelect extends React.Component {
   constructor (props) {
     super(props)
-    this.state = { selectedBranch: '', inputs: { branchName: '' } }
+    this.state = { selectedBranch: '', inputs: { branchName: '' }, inputActive: false }
     this.handleBranchChange = this.handleBranchChange.bind(this)
     this.handleBranchReload = this.handleBranchReload.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleStartInput = this.handleStartInput.bind(this)
+    this.handleCancelInput = this.handleCancelInput.bind(this)
     this.handleBranchCreation = this.handleBranchCreation.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
@@ -28,10 +30,19 @@ class BranchSelect extends React.Component {
     this.props.updateBranches({ message: true, unlock: true })
   }
 
+  handleStartInput () {
+    console.log('starting input')
+    this.setState({ inputActive: true })
+  }
+
+  handleCancelInput () {
+    this.setState({ inputActive: false })
+  }
+
   handleBranchCreation (event) {
     // console.log(`dispatching create branch with name ${this.state.inputs.branchName}`)
     this.props.createBranch({ name: this.state.inputs.branchName })
-    this.setState({ inputs: { branchName: '' } })
+    this.setState({ inputs: { branchName: '' }, inputActive: false })
     event.preventDefault()
   }
 
@@ -59,30 +70,56 @@ class BranchSelect extends React.Component {
         null
       )
     }
-    return (
-      <div>
-        {/* <h3>{(this.props.switching ? null : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3> */}
-        <p>Branch:</p>
-        <Select
-          value={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })}
-          isClearable isSearchable options={selectOptions}
-          onChange={this.handleBranchChange}
-          isDisabled={this.props.locked}
-        />
-        <button className='change-repo' onClick={this.handleBranchReload} disabled={this.props.locked}>
-          Reload Branches
-        </button>
+    if (this.state.inputActive === true) {
+      return (
+        <div>
+          {/* <h3>{(this.props.switching ? null : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3> */}
+          <p>Branch:</p>
+          <Select
+            value={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })}
+            isClearable isSearchable options={selectOptions}
+            onChange={this.handleBranchChange}
+            isDisabled={this.props.locked}
+          />
+          <button className='reload-branches' onClick={this.handleBranchReload} disabled={this.props.locked}>
+            Reload Branches
+          </button>
 
-        <form onKeyPress={this.handleKeyPress} onSubmit={this.handleBranchCreation}>
-          <label>
-            Enter new branch name:<br />
-            <input type='text' name='branchName' onChange={this.handleInputChange} value={this.state.inputs.branchName} disabled={this.props.locked} /><br />
-          </label>
-          <input type='submit' value='Create new branch' disabled={this.props.locked} />
-        </form>
+          <form onKeyPress={this.handleKeyPress} onSubmit={this.handleBranchCreation}>
+            <label>
+              Enter new branch name:<br />
+              <input type='text' name='branchName' onChange={this.handleInputChange} value={this.state.inputs.branchName} disabled={this.props.locked} /><br />
+            </label>
+            <input type='submit' value='Create Branch' disabled={this.props.locked} />
+          </form>
+          <button className='cancel-input' onClick={this.handleCancelInput} disabled={this.props.locked}>
+            Cancel
+          </button>
 
-      </div>
-    )
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          {/* <h3>{(this.props.switching ? null : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3> */}
+          <p>Branch:</p>
+          <Select
+            value={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })}
+            isClearable isSearchable options={selectOptions}
+            onChange={this.handleBranchChange}
+            isDisabled={this.props.locked}
+          />
+          <button className='reload-branches' onClick={this.handleBranchReload} disabled={this.props.locked}>
+            Reload Branches
+          </button>
+
+          <button className='start-input' onClick={this.handleStartInput} disabled={this.props.locked}>
+            Create New Branch
+          </button>
+
+        </div>
+      )
+    }
   }
 }
 
