@@ -63,6 +63,7 @@
     "@isomorphic-git/lightning-fs": "^3.4.0",
     "chrome-browser-object-polyfill": "^0.2.2",
     "isomorphic-git": "^0.70.7",
+    "node-diff3": "^1.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -71,6 +72,7 @@
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "redux-webext": "^1.1.2",
-    "standard": "^14.3.1"
+    "standard": "^14.3.1",
+    "three-way-merge": "^0.1.0"
   }
 }

@@ -46,9 +46,9 @@ function setDocInjected (doc) {
 
 export function setDoc (doc) {
   return new Promise((resolve, reject) => {
-    const scrubbedDoc = doc.replace(/`/g, '\\`')
-    console.log(scrubbedDoc)
-    window.chrome.tabs.executeScript({ code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
+    /* const scrubbedDoc = doc.replace(/`/g, '\\`')
+    console.log(scrubbedDoc) */
+    window.chrome.tabs.executeScript({ code: setDocInjected + `setDocInjected(\`${doc}\`)` }) // to revert, change doc here back to scrubbedDoc
 
     /* window.chrome.runtime.onConnect.addListener(p => {
       console.log('received connection from background script')

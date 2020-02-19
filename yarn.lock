@@ -5056,6 +5056,11 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
+node-diff3@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/node-diff3/-/node-diff3-1.0.0.tgz#1b27c6407f37884aba50044a07635ad7447e5244"
+  integrity sha1-GyfGQH83iEq6UARKB2Na10R+UkQ=
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -7227,6 +7232,13 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
+three-way-merge@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/three-way-merge/-/three-way-merge-0.1.0.tgz#d82029d5d84cde37d681981145403dee71e14552"
+  integrity sha512-FzQCDf2No6a1bYop4B4WWAlI9FcnV9+WCXRENaae1fZMRobxj92JDA/W1pc6eV7QQoDyUdoud2tCyZYolP6DYg==
+  dependencies:
+    ts-std "^0.6.0"
+
 through2@^2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.5.tgz#01c1e39eb31d07cb7d03a96a70823260b23132cd"
@@ -7328,6 +7340,11 @@ trim-newlines@^1.0.0:
   integrity sha512-m6s2OdQe5wgpFMC+pAJ+q9djG82O2jcHPOI6RNg1yy9rCYR+WD6Nbpl32fDpfC56nirdRy+opFa/Vk7HYhqaew==
   dependencies:
     glob "^7.1.2"
+
+ts-std@^0.6.0:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/ts-std/-/ts-std-0.6.2.tgz#bc76d271d338e7ca543e1b89ce4531ddc0424f8d"
+  integrity sha512-mhlyyOBvF7r+Xh8Ut4Fa3qe3BxjQMTWxHLb7NBSkOmxOe1V5Oc5+PpUl/y7tpBOL2sJZwLL1r5T8hqmc0SAFTw==
 
 tslib@^1.9.0:
   version "1.10.0"
