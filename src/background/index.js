@@ -13,6 +13,7 @@ import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
 import { repoDefault, recursiveObjectPrinter } from '../constants'
 import { setUserInfo, deleteUserInfo } from '../background/action-creators/authentication'
+import { resolveMerge, abortMerge } from './action-creators/merge'
 // import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
@@ -39,7 +40,9 @@ const actions = {
   POPUP_FETCH_REPLACE: fetchReplace,
   POPUP_COMMIT_PUSH: commitPush,
   POPUP_SET_USER_INFO: setUserInfo,
-  POPUP_DELETE_USER_INFO: deleteUserInfo
+  POPUP_DELETE_USER_INFO: deleteUserInfo,
+  POPUP_RESOLVE_MERGE: resolveMerge,
+  POPUP_ABORT_MERGE: abortMerge
 }
 
 createBackgroundStore({ store, actions })

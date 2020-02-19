@@ -8,7 +8,7 @@ import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
 import Authentication from './authentication'
 import CommitButton from './commit-button'
-// import Merge from './merge'
+import Merge from './merge'
 
 class Popup extends React.Component {
   render () {
@@ -16,7 +16,8 @@ class Popup extends React.Component {
       return (
         <div className='popup'>
           <h1>zr-git-webext dev version</h1>
-          <div>Merge in progress. Please resolve all conflicts and commit, or abort if you do not wish to proceed.</div>
+          <Status />
+          <Merge />
         </div>
       )
     } else {

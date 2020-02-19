@@ -25,9 +25,15 @@ export const POPUP_SET_USER_INFO = 'POPUP_SET_USER_INFO'
 export const POPUP_DELETE_USER_INFO = 'POPUP_DELETE_USER_INFO'
 export const SET_USER_INFO = 'SET_USER_INFO'
 export const DELETE_USER_INFO = 'DELETE_USER_INFO'
-export const START_MERGE = 'START_MERGE'
-export const ABORT_MERGE = 'ABORT_MERGE'
-export const MERGE_SUCCESS = 'MERGE_SUCCESS'
+export const MERGE_STARTING = 'MERGE_STARTING'
+export const MERGE_STARTED = 'MERGE_STARTED'
+export const MERGE_ABORTED = 'MERGE_ABORTED'
+export const MERGE_RESOLVING = 'MERGE_RESOLVING'
+export const MERGE_RESOLVED = 'MERGE_RESOLVED'
+export const MERGE_FAILURE = 'MERGE_FAILURE'
+export const MERGE_RESOLVE_FAILURE = 'MERGE_RESOLVE_FAILURE'
+export const POPUP_RESOLVE_MERGE = 'POPUP_RESOLVE_MERGE'
+export const POPUP_ABORT_MERGE = 'POPUP_ABORT_MERGE'
 
 export const repoDirectory = '/repoDirectory'
 export const branchDefault = '!default currentBranch value'
@@ -39,7 +45,7 @@ export const proxyUrl = 'https://cors.isomorphic-git.org'
 export const ZRCodePath = 'main.cpp'
 export const statusDefault = 'Nothing to report'
 
-export const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes. don't use it for those.
+export function recursiveObjectPrinter (obj) { // this breaks on function-valued attributes. don't use it for those.
   if (Object.prototype.toString.call(obj) === '[object Array]') { // if value is just an array
     return `[${obj}]`
   } else if (obj !== Object(obj)) { // if value is not an object (and not an array), primitive or null

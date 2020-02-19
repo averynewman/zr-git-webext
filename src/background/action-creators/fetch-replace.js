@@ -61,10 +61,10 @@ export function writeDoc () {
       throw error
     })
     const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
-    console.log('git log output for sha checking:')
+    /* console.log('git log output for sha checking:')
     for (let i = 0; i < logOutput.length; i++) {
       console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
-    }
+    } */
     const sha = logOutput[0].oid
     editorContents = `// { "sha": "${sha}" } \n` + editorContents
     await setDoc(editorContents).then((success) => {

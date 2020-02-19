@@ -68,7 +68,7 @@ export function commitPush (payload) {
         return dispatch(commitPushFailure())
       } else {
         console.log(`document commit (${sha}) is ancestor of HEAD (${ancestorList[0]}). initiating merge`)
-        // await dispatch(initiateMerge({ editorContents: editorContents, ancestorCommit: sha, ...payload }))
+        await dispatch(initiateMerge({ editorContents: editorContents, ancestorCommit: sha, ...payload }))
       }
     } else {
       await dispatch(commitPushInternal({ editorContents: editorContents, ...payload }))
@@ -76,10 +76,20 @@ export function commitPush (payload) {
   }
 }
 
-function commitPushInternal (payload) {
+export function commitPushInternal (payload) {
   return async function (dispatch, getState) {
-    const commitMessage = payload.message
-    const editorContents = payload.editorContents
+    var commitMessage = payload.message
+    if (commitMessage === undefined) {
+      commitMessage = getState().status.mergeStoredCommitMessage
+    }
+    var editorContents = payload.editorContents
+    if (editorContents === undefined) {
+      const contentResponse = await getDoc({ header: false }).catch((error) => {
+        dispatch(commitPushFailure())
+        throw error
+      })
+      editorContents = contentResponse.text
+    }
     await fs.promises.writeFile(repoDirectory + '/' + ZRCodePath, editorContents).catch((error) => {
       dispatch(commitPushFailure())
       throw error

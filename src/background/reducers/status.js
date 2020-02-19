@@ -1,12 +1,13 @@
 import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_REPO_CHANGE, REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE,
   START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault, START_BRANCH_CREATION,
-  BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_MERGE, MERGE_SUCCESS, ABORT_MERGE
+  BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, MERGE_STARTING, MERGE_STARTED, MERGE_RESOLVING, MERGE_RESOLVED, MERGE_ABORTED, MERGE_FAILURE, MERGE_RESOLVE_FAILURE
 } from '../../constants'
 
 var defaultSubstate = {
   locked: false,
-  statusMessage: statusDefault
+  statusMessage: statusDefault,
+  merging: false
 }
 
 export default (state = defaultSubstate, action) => {
@@ -79,14 +80,39 @@ export default (state = defaultSubstate, action) => {
       output.locked = false
       output.statusMessage = 'Failed to commit and push.'
       break
-    case START_MERGE:
+    case MERGE_STARTING:
+      output.statusMessage = 'Processing merge data...'
+      output.mergeStoredCommitMessage = action.message
+      output.mergeStoredEditorContents = action.editorContents
+      break
+    case MERGE_STARTED:
       output.merging = true
       break
-    case MERGE_SUCCESS:
-      output.merging = false
+    case MERGE_RESOLVING:
+      output.statusMessage = 'Merge resolving...'
       break
-    case ABORT_MERGE:
+    case MERGE_RESOLVED:
       output.merging = false
+      output.statusMessage = 'Merge and commit successful.'
+      output.mergeStoredCommitMessage = undefined
+      output.mergeStoredEditorContents = undefined
+      break
+    case MERGE_ABORTED:
+      output.merging = false
+      output.statusMessage = 'Merge aborted.'
+      output.mergeStoredCommitMessage = undefined
+      output.mergeStoredEditorContents = undefined
+      output.locked = false
+      break
+    case MERGE_FAILURE:
+      output.merging = false
+      output.statusMessage = 'Merge failed.'
+      output.mergeStoredCommitMessage = undefined
+      output.mergeStoredEditorContents = undefined
+      output.locked = false
+      break
+    case MERGE_RESOLVE_FAILURE:
+      output.statusMessage = 'Merge failed to resolve. Please ensure that all conflict markers are removed and try again.'
       break
   }
   return output
