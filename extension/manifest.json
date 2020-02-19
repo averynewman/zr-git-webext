@@ -20,15 +20,15 @@
 
   "content_scripts": [
     {
-      "matches": ["http://zerorobotics.mit.edu/ide/*"],
-      "exclude_matches": ["http://zerorobotics.mit.edu/ide/simulation/*"],
+      "matches": ["*://zerorobotics.mit.edu/ide/*"],
+      "exclude_matches": ["*://zerorobotics.mit.edu/ide/simulation/*"],
       "js": ["js/content.bundle.js"]
     }
   ],
 
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
-  "permissions": ["activeTab", "tabs"],
+  "permissions": ["activeTab", "*://zerorobotics.mit.edu/*"],
 
   "default_locale": "en"
 }

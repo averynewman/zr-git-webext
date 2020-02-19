@@ -48,7 +48,10 @@ export function setDoc (doc) {
   return new Promise((resolve, reject) => {
     const scrubbedDoc = doc.replace(/`/g, '\\`')
     console.log(scrubbedDoc)
-    window.chrome.tabs.executeScript({ code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
+    window.chrome.tabs.query({ url: '*://zerorobotics.mit.edu/ide/*' }, function (results) {
+      const filteredResults = results.filter((element) => !element.url.includes('zerorobotics.mit.edu/ide/simulation/'))
+      window.chrome.tabs.executeScript(filteredResults[0].id, { code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
+    })
 
     /* window.chrome.runtime.onConnect.addListener(p => {
       console.log('received connection from background script')
