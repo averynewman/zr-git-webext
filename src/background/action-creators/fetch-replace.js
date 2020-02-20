@@ -1,7 +1,7 @@
 import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
-import { fs, recursiveObjectPrinter } from '../index'
+import { fs } from '../index'
 import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, ZRCodePath } from '../../constants'
 import { setDoc } from '../injected-scripts/set-editor-text'
 
@@ -61,10 +61,10 @@ export function writeDoc () {
       throw error
     })
     const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
-    console.log('git log output for sha checking:')
+    /* console.log('git log output for sha checking:')
     for (let i = 0; i < logOutput.length; i++) {
       console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
-    }
+    } */
     const sha = logOutput[0].oid
     editorContents = `// { "sha": "${sha}" } \n` + editorContents
     await setDoc(editorContents).then((success) => {
@@ -77,20 +77,20 @@ export function writeDoc () {
   }
 }
 
-function pull () {
-  console.log('fetching')
+export function pull () {
+  console.log('pulling')
   return async function (dispatch, getState) {
     return git.pull({ dir: repoDirectory, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
-      console.log('fetch succeeded')
+      console.log('pull succeeded')
       return success
     }, (error) => {
-      console.log(`fetch failed with error ${error}`)
+      console.log(`pull failed with error ${error}`)
       throw error
     })
   }
 }
 
-function checkout () {
+export function checkout () {
   console.log('checking out')
   return async function (dispatch, getState) {
     return git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch }).then((success) => {

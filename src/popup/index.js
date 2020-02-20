@@ -15,19 +15,3 @@ createUIStore().then((store) => {
     </Provider>,
     document.getElementById('app'))
 })
-
-export const recursiveObjectPrinter = (obj) => { // this breaks on function-valued attributes, but our store state should never contain a function, unless future me does something stupid
-  let outputString = ''
-  Object.keys(obj).forEach((key, index) => {
-    const value = obj[key]
-    if (index !== 0) {
-      outputString = outputString + ', '
-    }
-    if (value === Object(value) && Object.prototype.toString.call(value) !== '[object Array]') { // if value is a non-array object
-      outputString = outputString + `${key} : ${recursiveObjectPrinter(value)}`
-    } else { // if value is primitive, null, or array
-      outputString = outputString + `${key} : ${value}`
-    }
-  })
-  return `{ ${outputString} }`
-}

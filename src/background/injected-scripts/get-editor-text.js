@@ -32,7 +32,7 @@ function getDocInjected (cb) {
   (document.head || document.documentElement).appendChild(s)
 }
 
-export function getDoc () {
+export function getDoc (settings = { header: true }) {
   return new Promise((resolve, reject) => {
     window.chrome.tabs.executeScript({ code: getDocInjected + 'getDocInjected();' })
     console.log('waiting on injected script')
@@ -49,11 +49,15 @@ export function getDoc () {
         const cleanDoc = request.doc
         const headMatch = cleanDoc.match(/^\/\/(.*)/) // if the first line is a comment, matches the first line minus the leading slashes. Otherwise matches nothing
         // console.log(`headmatch is ${headMatch}`)
-        try {
-          const head = JSON.parse(headMatch[1]) // [1] is the capture group in a .match return. parsing it gives us the contents of our header (should be a sha)
-          resolve({ text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head })
-        } catch (e) {
-          reject(e)
+        if (settings.header) {
+          try {
+            const head = JSON.parse(headMatch[1]) // [1] is the capture group in a .match return. parsing it gives us the contents of our header (should be a sha)
+            resolve({ text: cleanDoc.replace(/^\/\/.*sha.*\n/, ''), head })
+          } catch (e) {
+            reject(e)
+          }
+        } else {
+          resolve({ text: cleanDoc })
         }
         window.clearTimeout(timeoutID)
         sendResponse({ ok: true })
