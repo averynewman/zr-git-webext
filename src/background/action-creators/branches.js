@@ -207,8 +207,8 @@ export function createBranch (payload) {
         return success
       }, async function (error) {
         console.log(`creation failed with error ${error}`)
-        dispatch(branchCreationFailure({ branchName: branchName, reset: true, nameError: false }))
         await dispatch(changeBranch({ branchName: oldBranch, write: true }))
+        dispatch(branchCreationFailure({ branchName: branchName, reset: true, nameError: false }))
         throw error
       }
     )

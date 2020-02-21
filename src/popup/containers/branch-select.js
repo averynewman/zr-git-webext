@@ -91,11 +91,10 @@ class BranchSelect extends React.Component {
               <input type='text' name='branchName' onChange={this.handleInputChange} value={this.state.inputs.branchName} disabled={this.props.locked} /><br />
             </label>
             <input type='submit' value='Create Branch' disabled={this.props.locked} />
+            <button type='button' onClick={this.handleCancelInput} disabled={this.props.locked}>
+              Cancel
+            </button>
           </form>
-          <button className='cancel-input' onClick={this.handleCancelInput} disabled={this.props.locked}>
-            Cancel
-          </button>
-
         </div>
       )
     } else {
