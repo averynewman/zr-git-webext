@@ -44,29 +44,33 @@ function setDocInjected (doc) {
   (document.head || document.documentElement).appendChild(s)
 }
 
-export function setDoc (doc) {
-  return new Promise((resolve, reject) => {
-    const scrubbedDoc = doc.replace(/`/g, '\\`')
-    console.log(scrubbedDoc)
-    window.chrome.tabs.query({ url: '*://zerorobotics.mit.edu/ide/*' }, function (results) {
-      const filteredResults = results.filter((element) => !element.url.includes('zerorobotics.mit.edu/ide/simulation/'))
-      window.chrome.tabs.executeScript(filteredResults[0].id, { code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
+// les broken more confuising
+export async function setDoc (doc) {
+  const scrubbedDoc = doc.replace(/`/g, '\\`')
+  console.log(scrubbedDoc)
+  const tabs = await new Promise((resolve, reject) => window.chrome.tabs.query({}, function (results) {
+    console.log(results)
+    const filteredResults = results.filter((element) => (!element.url.includes('zerorobotics.mit.edu/ide/simulation/') && element.url.includes('zerorobotics.mit.edu/ide/')))
+    console.log(`found ${filteredResults.length} tabs`)
+    resolve(filteredResults)
+  }))
+  if (tabs.length === 0) {
+    throw new Error('found no appropriate tabs')
+  }
+  window.chrome.tabs.executeScript(tabs[0].id, { code: setDocInjected + `setDocInjected(\`${scrubbedDoc}\`)` })
+
+  console.log('waiting on injected script')
+  const listenerPromise = new Promise((resolve, reject) => {
+    window.chrome.runtime.onMessage.addListener(function listenerFunction (request, sender, sendResponse) {
+      console.log('resolving setDoc promise')
+      sendResponse({ ok: true })
+      window.chrome.runtime.onMessage.removeListener(listenerFunction)
+      console.log('listener removed at end of execution')
+      resolve(request.doc)
     })
-
-    /* window.chrome.runtime.onConnect.addListener(p => {
-      console.log('received connection from background script')
-      p.onMessage.addListener(m => {
-        console.log(`received message ${recursiveObjectPrinter(m)} from background script`)
-      })
-    }) */
-
-    window.chrome.runtime.onMessage.addListener(
-      function listenerFunction (request, sender, sendResponse) {
-        console.log('resolving setDoc promise')
-        resolve(request.doc)
-        sendResponse({ ok: true })
-        window.chrome.runtime.onMessage.removeListener(listenerFunction)
-        console.log('listener removed at end of execution')
-      })
   })
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error('setDoc timed out')), 5000)
+  })
+  return Promise.race([listenerPromise, timeoutPromise])
 }

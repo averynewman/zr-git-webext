@@ -119,8 +119,13 @@ export function changeBranch (payload) {
     return git.checkout({ dir: repoDirectory, ref: branchName }).then(
       async function (success) {
         if (write) {
-          await dispatch(writeDoc())
-          dispatch(branchChangeSuccess({ branchName: branchName }))
+          await dispatch(writeDoc()).then(
+            (success) => {
+              dispatch(branchChangeSuccess({ branchName: branchName }))
+            }, error => {
+              dispatch(branchChangeFailure({ branchName: branchName }))
+            }
+          )
         }
         return success
       }, error => {

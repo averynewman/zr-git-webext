@@ -76,7 +76,7 @@ class BranchSelect extends React.Component {
           {/* <h3>{(this.props.switching ? null : (this.props.currentBranch === branchDefault ? 'No branch selected yet' : `Current branch is ${this.props.currentBranch}`))}</h3> */}
           <p>Branch:</p>
           <Select
-            value={(this.props.currentBranch === branchDefault ? undefined : { value: this.props.currentBranch, label: this.props.currentBranch })}
+            value={(this.props.currentBranch === branchDefault ? null : { value: this.props.currentBranch, label: this.props.currentBranch })}
             isClearable isSearchable options={selectOptions}
             onChange={this.handleBranchChange}
             isDisabled={this.props.locked}
