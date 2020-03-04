@@ -52,7 +52,7 @@ class CommitButton extends React.Component {
             Commit message:<br />
             <input name='message' type='text' onChange={this.handleInputChange} value={this.state.inputs.message} disabled={this.props.locked} />
           </label>
-          <input type='submit' value='Commit and push' disabled={this.props.locked} />
+          <input type='submit' value='Commit and push' disabled={(this.props.locked || this.state.inputs.message === '')} />
         </form>
       )
     }
