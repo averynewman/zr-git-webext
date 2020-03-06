@@ -2,7 +2,7 @@ import {
   START_BRANCH_LIST_UPDATE, BRANCH_LIST_UPDATE_SUCCESS, BRANCH_LIST_UPDATE_FAILURE, START_BRANCH_CHANGE, BRANCH_CHANGE_SUCCESS, START_REPO_CHANGE, REPO_CHANGE_SUCCESS,
   REPO_CHANGE_FAILURE, START_COMMIT_PUSH, COMMIT_PUSH_SUCCESS, COMMIT_PUSH_FAILURE, START_FETCH_REPLACE, FETCH_REPLACE_SUCCESS, FETCH_REPLACE_FAILURE, statusDefault,
   START_BRANCH_CREATION, BRANCH_CREATION_SUCCESS, BRANCH_CREATION_FAILURE, START_GET_CONTENTS, GET_CONTENTS_SUCCESS, GET_CONTENTS_FAILURE, SET_USER_INFO, MERGE_STARTING,
-  MERGE_STARTED, MERGE_RESOLVING, MERGE_RESOLVED, MERGE_ABORTED, MERGE_FAILURE, MERGE_RESOLVE_FAILURE, BRANCH_CHANGE_FAILURE
+  MERGE_STARTED, MERGE_RESOLVING, MERGE_RESOLVED, MERGE_ABORTED, MERGE_FAILURE, MERGE_RESOLVE_FAILURE, BRANCH_CHANGE_FAILURE, STATUS_SET_MESSAGE, STATUS_LOCK, STATUS_UNLOCK
 } from '../../constants'
 
 var defaultSubstate = {
@@ -14,6 +14,18 @@ var defaultSubstate = {
 export default (state = defaultSubstate, action) => {
   const output = state
   switch (action.type) {
+    case STATUS_LOCK:
+      output.locked = true
+      break
+    case STATUS_UNLOCK:
+      output.locked = false
+      break
+    case STATUS_SET_MESSAGE:
+      output.statusMessage = action.message
+      break
+
+//old stuff
+
     case START_REPO_CHANGE:
       output.locked = true
       output.statusMessage = 'Changing repos...'
@@ -25,6 +37,7 @@ export default (state = defaultSubstate, action) => {
       output.locked = false
       output.statusMessage = 'Failed to change repo, check your path and try again.'
       break
+      /*
     case START_BRANCH_LIST_UPDATE:
       output.locked = true
       if (action.message) {
@@ -55,6 +68,7 @@ export default (state = defaultSubstate, action) => {
       output.locked = false
       output.statusMessage = 'Failed to switch branches.'
       break
+      */
     case START_GET_CONTENTS:
       output.locked = true
       output.statusMessage = `Retrieving the contents of ${action.branchName}`
@@ -110,6 +124,7 @@ export default (state = defaultSubstate, action) => {
     case SET_USER_INFO:
       output.statusMessage = 'User info successfully updated.'
       break
+
     case MERGE_STARTING:
       output.statusMessage = 'Processing merge data...'
       output.mergeStoredCommitMessage = action.message
