@@ -39,7 +39,7 @@ class RepoSelect extends React.Component {
             if (repoUrl === repoDefault) {
               return 'No repo currently selected.'
             } else if (validRepo === false) {
-              return 'placeholder'
+              return 'Invalid repo.'
             } else {
               return (`Active repo: ${repoUrl}`)
             }

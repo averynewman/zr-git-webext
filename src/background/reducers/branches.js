@@ -30,10 +30,8 @@ export default (state = defaultSubstate, action) => {
       output.currentBranch = action.branchName
       break
     case BRANCH_CREATION_FAILURE:
-      if (action.reset) {
-        output.currentBranch = branchDefault
-        output.branchList = output.branchList.filter(value => (value !== action.branchName))
-      }
+      output.currentBranch = branchDefault
+      output.branchList = output.branchList.filter(value => (value !== action.branchName))
       break
   }
   return output
