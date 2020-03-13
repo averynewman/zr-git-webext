@@ -217,7 +217,7 @@ export function createBranch (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      token: getState().authentication.token,
+      token: getState().userInfo.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
     }).then((success) => {

@@ -36,10 +36,8 @@ class RepoSelect extends React.Component {
       <div>
         <p>{
           ((repoUrl, validRepo) => {
-            if (repoUrl === repoDefault) {
-              return 'No repo currently selected.'
-            } else if (validRepo === false) {
-              return 'placeholder'
+            if (repoUrl === repoDefault || validRepo === false) {
+              return 'No repo selected'
             } else {
               return (`Active repo: ${repoUrl}`)
             }

@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
-import * as diff3 from 'node-diff3'
+// import * as diff3 from 'node-diff3'
 import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import thunkMiddleware from 'redux-thunk'
@@ -11,26 +11,55 @@ import { changeBranch, updateBranches, createBranch, getContents } from './actio
 import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
-import { repoDefault, recursiveObjectPrinter } from '../constants'
-import { setUserInfo } from '../background/action-creators/authentication'
+import { repoDefault, recursiveObjectPrinter, tokenDefault, nameDefault, emailDefault } from '../constants'
+import { setUserInfo } from './action-creators/user-info'
 import { resolveMerge, abortMerge } from './action-creators/merge'
-// import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
 
-const initialState = {
+const defaultState = {
   repoSelect: {
     switching: false,
-    validRepo: true,
+    validRepo: false,
     repoUrl: repoDefault
+  },
+  userInfo: {
+    token: tokenDefault,
+    name: nameDefault,
+    email: emailDefault
   }
 }
 
+const storage = window.localStorage
+const userInfoStored = {
+  name: storage.getItem('userInfo.name'),
+  email: storage.getItem('userInfo.email'),
+  token: storage.getItem('userInfo.token')
+}
+const repoSelectStored = {
+  switching: false,
+  validRepo: true,
+  repoUrl: storage.getItem('repoSelect.repoUrl')
+}
+
+console.log(`storage testing: ${recursiveObjectPrinter(repoSelectStored)}, ${recursiveObjectPrinter(userInfoStored)}`)
+
+Object.keys(userInfoStored).forEach(key => {
+  userInfoStored[key] = userInfoStored[key] === null ? defaultState.userInfo[key] : userInfoStored[key]
+})
+Object.keys(repoSelectStored).forEach(key => {
+  repoSelectStored[key] = repoSelectStored[key] === null ? defaultState.repoSelect[key] : repoSelectStored[key]
+})
+
+const startingState = { repoSelect: defaultState.repoSelect, userInfo: userInfoStored } // change defaultState.repoSelect to repoSelectStored to enable repo persistence
+
 const store = createStore(
   rootReducer,
-  initialState,
+  startingState,
   applyMiddleware(...middlewares)
 )
+
+console.log(`store state after init is ${recursiveObjectPrinter(store.getState())}`)
 
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
@@ -76,9 +105,10 @@ git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
-export { fs, logStoreState } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
+export { fs, logStoreState, storage } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
 // break your filesystem every time you open the popup
 
+/*
 console.log('merge testing below')
 
 const base = [1, 2, 3, 4, 5, 6].join('\n')
@@ -96,3 +126,4 @@ console.log('merge:')
 console.log(merge)
 console.log('mergeDigIn:')
 console.log(mergeDigIn)
+*/

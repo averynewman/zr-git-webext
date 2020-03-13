@@ -6,7 +6,7 @@ import Status from './status'
 import RepoSelect from './repo-select'
 import BranchSelect from './branch-select'
 import FetchButton from './fetch-button'
-import Authentication from './authentication'
+import UserInfo from './user-info'
 import CommitButton from './commit-button'
 import Merge from './merge'
 
@@ -29,7 +29,7 @@ class Popup extends React.Component {
           <BranchSelect />
           <FetchButton />
           <CommitButton />
-          <Authentication />
+          <UserInfo />
         </div>
       )
     }

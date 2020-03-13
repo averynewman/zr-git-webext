@@ -101,7 +101,7 @@ export function commitPushInternal (payload) {
     await git.commit({
       dir: repoDirectory,
       message: commitMessage,
-      author: { name: getState().authentication.name, email: getState().authentication.email },
+      author: { name: getState().userInfo.name, email: getState().userInfo.email },
       ref: getState().branches.currentBranch
     }).catch((error) => {
       dispatch(commitPushFailure())
@@ -113,7 +113,7 @@ export function commitPushInternal (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      token: getState().authentication.token,
+      token: getState().userInfo.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
     }).then((success) => {
