@@ -2,7 +2,7 @@ import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
 // import { logStoreState } from '../index'
-import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl } from '../../constants'
+import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl, STATUS_SET_MESSAGE, STATUS_LOCK, STATUS_UNLOCK } from '../../constants'
 import { updateBranches } from './branches'
 import { fs } from '../index'
 // import { recursiveObjectPrinter } from '../../constants'
@@ -27,6 +27,27 @@ function repoChangeSuccess (payload) {
   // console.log(`clone succeeded with path ${payload.repoPath}`)
   return {
     type: REPO_CHANGE_SUCCESS,
+    ...payload
+  }
+}
+
+function statusLock (payload) {
+  return {
+    type: STATUS_LOCK,
+    ...payload
+  }
+}
+
+function statusUnlock (payload) {
+  return {
+    type: STATUS_UNLOCK,
+    ...payload
+  }
+}
+
+function statusSetMessage (payload) {
+  return {
+    type: STATUS_SET_MESSAGE,
     ...payload
   }
 }
@@ -77,10 +98,14 @@ export function changeRepo (payload) {
   return async function (dispatch) {
     // console.log('changeRepo thunk started')
     dispatch(startRepoChange())
+    dispatch(statusLock())
+    dispatch(statusSetMessage({ message: 'Changing repos...' }))
     // console.log('startErase dispatched')
     await deleteFolderRecursive('/').catch(error => {
       // console.log(`changeRepo: filesystem clear failed with error ${String(error)}`)
       dispatch(repoChangeFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to change repos.' }))
       throw error
     })
     await git.clone({
@@ -94,12 +119,16 @@ export function changeRepo (payload) {
       success => {
         // console.log(`changeRepo: repo change succeeded with path ${repoPath}`)
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
+        dispatch(statusUnlock())
+        dispatch(statusSetMessage({ message: 'Successfully changed repos.' }))
         // console.log('successful git clone, updating branches')
         return success
       },
       error => {
         // console.log(`changeRepo: git clone (or filesystem clear) failed with error ${String(error)}`)
         dispatch(repoChangeFailure())
+        dispatch(statusUnlock())
+        dispatch(statusSetMessage({ message: 'Failed to change repo, please check your path and try again.' }))
         throw error
       }
     )

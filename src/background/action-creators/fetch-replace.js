@@ -2,51 +2,33 @@ import * as git from 'isomorphic-git'
 import '@babel/polyfill'
 
 import { fs } from '../index'
-import { START_FETCH_REPLACE, FETCH_REPLACE_FAILURE, FETCH_REPLACE_SUCCESS, repoDirectory, ZRCodePath } from '../../constants'
+import { repoDirectory, ZRCodePath } from '../../constants'
+import { statusLock, statusUnlock, statusSetMessage } from './status'
 import { setDoc } from '../injected-scripts/set-editor-text'
-
-function startFetchReplace (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: START_FETCH_REPLACE,
-    ...payload
-  }
-}
-
-function fetchReplaceFailure (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: FETCH_REPLACE_FAILURE,
-    ...payload
-  }
-}
-
-function fetchReplaceSuccess (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: FETCH_REPLACE_SUCCESS,
-    ...payload
-  }
-}
 
 export function fetchReplace () {
   return async function (dispatch, getState) {
-    dispatch(startFetchReplace())
+    dispatch(statusLock())
+    dispatch(statusSetMessage({ message: 'Fetching and replacing...' }))
     await dispatch(pull()).catch((error) => {
-      dispatch(fetchReplaceFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to fetch and replace. Check your internet connection and try again.' }))
       throw error
     })
     await dispatch(checkout()).catch((error) => {
-      dispatch(fetchReplaceFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to fetch and replace.' }))
       throw error
     })
     await dispatch(writeDoc()).then((success) => {
       return success
     }, (error) => {
-      dispatch(fetchReplaceFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to fetch and replace. Check that there is an open ZR IDE tab.' }))
       throw error
     })
-    dispatch(fetchReplaceSuccess())
+    dispatch(statusUnlock())
+    dispatch(statusSetMessage({ message: 'Successfully fetched and replaced.' }))
   }
 }
 

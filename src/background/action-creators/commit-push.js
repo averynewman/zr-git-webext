@@ -3,55 +3,36 @@ import '@babel/polyfill'
 
 import { fs } from '../index'
 import { getDoc } from '../injected-scripts/get-editor-text'
-import { COMMIT_PUSH_FAILURE, COMMIT_PUSH_SUCCESS, START_COMMIT_PUSH, repoDirectory, ZRCodePath, recursiveObjectPrinter } from '../../constants'
+import { repoDirectory, ZRCodePath, recursiveObjectPrinter } from '../../constants'
+import { statusLock, statusUnlock, statusSetMessage } from './status'
 import { writeDoc, pull, checkout } from './fetch-replace'
 import { changeRepo } from './repo-select'
 import { changeBranch } from './branches'
 import { initiateMerge } from './merge'
 
-function startCommitPush (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: START_COMMIT_PUSH,
-    ...payload
-  }
-}
-
-function commitPushFailure (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: COMMIT_PUSH_FAILURE,
-    ...payload
-  }
-}
-
-function commitPushSuccess (payload) {
-  // console.log('clone starting in background')
-  return {
-    type: COMMIT_PUSH_SUCCESS,
-    ...payload
-  }
-}
-
 export function commitPush (payload) {
   return async function (dispatch, getState) {
-    dispatch(startCommitPush())
+    dispatch(statusLock())
+    dispatch(statusSetMessage({ message: 'Committing and pushing...' }))
 
     console.log('doing preliminary pull/checkout')
     await dispatch(pull()).catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push. Check your internet connection and try again.' }))
       console.log(`preliminary pull/checkout failed with ${error}`)
       throw error
     })
     await dispatch(checkout()).catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       console.log(`preliminary pull/checkout failed with ${error}`)
       throw error
     })
     console.log('preliminary pull/checkout succeeded')
 
     const contentResponse = await getDoc().catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
     const editorContents = contentResponse.text
@@ -65,7 +46,8 @@ export function commitPush (payload) {
     if (sha !== logOutput[0].oid) {
       if (!ancestorList.includes(sha)) {
         console.log(`commits not equal and document commit not ancestor of HEAD, aborting. Document is ${sha}, HEAD is ${ancestorList[0]}`)
-        return dispatch(commitPushFailure())
+        dispatch(statusUnlock())
+        dispatch(statusSetMessage({ message: 'Failed to commit and push. Sha does not match the current branch.' }))
       } else {
         console.log(`document commit (${sha}) is ancestor of HEAD (${ancestorList[0]}). initiating merge`)
         await dispatch(initiateMerge({ editorContents: editorContents, ancestorCommit: sha, ...payload }))
@@ -85,17 +67,20 @@ export function commitPushInternal (payload) {
     var editorContents = payload.editorContents
     if (editorContents === undefined) {
       const contentResponse = await getDoc({ header: false }).catch((error) => {
-        dispatch(commitPushFailure())
+        dispatch(statusUnlock())
+        dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
         throw error
       })
       editorContents = contentResponse.text
     }
     await fs.promises.writeFile(repoDirectory + '/' + ZRCodePath, editorContents).catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
     await git.add({ dir: repoDirectory, filepath: ZRCodePath }).catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
     await git.commit({
@@ -104,7 +89,8 @@ export function commitPushInternal (payload) {
       author: { name: getState().authentication.name, email: getState().authentication.email },
       ref: getState().branches.currentBranch
     }).catch((error) => {
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
 
@@ -126,14 +112,16 @@ export function commitPushInternal (payload) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
       await dispatch(writeDoc())
       await git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch })
-      dispatch(commitPushSuccess())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Successfully committed and pushed.' }))
       return success
     }, async function (error) {
       console.log(`push failed with error ${error}. fetching now`)
       const oldBranch = getState().branches.currentBranch
       await dispatch(changeRepo({ repoUrl: getState().repoSelect.repoUrl }))
       await dispatch(changeBranch({ branchName: oldBranch, write: true }))
-      dispatch(commitPushFailure())
+      dispatch(statusUnlock())
+      dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
     var logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
