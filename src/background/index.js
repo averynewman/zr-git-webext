@@ -51,7 +51,7 @@ Object.keys(repoSelectStored).forEach(key => {
   repoSelectStored[key] = repoSelectStored[key] === null ? defaultState.repoSelect[key] : repoSelectStored[key]
 })
 
-const startingState = { repoSelect: defaultState.repoSelect, userInfo: userInfoStored } // change defaultState.repoSelect to repoSelectStored to enable repo persistence
+const startingState = { repoSelect: repoSelectStored, userInfo: userInfoStored } // change defaultState.repoSelect to repoSelectStored to enable repo persistence
 
 const store = createStore(
   rootReducer,
@@ -108,22 +108,13 @@ git.plugins.set('emitter', emitter) */
 export { fs, logStoreState, storage } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
 // break your filesystem every time you open the popup
 
-/*
-console.log('merge testing below')
-
-const base = [1, 2, 3, 4, 5, 6].join('\n')
-const left = [2, 9, 3, 7, 5, 6].join('\n') // delete 1, insert 9 between 2 and 3, change 4 to 7
-const right = [1, 3, 8, 5, 12, 6].join('\n') // delete 2, change 4 to 8, insert 12 between 5 and 6
-// const diffMergeIndices = diff3.diff3MergeIndices(left, base, right)
-const diffMerge = diff3.diff3Merge(left, base, right, true)
-const merge = diff3.merge(left, base, right) // this seems to be the good one
-const mergeDigIn = diff3.mergeDigIn(left, base, right)
-
-// console.log(`diffMergeIndices: ${recursiveObjectPrinter(diffMergeIndices)}`)
-console.log('diffMerge:')
-console.log(diffMerge)
-console.log('merge:')
-console.log(merge)
-console.log('mergeDigIn:')
-console.log(mergeDigIn)
-*/
+if (store.getState().repoSelect.repoUrl !== repoDefault) {
+  (async function handleStartupRepo () {
+    console.log(`found stored repoUrl ${store.getState().repoSelect.repoUrl}, switching`)
+    await store.dispatch(changeRepo({ repoUrl: store.getState().repoSelect.repoUrl }))
+    console.log('finished switching (in async function)')
+  })()
+} else {
+  console.log('did not find stored repoUrl')
+}
+console.log('finished handling stored repoUrl')
