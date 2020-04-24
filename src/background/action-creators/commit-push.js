@@ -60,9 +60,9 @@ export function commitPush (payload) {
 
 export function commitPushInternal (payload) {
   return async function (dispatch, getState) {
-    var commitMessage = payload.message
+    var commitMessage = payload.commitMessage
     if (commitMessage === undefined) {
-      commitMessage = getState().status.mergeStoredCommitMessage
+      commitMessage = getState().merge.mergeStoredCommitMessage
     }
     var editorContents = payload.editorContents
     if (editorContents === undefined) {
@@ -86,7 +86,7 @@ export function commitPushInternal (payload) {
     await git.commit({
       dir: repoDirectory,
       message: commitMessage,
-      author: { name: getState().authentication.name, email: getState().authentication.email },
+      author: { name: getState().userInfo.name, email: getState().userInfo.email },
       ref: getState().branches.currentBranch
     }).catch((error) => {
       dispatch(statusUnlock())
@@ -99,7 +99,7 @@ export function commitPushInternal (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      token: getState().authentication.token,
+      token: getState().userInfo.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
     }).then((success) => {

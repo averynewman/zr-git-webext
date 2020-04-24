@@ -2,7 +2,7 @@ import { REPO_CHANGE_SUCCESS, REPO_CHANGE_FAILURE, repoDefault, START_REPO_CHANG
 
 var defaultSubstate = {
   switching: false,
-  validRepo: true,
+  validRepo: false,
   repoUrl: repoDefault
 }
 

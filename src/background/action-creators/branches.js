@@ -87,6 +87,7 @@ export function changeBranch (payload) {
               dispatch(branchChangeFailure())
               dispatch(statusUnlock())
               dispatch(statusSetMessage({ message: 'Failed to switch branches. Check that there is an open ZR IDE tab.' }))
+              throw error
             }
           )
         }
@@ -210,7 +211,7 @@ export function createBranch (payload) {
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
       remote: 'origin',
-      token: getState().authentication.token,
+      token: getState().userInfo.token,
       oauth2format: 'github',
       remoteRef: `refs/heads/${getState().branches.currentBranch}`
     }).then((success) => {

@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
-import * as diff3 from 'node-diff3'
+// import * as diff3 from 'node-diff3'
 import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import thunkMiddleware from 'redux-thunk'
@@ -11,26 +11,55 @@ import { changeBranch, updateBranches, createBranch, getContents } from './actio
 import { fetchReplace } from './action-creators/fetch-replace'
 import { commitPush } from './action-creators/commit-push'
 import rootReducer from './reducers'
-import { repoDefault, recursiveObjectPrinter } from '../constants'
-import { setUserInfo } from '../background/action-creators/authentication'
+import { repoDefault, recursiveObjectPrinter, tokenDefault, nameDefault, emailDefault } from '../constants'
+import { setUserInfo } from './action-creators/user-info'
 import { resolveMerge, abortMerge } from './action-creators/merge'
-// import EventEmitter from 'events'
 
 const middlewares = [thunkMiddleware]
 
-const initialState = {
+const defaultState = {
   repoSelect: {
     switching: false,
-    validRepo: true,
+    validRepo: false,
     repoUrl: repoDefault
+  },
+  userInfo: {
+    token: tokenDefault,
+    name: nameDefault,
+    email: emailDefault
   }
 }
 
+const storage = window.localStorage
+const userInfoStored = {
+  name: storage.getItem('userInfo.name'),
+  email: storage.getItem('userInfo.email'),
+  token: storage.getItem('userInfo.token')
+}
+const repoSelectStored = {
+  switching: false,
+  validRepo: true,
+  repoUrl: storage.getItem('repoSelect.repoUrl')
+}
+
+console.log(`storage testing: ${recursiveObjectPrinter(repoSelectStored)}, ${recursiveObjectPrinter(userInfoStored)}`)
+
+Object.keys(userInfoStored).forEach(key => {
+  userInfoStored[key] = userInfoStored[key] === null ? defaultState.userInfo[key] : userInfoStored[key]
+})
+Object.keys(repoSelectStored).forEach(key => {
+  repoSelectStored[key] = repoSelectStored[key] === null ? defaultState.repoSelect[key] : repoSelectStored[key]
+})
+
+const startingState = { repoSelect: repoSelectStored, userInfo: userInfoStored } // change defaultState.repoSelect to repoSelectStored to enable repo persistence
+
 const store = createStore(
   rootReducer,
-  initialState,
+  startingState,
   applyMiddleware(...middlewares)
 )
+
+console.log(`store state after init is ${recursiveObjectPrinter(store.getState())}`)
 
 const actions = {
   POPUP_CHANGE_REPO: changeRepo,
@@ -57,17 +86,19 @@ store.subscribe(() => logStoreState())
 
 window.chrome.runtime.onConnect.addListener(function (port) {
   console.log(port)
-  console.assert(port.name === 'branchListPort')
-  port.onMessage.addListener(async function (msg) {
-    console.log(`recieved msg: ${msg}`)
-    if (msg.request === 'branchList') {
-      port.postMessage({ branchList: store.getState().branches.branchList })
-    }
-    if (msg.request === 'contents') {
-      const contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
-      port.postMessage({ contents: contents })
-    }
-  })
+  // console.assert(port.name === 'branchListPort')
+  if (port.name === 'branchListPort') {
+    port.onMessage.addListener(async function (msg) {
+      console.log(`recieved msg: ${msg}`)
+      if (msg.request === 'branchList') {
+        port.postMessage({ branchList: store.getState().branches.branchList })
+      }
+      if (msg.request === 'contents') {
+        const contents = await store.dispatch(getContents({ branchName: msg.branch, oldBranchName: store.getState().branches.currentBranch }))
+        port.postMessage({ contents: contents })
+      }
+    })
+  }
 })
 
 const fs = new LightningFS('fs', { wipe: true })
@@ -76,23 +107,16 @@ git.plugins.set('fs', fs)
 /* const emitter = new EventEmitter()
 git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
-export { fs, logStoreState } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
+export { fs, logStoreState, storage } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
 // break your filesystem every time you open the popup
 
-console.log('merge testing below')
-
-const base = [1, 2, 3, 4, 5, 6].join('\n')
-const left = [2, 9, 3, 7, 5, 6].join('\n') // delete 1, insert 9 between 2 and 3, change 4 to 7
-const right = [1, 3, 8, 5, 12, 6].join('\n') // delete 2, change 4 to 8, insert 12 between 5 and 6
-// const diffMergeIndices = diff3.diff3MergeIndices(left, base, right)
-const diffMerge = diff3.diff3Merge(left, base, right, true)
-const merge = diff3.merge(left, base, right) // this seems to be the good one
-const mergeDigIn = diff3.mergeDigIn(left, base, right)
-
-// console.log(`diffMergeIndices: ${recursiveObjectPrinter(diffMergeIndices)}`)
-console.log('diffMerge:')
-console.log(diffMerge)
-console.log('merge:')
-console.log(merge)
-console.log('mergeDigIn:')
-console.log(mergeDigIn)
+if (store.getState().repoSelect.repoUrl !== repoDefault) {
+  (async function handleStartupRepo () {
+    console.log(`found stored repoUrl ${store.getState().repoSelect.repoUrl}, switching`)
+    await store.dispatch(changeRepo({ repoUrl: store.getState().repoSelect.repoUrl }))
+    console.log('finished switching (in async function)')
+  })()
+} else {
+  console.log('did not find stored repoUrl')
+}
+console.log('finished handling stored repoUrl')

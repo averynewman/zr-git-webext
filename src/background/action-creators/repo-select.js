@@ -4,7 +4,7 @@ import '@babel/polyfill'
 // import { logStoreState } from '../index'
 import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl, STATUS_SET_MESSAGE, STATUS_LOCK, STATUS_UNLOCK } from '../../constants'
 import { updateBranches } from './branches'
-import { fs } from '../index'
+import { fs, storage } from '../index'
 // import { recursiveObjectPrinter } from '../../constants'
 
 function startRepoChange (payload) {
@@ -121,6 +121,7 @@ export function changeRepo (payload) {
         dispatch(repoChangeSuccess({ repoUrl: repoUrl }))
         dispatch(statusUnlock())
         dispatch(statusSetMessage({ message: 'Successfully changed repos.' }))
+        storage.setItem('repoSelect.repoUrl', repoUrl)
         // console.log('successful git clone, updating branches')
         return success
       },

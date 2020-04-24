@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { setUserInfo } from '../action-creators/authentication'
+import { setUserInfo } from '../action-creators/user-info'
 import { nameDefault } from '../../constants'
 
-class Authentication extends React.Component {
+class UserInfo extends React.Component {
   constructor (props) {
     super(props)
     this.state = { inputs: { name: '', email: '', token: '' }, inputActive: false }
@@ -73,8 +73,8 @@ class Authentication extends React.Component {
 
 export default connect(
   state => ({
-    userInfo: state.authentication,
+    userInfo: state.userInfo,
     locked: state.status.locked
   }),
   { setUserInfo }
-)(Authentication)
+)(UserInfo)

@@ -17,7 +17,7 @@ class CommitButton extends React.Component {
   }
 
   handleCommit (event) {
-    this.props.startCommit({ message: this.state.inputs.message })
+    this.props.startCommit({ commitMessage: this.state.inputs.message })
     this.setState({ inputActive: false, inputs: { message: '' } })
     event.preventDefault()
   }

@@ -35,7 +35,6 @@ export const DELETE_USER_INFO = 'DELETE_USER_INFO'
 export const MERGE_STARTING = 'MERGE_STARTING'
 export const MERGE_STARTED = 'MERGE_STARTED'
 export const MERGE_ABORTED = 'MERGE_ABORTED'
-export const MERGE_RESOLVING = 'MERGE_RESOLVING'
 export const MERGE_RESOLVED = 'MERGE_RESOLVED'
 export const MERGE_FAILURE = 'MERGE_FAILURE'
 export const MERGE_RESOLVE_FAILURE = 'MERGE_RESOLVE_FAILURE'
@@ -52,10 +51,12 @@ export const proxyUrl = 'https://cors.isomorphic-git.org'
 export const ZRCodePath = 'main.cpp'
 export const statusDefault = 'Nothing to report'
 
-export function recursiveObjectPrinter (obj) { // this breaks on function-valued attributes. don't use it for those.
-  if (Object.prototype.toString.call(obj) === '[object Array]') { // if value is just an array
+export function recursiveObjectPrinter (obj) { // this breaks on functions or objects with function-valued attributes. don't use it for those.
+  if (Object.prototype.toString.call(obj) === '[object Array]') { // if obj is just an array
     return `[${obj}]`
-  } else if (obj !== Object(obj)) { // if value is not an object (and not an array), primitive or null
+  } else if (typeof obj === 'string' || obj instanceof String) { // if obj is string
+    return `${JSON.stringify(obj)}` // convert to string literal (turn special characters into other stuff)
+  } else if (obj !== Object(obj)) { // if obj is not an object. triggers when obj is null or a non-string primitive
     return `${obj}`
   }
   let outputString = ''
@@ -64,15 +65,7 @@ export function recursiveObjectPrinter (obj) { // this breaks on function-valued
     if (index !== 0) {
       outputString = outputString + ', '
     }
-    if (value === Object(value) && Object.prototype.toString.call(value) !== '[object Array]') { // if value is a non-array object
-      outputString = outputString + `${key} : ${recursiveObjectPrinter(value)}`
-    } else if (Object.prototype.toString.call(value) === '[object Array]') { // if value is array
-      outputString = outputString + `${key} : [${value}]`
-    } else if (typeof value === 'string' || value instanceof String) { // if value is string
-      outputString = outputString + `${key} : ${JSON.stringify(value)}` // convert to string literal (turn special characters into other stuff)
-    } else { // if value is non-string primitive or null
-      outputString = outputString + `${key} : ${value}`
-    }
+    outputString = outputString + `${key} : ${recursiveObjectPrinter(value)}`
   })
   return `{ ${outputString} }`
 }
