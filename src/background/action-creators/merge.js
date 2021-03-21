@@ -139,6 +139,6 @@ export function initiateMerge (payload) {
       throw err
     })
     dispatch(mergeStarted())
-    dispatch(statusSetMessage({ message: 'Merge in progress. Make all desired changes, then press the resolve button to continue with the commit.'}))
+    dispatch(statusSetMessage({ message: 'Merge in progress. Make all desired changes, then press the resolve button to continue with the commit.' }))
   }
 }

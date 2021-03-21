@@ -44,7 +44,6 @@ function setDocInjected (doc) {
   (document.head || document.documentElement).appendChild(s)
 }
 
-// les broken more confuising
 export async function setDoc (doc) {
   const scrubbedDoc = doc.replace(/`/g, '\\`')
   console.log(scrubbedDoc)
