@@ -9,10 +9,11 @@ const DEFAULT_HOST = "'localhost'"
 const DEFAULT_PORT = 3004
 const devHotClient = require.resolve('./webpackHotDevClient')
 
+process.traceDeprecation = true
+
 module.exports = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
-  mode: 'development',
   entry: {
     background: [
       devHotClient,
@@ -63,15 +64,14 @@ module.exports = {
       'process.env.HOST': process.env.HOST || DEFAULT_HOST,
       'process.env.PORT': process.env.PORT || DEFAULT_PORT
     }),
-    new WriteFilePlugin({
+    /* new WriteFilePlugin({
       test: /\.bundle(\.js|\.js\.map)$|\.html$|manifest\.json|messages\.json|\.png/
-    }),
-    new CopyWebpackPlugin([
+    }), */
+    new CopyWebpackPlugin({ patterns: [
       {
         from: paths.extension,
-        to: paths.devBuild,
-        writeToDisk: true
+        to: paths.devBuild
       }
-    ])
+    ] })
   ]
 }

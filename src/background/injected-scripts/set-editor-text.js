@@ -17,8 +17,8 @@ function setDocInjected (doc) {
    * Injected into ZR IDE page.
    */
   s.textContent = `
-    console.log("injected script is running");
-    var aceEditSession = document.querySelector('[ui-ace="aceOptions"]')
+    console.log('injected script is running');
+    var aceEditSession = document.querySelector('[ui-ace='aceOptions']')
        .env.editor;
     console.log(aceEditSession, \`${scrubbedDoc}\`);
     aceEditSession.setValue(\`${scrubbedDoc}\`);

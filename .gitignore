@@ -3,3 +3,12 @@ build-dev
 build-prod
 *.log
 package-lock.json
+logfile.txt
+
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

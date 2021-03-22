@@ -1,10 +1,10 @@
 import { createStore, applyMiddleware } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
 // import * as diff3 from 'node-diff3'
-import * as git from 'isomorphic-git'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import thunkMiddleware from 'redux-thunk'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import { changeRepo } from './action-creators/repo-select'
 import { changeBranch, updateBranches, createBranch, getContents } from './action-creators/branches'
@@ -103,9 +103,6 @@ window.chrome.runtime.onConnect.addListener(function (port) {
 
 const fs = new LightningFS('fs', { wipe: true })
 // console.log(recursiveObjectPrinter(fs))
-git.plugins.set('fs', fs)
-/* const emitter = new EventEmitter()
-git.plugins.set('emitter', emitter) */
 // console.log('LightningFS and isomorphic-git initialized')
 export { fs, logStoreState, storage } // never import any of these in a popup file, it will cause webpack to bundle this with the popup and
 // break your filesystem every time you open the popup

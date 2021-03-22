@@ -1,3 +1,4 @@
+// test
 import {
   BRANCH_LIST_UPDATE_SUCCESS, BRANCH_LIST_UPDATE_FAILURE, START_BRANCH_CHANGE, BRANCH_CHANGE_FAILURE, repoDirectory, BRANCH_CREATION_FAILURE, START_BRANCH_CREATION,
   proxyUrl, branchDefault, ZRCodePath, recursiveObjectPrinter
@@ -65,7 +66,7 @@ export function changeBranch (payload) {
     dispatch(statusSetMessage({ message: 'Switching branches...' }))
     await dispatch(updateBranches({ message: false, unlock: false }))
     // console.log('changeBranch thunk started')
-    await git.fetch({ dir: repoDirectory, ref: branchName, depth: 5, url: getState().repoUrl }).then(
+    await git.fetch({ fs, dir: repoDirectory, ref: branchName, depth: 5, url: getState().repoUrl }).then(
       (success) => {
         return success
       }, error => {
@@ -76,7 +77,7 @@ export function changeBranch (payload) {
         throw error
       }
     )
-    return git.checkout({ dir: repoDirectory, ref: branchName }).then(
+    return git.checkout({ fs, dir: repoDirectory, ref: branchName }).then(
       async function (success) {
         if (write) {
           await dispatch(writeDoc()).then(
@@ -194,7 +195,7 @@ export function createBranch (payload) {
     dispatch(startBranchCreation({ branchName: branchName }))
     dispatch(statusSetMessage({ message: `Creating branch ${branchName}...` }))
     console.log('startBranchCreation dispatched')
-    await git.branch({ dir: repoDirectory, ref: branchName, checkout: true }).then(
+    await git.branch({ fs, dir: repoDirectory, ref: branchName, checkout: true }).then(
       (success) => {
         return success
       }, async function (error) {
@@ -232,7 +233,7 @@ export function createBranch (payload) {
       dispatch(statusSetMessage({ message: 'Failed to create branch.' }))
       throw error
     })
-    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    const logOutput = await git.log({ fs, dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     console.log(recursiveObjectPrinter(logOutput))
   }
 }

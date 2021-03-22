@@ -6,8 +6,8 @@ function getDocInjected (cb) {
    * Then sends it back to content script in a custom event
    */
   s.textContent = `
-    console.log("injected script is running");
-    var aceEditSession = document.querySelector('[ui-ace="aceOptions"]')
+    console.log('injected script is running');
+    var aceEditSession = document.querySelector('[ui-ace='aceOptions']')
        .env.editor;
     console.log(aceEditSession);
     var doc = aceEditSession.getValue();
@@ -15,7 +15,7 @@ function getDocInjected (cb) {
       ok: true,
       detail: doc
     }));
-    console.log("sent event", doc);
+    console.log('sent event', doc);
   `
   s.onload = function () {
     this.remove()

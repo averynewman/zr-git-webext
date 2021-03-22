@@ -1,5 +1,7 @@
 import 'chrome-browser-object-polyfill'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'

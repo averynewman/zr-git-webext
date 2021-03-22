@@ -64,8 +64,8 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new CopyWebpackPlugin([
+    new CopyWebpackPlugin({ patterns: [
       { from: paths.extension }
-    ])
+    ] })
   ]
 }

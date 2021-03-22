@@ -12,7 +12,7 @@ let server
 function setupCompiler () {
   compiler = webpack(config)
 
-  compiler.plugin('done', () => {
+  compiler.hooks.done.tap('done', () => {
     console.log()
     console.log(
       chalk.green(
@@ -50,6 +50,9 @@ function setupServer (host, port) {
     hot: true,
     stats: {
       color: true
+    },
+    writeToDisk: (filePath) => {
+      return /\.bundle(\.js|\.js\.map)$|\.html$|manifest\.json|messages\.json|\.png/.test(filePath);
     }
   })
 

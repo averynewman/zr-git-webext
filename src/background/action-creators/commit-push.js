@@ -1,5 +1,6 @@
 import * as git from 'isomorphic-git'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import { fs } from '../index'
 import { getDoc } from '../injected-scripts/get-editor-text'
@@ -38,7 +39,7 @@ export function commitPush (payload) {
     const editorContents = contentResponse.text
     const documentHeader = contentResponse.head
     const sha = documentHeader.sha
-    var logOutput = await git.log({ dir: repoDirectory, ref: getState().branches.currentBranch })
+    var logOutput = await git.log({ fs, dir: repoDirectory, ref: getState().branches.currentBranch })
     var ancestorList = []
     for (var i = 0; i < logOutput.length; i++) {
       ancestorList.push(logOutput[i].oid)
@@ -78,12 +79,13 @@ export function commitPushInternal (payload) {
       dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
-    await git.add({ dir: repoDirectory, filepath: ZRCodePath }).catch((error) => {
+    await git.add({ fs, dir: repoDirectory, filepath: ZRCodePath }).catch((error) => {
       dispatch(statusUnlock())
       dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
     await git.commit({
+      fs,
       dir: repoDirectory,
       message: commitMessage,
       author: { name: getState().userInfo.name, email: getState().userInfo.email },
@@ -95,6 +97,7 @@ export function commitPushInternal (payload) {
     })
 
     await git.push({
+      fs,
       dir: repoDirectory,
       noGitSuffix: true,
       ref: getState().branches.currentBranch,
@@ -111,7 +114,7 @@ export function commitPushInternal (payload) {
     }).then(async function (success) {
       console.log(`push succeeded with info ${recursiveObjectPrinter(success)}`)
       await dispatch(writeDoc())
-      await git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch })
+      await git.checkout({ fs, dir: repoDirectory, ref: getState().branches.currentBranch })
       dispatch(statusUnlock())
       dispatch(statusSetMessage({ message: 'Successfully committed and pushed.' }))
       return success
@@ -124,7 +127,7 @@ export function commitPushInternal (payload) {
       dispatch(statusSetMessage({ message: 'Failed to commit and push.' }))
       throw error
     })
-    var logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    var logOutput = await git.log({ fs, dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     console.log(recursiveObjectPrinter(logOutput))
   }
 }

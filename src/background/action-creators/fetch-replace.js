@@ -1,5 +1,6 @@
 import * as git from 'isomorphic-git'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import { fs } from '../index'
 import { repoDirectory, ZRCodePath } from '../../constants'
@@ -42,13 +43,13 @@ export function writeDoc () {
       console.log(`file read failed with error ${error}`)
       throw error
     })
-    const logOutput = await git.log({ dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
+    const logOutput = await git.log({ fs, dir: repoDirectory, depth: 2, ref: getState().branches.currentBranch })
     /* console.log('git log output for sha checking:')
     for (let i = 0; i < logOutput.length; i++) {
       console.log(`commit ${i} is ${recursiveObjectPrinter(logOutput[i])}`)
     } */
     const sha = logOutput[0].oid
-    editorContents = `// { "sha": "${sha}" } \n` + editorContents
+    editorContents = `// { 'sha': '${sha}' } \n` + editorContents
     await setDoc(editorContents).then((success) => {
       console.log('setDoc succeeded')
       return success
@@ -62,7 +63,7 @@ export function writeDoc () {
 export function pull () {
   console.log('pulling')
   return async function (dispatch, getState) {
-    return git.pull({ dir: repoDirectory, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
+    return git.pull({ fs, dir: repoDirectory, url: getState().repoSelect.repoUrl, ref: getState().branches.currentBranch }).then((success) => {
       console.log('pull succeeded')
       return success
     }, (error) => {
@@ -75,7 +76,7 @@ export function pull () {
 export function checkout () {
   console.log('checking out')
   return async function (dispatch, getState) {
-    return git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch }).then((success) => {
+    return git.checkout({ fs, dir: repoDirectory, ref: getState().branches.currentBranch }).then((success) => {
       console.log('checkout succeeded')
       return success
     }, (error) => {

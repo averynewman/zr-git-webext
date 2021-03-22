@@ -1,6 +1,7 @@
 import * as diff3 from 'node-diff3'
 import * as git from 'isomorphic-git'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import { fs } from '../index'
 import { MERGE_STARTED, MERGE_RESOLVED, MERGE_ABORTED, MERGE_STARTING, MERGE_FAILURE, MERGE_RESOLVE_FAILURE, repoDirectory, ZRCodePath } from '../../constants'
@@ -97,7 +98,7 @@ export function initiateMerge (payload) {
   return async function (dispatch, getState) {
     var myText = payload.editorContents
     var ancestorCommit = payload.ancestorCommit
-    dispatch(mergeStarting({ commitMessage: payload.commitMessage, editorContents: `// { "sha": "${ancestorCommit}" } \n` + myText }))
+    dispatch(mergeStarting({ commitMessage: payload.commitMessage, editorContents: `// { 'sha': '${ancestorCommit}' } \n` + myText }))
     dispatch(statusSetMessage({ message: 'Processing merge data...' }))
     console.log('reading text of branch HEAD')
     var theirText = await fs.promises.readFile(repoDirectory + '/' + ZRCodePath, { encoding: 'utf8' }, (err, data) => { if (err) throw err }).catch(err => {
@@ -107,7 +108,7 @@ export function initiateMerge (payload) {
       throw err
     })
     console.log('checking out common ancestor')
-    await git.checkout({ dir: repoDirectory, ref: ancestorCommit }).catch(err => {
+    await git.checkout({ fs, dir: repoDirectory, ref: ancestorCommit }).catch(err => {
       dispatch(mergeFailure())
       dispatch(statusSetMessage({ message: 'Failed to initiate merge.' }))
       dispatch(statusUnlock())
@@ -121,7 +122,7 @@ export function initiateMerge (payload) {
       throw err
     })
     console.log('checking out branch HEAD')
-    await git.checkout({ dir: repoDirectory, ref: getState().branches.currentBranch }).catch(err => {
+    await git.checkout({ fs, dir: repoDirectory, ref: getState().branches.currentBranch }).catch(err => {
       dispatch(mergeFailure())
       dispatch(statusSetMessage({ message: 'Failed to initiate merge.' }))
       dispatch(statusUnlock())

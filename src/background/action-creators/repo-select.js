@@ -1,5 +1,6 @@
 import * as git from 'isomorphic-git'
-import '@babel/polyfill'
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 // import { logStoreState } from '../index'
 import { START_REPO_CHANGE, REPO_CHANGE_FAILURE, REPO_CHANGE_SUCCESS, repoDirectory, proxyUrl, STATUS_SET_MESSAGE, STATUS_LOCK, STATUS_UNLOCK } from '../../constants'
@@ -109,6 +110,7 @@ export function changeRepo (payload) {
       throw error
     })
     await git.clone({
+      fs,
       dir: repoDirectory,
       corsProxy: proxyUrl,
       url: repoUrl,
