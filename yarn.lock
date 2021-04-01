@@ -4835,10 +4835,17 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"html-entities@npm:^1.3.1, html-entities@npm:^1.4.0":
+"html-entities@npm:^1.3.1":
   version: 1.4.0
   resolution: "html-entities@npm:1.4.0"
   checksum: 639b7722433e5f78856f92431a302d2f113a9c2947d684975926801e507dfcf1269fdbf1f719931f478749b5a53a642b0f2c90959cd41af21a633722e9c64422
+  languageName: node
+  linkType: hard
+
+"html-entities@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "html-entities@npm:2.3.2"
+  checksum: a0bcdfdb2326d8943d43d4f5f794769f666d335f7795e82ac5140154970d82a8a1be082725bd53e18c8727821713e7d124982ed9a3463db9b0159b58bc6eff42
   languageName: node
   linkType: hard
 
@@ -9770,7 +9777,7 @@ fsevents@~2.3.1:
     eslint: ^7.22.0
     eslint-import-resolver-node: ^0.3.4
     fs-extra: ^8.1.0
-    html-entities: ^1.4.0
+    html-entities: ^2.3.2
     html-webpack-plugin: ^5.3.1
     isomorphic-git: ^1.8.1
     mini-css-extract-plugin: ^1.3.9

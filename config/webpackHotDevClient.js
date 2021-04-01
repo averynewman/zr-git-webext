@@ -1,33 +1,10 @@
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
-// This alternative WebpackDevServer combines the functionality of:
-// https://github.com/webpack/webpack-dev-server/blob/webpack-1/client/index.js
-// https://github.com/webpack/webpack/blob/webpack-1/hot/dev-server.js
-
-// It only supports their simplest configuration (hot updates on same server).
-// It makes some opinionated choices on top, like adding a syntax error overlay
-// that looks similar to our console output. The error overlay is inspired by:
-// https://github.com/glenjamin/webpack-hot-middleware
-
-/* eslint no-console: 0 */
 import ansiHTML from 'ansi-html'
 import SockJS from 'sockjs-client'
 import stripAnsi from 'strip-ansi'
 import url from 'url'
 import formatWebpackMessages from './webpackFormatMessages'
+import { encode } from 'html-entities'
 
-const Entities = require('html-entities').AllHtmlEntities
-
-const entities = new Entities()
-
-// Color scheme inspired by https://github.com/glenjamin/webpack-hot-middleware
 const colors = {
   reset: ['transparent', 'transparent'],
   black: '181818',
@@ -124,7 +101,7 @@ function showErrorOverlay (message) {
     div.innerHTML =
       `<span style="color: #${colors.red}">
         Failed to compile.
-       </span><br><br>${ansiHTML(entities.encode(message))}'`
+       </span><br><br>${ansiHTML(encode(message))}'`
   }
 
   ensureOverlayDivExists(onOverlayDivReady)
