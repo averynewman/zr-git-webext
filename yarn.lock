@@ -2288,6 +2288,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"at-least-node@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "at-least-node@npm:1.0.0"
+  checksum: 8f33efc16287ed39766065c718a2d36a469f702c66c6eb41fa460c0c62bca395301a6a02946e315ae4a84c9cc7f44c94ec73a556bc2a1049350da98d0b013afe
+  languageName: node
+  linkType: hard
+
 "atob@npm:^2.1.1":
   version: 2.1.2
   resolution: "atob@npm:2.1.2"
@@ -2649,17 +2656,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "chalk@npm:3.0.0"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: 4018b0c812880da595d0d7b8159939527b72f58d3370e2fdc1a24d9abd460bab851695d7eca014082f110d5702d1221b05493fec430ccce375de907d50cc48c1
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.0.0":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0":
   version: 4.1.0
   resolution: "chalk@npm:4.1.0"
   dependencies:
@@ -4408,14 +4405,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "fs-extra@npm:8.1.0"
+"fs-extra@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "fs-extra@npm:9.1.0"
   dependencies:
+    at-least-node: ^1.0.0
     graceful-fs: ^4.2.0
-    jsonfile: ^4.0.0
-    universalify: ^0.1.0
-  checksum: 056a96d4f55ab8728b021e251175a4a6440d1edb5845e6c2e8e010019bde3e63de188a0eb99386c21c71804ca1a571cd6e08f507971f10a2bc4f4f7667720fa4
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: e667d8df54113b527bf5830dd9db8f142618db488894b329fe07724c7020dfacf8a372b144a74e683ae44e66f56117adca9cac165950dda7d83537c46c10dc4b
   languageName: node
   linkType: hard
 
@@ -5696,15 +5694,16 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"jsonfile@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "jsonfile@npm:4.0.0"
+"jsonfile@npm:^6.0.1":
+  version: 6.1.0
+  resolution: "jsonfile@npm:6.1.0"
   dependencies:
     graceful-fs: ^4.1.6
+    universalify: ^2.0.0
   dependenciesMeta:
     graceful-fs:
       optional: true
-  checksum: a40b7b64da41c84b0dc7ad753737ba240bb0dc50a94be20ec0b73459707dede69a6f89eb44b4d29e6994ed93ddf8c9b6e57f6b1f09dd707567959880ad6cee7f
+  checksum: 9419c886abc6f8a5088cbb222b7bc17c76e8ee9f6c0e5c38781a4e09488166084f25247bc0b58e025b08c43064c82ae860ad89a992e35fc8cfae639323b7edbc
   languageName: node
   linkType: hard
 
@@ -6399,10 +6398,10 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"node-diff3@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "node-diff3@npm:1.0.0"
-  checksum: b933181ec74cb55726155ebcbf855a06dbb662b041f488a4fcc30a2f002ac3634c2802266f8a93efbdb77d466fec25a0d78fbc8bd8c5a16715ba2b4fd1c1a627
+"node-diff3@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "node-diff3@npm:2.1.0"
+  checksum: 55d64285da767efb77582a4bbdde8a5d1a0a59dd87d4dbeea6643115ecdb8ab61b766a7f38b97106b08f422b39d3ab4b5ba7cfb4a09afe33f980d402b18839f3
   languageName: node
   linkType: hard
 
@@ -9221,10 +9220,10 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"universalify@npm:^0.1.0":
-  version: 0.1.2
-  resolution: "universalify@npm:0.1.2"
-  checksum: 420fc6547357782c700d53e9a92506a8e95345b13e97684c8f9ab75237912ec2ebb6af8ac10d4f7406b7b6bd21c58f6c5c0811414fb0b4091b78b4743fa6806e
+"universalify@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "universalify@npm:2.0.0"
+  checksum: 36bfbdc97bd4b483596e66ea65e20663f5ab9ec3650157d99b075b7f97afcdefe46bbb23f89171dd75595d398cea3769a5b6d7130f5c66cae2a0f00904780f62
   languageName: node
   linkType: hard
 
@@ -9769,19 +9768,19 @@ fsevents@~2.3.1:
     ansi-html: ^0.0.7
     babel-loader: ^8.2.2
     buffer: ^6.0.3
-    chalk: ^3.0.0
+    chalk: ^4.1.0
     chrome-browser-object-polyfill: ^0.2.2
     copy-webpack-plugin: ^8.0.0
     core-js: ^3.9.1
     css-loader: ^5.1.3
     eslint: ^7.22.0
     eslint-import-resolver-node: ^0.3.4
-    fs-extra: ^8.1.0
+    fs-extra: ^9.1.0
     html-entities: ^2.3.2
     html-webpack-plugin: ^5.3.1
     isomorphic-git: ^1.8.1
     mini-css-extract-plugin: ^1.3.9
-    node-diff3: ^1.0.0
+    node-diff3: ^2.1.0
     prop-types: ^15.7.2
     react: ^17.0.2
     react-dom: ^17.0.2

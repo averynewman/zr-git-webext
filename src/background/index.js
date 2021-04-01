@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
 import { createBackgroundStore } from 'redux-webext'
-// import * as diff3 from 'node-diff3'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import thunkMiddleware from 'redux-thunk'
 import 'core-js/stable'
